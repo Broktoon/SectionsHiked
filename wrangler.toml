@@ -1,2 +1,5 @@
 name = "sections-hiked"
-pages_build_output_dir = "."
+compatibility_date = "2026-05-31"
+
+[assets]
+directory = "."
