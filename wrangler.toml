@@ -2,4 +2,4 @@ name = "sections-hiked"
 compatibility_date = "2026-05-31"
 
 [assets]
-directory = "."
+directory = "public"

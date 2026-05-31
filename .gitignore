@@ -1,0 +1,8 @@
+# Claude Code internal settings
+.claude/
+
+# Wrangler local build artifacts
+.wrangler/
+
+# Node
+node_modules/
