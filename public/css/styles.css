@@ -1,0 +1,490 @@
+/* ===================================================================
+   SectionsHiked — styles.css
+   Aligned with TrailTemps conventions where possible:
+     - Shared variable names: --maxw, --mapw, --border, --muted, --bghead
+     - Shared utilities: .note, .small, .card-sep, .site-header, .site-footer
+     - Shared heading scale and base input/button sizing
+   Intentional divergences from TrailTemps (documented below):
+     - Font: system stack vs Arial — SectionsHiked is a more polished product
+     - --maxw value: 1100px vs 980px — app UI needs more width than a planner
+     - line-height: 1.5 vs 1.35 — better for form-heavy UI and accessibility
+     - .btn-primary color: forest green vs blue — brand differentiation
+     - Box shadows, larger radius, focus rings — richer component set
+     - Auth, landing page, and app-shell styles have no TrailTemps equivalent
+=================================================================== */
+
+/* ===== Variables =====
+   Naming aligned with TrailTemps where names overlap.
+   SectionsHiked adds semantic color tokens that TrailTemps doesn't need.
+===== */
+:root {
+  /* Layout — same variable names as TrailTemps; values differ where noted */
+  --maxw:  1100px;                 /* TrailTemps uses 980px; SectionsHiked needs more room */
+  --mapw:  min(720px, 100%);       /* same as TrailTemps — reused when map is built */
+
+  /* Colors — TrailTemps-aligned names */
+  --border:  #e5e7eb;              /* TrailTemps: #ddd — slightly softer */
+  --muted:   #6b7280;              /* TrailTemps: #444 — lighter; matches form UI tone */
+  --bghead:  #f6f6f6;              /* same as TrailTemps */
+
+  /* SectionsHiked brand colors (no TrailTemps equivalent) */
+  --color-primary:       #4a7c59; /* forest green — CLAUDE.md spec */
+  --color-primary-dark:  #3a6247;
+  --color-primary-light: #e8f2ec;
+  --color-hiked:         #2ecc71; /* hiked-segment highlight — CLAUDE.md spec */
+
+  /* Semantic aliases used in component styles below */
+  --color-text:         #111;     /* aligned with TrailTemps body color */
+  --color-text-muted:   var(--muted);
+  --color-border:       var(--border);
+  --color-bg:           #f3f4f6;
+  --color-white:        #ffffff;
+  --color-error:        #dc2626;
+  --color-error-bg:     #fef2f2;
+  --color-error-border: #fecaca;
+
+  /* Radii and shadows (no TrailTemps equivalent) */
+  --radius:    6px;               /* aligned to TrailTemps button radius */
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .10);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, .12);
+
+  /* Font — diverges from TrailTemps (Arial); system stack for polished UI */
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ===== Base Reset ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.5;             /* TrailTemps: 1.35 — 1.5 better for form-heavy UI */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Shared layout — mirrors TrailTemps .site-header / main / .site-footer pattern ===== */
+.site-header,
+.site-footer {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* .container is the SectionsHiked equivalent of TrailTemps' direct max-width on elements */
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===== Headings — scale aligned with TrailTemps ===== */
+h1 { font-size: 22px; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 22px 0 10px; }
+h3 { font-size: 14px; margin: 14px 0 6px;  color: var(--muted); font-weight: 700; }
+h4 { font-size: 13px; margin: 12px 0 5px;  color: var(--muted); font-weight: 700; }
+
+/* ===== Utilities — aligned with TrailTemps ===== */
+.hidden  { display: none !important; }
+.note    { color: var(--muted); font-size: 12px; max-width: var(--maxw); }
+.small   { margin-top: 6px; font-size: 12px; color: var(--muted); }
+
+/* Section divider — same as TrailTemps hr.card-sep */
+.card-sep,
+hr.card-sep {
+  border: 0;
+  border-top: 2px solid rgba(0, 0, 0, .15);
+  margin: 1.5rem 0;
+}
+
+/* ===== Base element styles — aligned with TrailTemps ===== */
+button { cursor: pointer; }
+
+input, select, button {
+  padding: 10px;
+  font-size: 14px;              /* TrailTemps default; SectionsHiked form inputs may override */
+}
+
+/* ===== Table — aligned with TrailTemps ===== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: var(--maxw);
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 8px;
+  font-size: 13px;
+}
+th {
+  background: var(--bghead);
+  text-align: left;
+}
+
+/* ===== Footer — aligned with TrailTemps .site-footer ===== */
+.site-footer,
+.landing-footer {
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.copyright-line {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ===================================================================
+   Buttons
+   .btn-primary color diverges from TrailTemps (#2a6ebb blue) —
+   SectionsHiked uses forest green for brand differentiation.
+=================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 14px;              /* aligned with TrailTemps base */
+  font-weight: 600;             /* aligned with TrailTemps .btn-primary */
+  font-family: var(--font);
+  border-radius: var(--radius); /* 6px — aligned with TrailTemps */
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  white-space: nowrap;
+  min-height: 44px;
+  line-height: 1;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Green primary — diverges from TrailTemps blue; SectionsHiked brand color */
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.btn-outline:hover:not(:disabled) {
+  background: var(--color-primary-light);
+}
+
+.btn-google {
+  width: 100%;
+  background: var(--color-white);
+  color: var(--color-text);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.btn-google:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.btn-full { width: 100%; }
+.btn-lg   { padding: 13px 28px; font-size: 16px; min-height: 50px; }
+.btn-sm   { padding: 7px 14px;  font-size: 13px; min-height: 36px; }
+
+/* ===================================================================
+   Forms
+   No TrailTemps equivalent — SectionsHiked-specific.
+=================================================================== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;             /* aligned with TrailTemps label weight */
+  color: var(--color-text);
+}
+.form-group input {
+  padding: 10px 14px;
+  font-size: 14px;              /* aligned with TrailTemps */
+  font-family: var(--font);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  color: var(--color-text);
+  min-height: 44px;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, .15);
+}
+.form-group input::placeholder { color: #9ca3af; }
+
+.form-error {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error);
+  font-size: 14px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+/* ===================================================================
+   Auth page
+   No TrailTemps equivalent.
+=================================================================== */
+.auth-page {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 36px 32px;
+}
+
+.auth-logo {
+  display: block;
+  text-align: center;
+  font-size: 22px;              /* aligned with TrailTemps h1 size */
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-bottom: 24px;
+  letter-spacing: -0.3px;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.15s, border-color 0.15s;
+  min-height: 44px;
+}
+.tab-btn.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.username-prompt-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.username-prompt-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.username-prompt-header p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.verify-message { text-align: center; padding: 8px 0; }
+.verify-message h2 { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+.verify-message p  { color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+
+/* ===================================================================
+   Loading spinner
+   No TrailTemps equivalent.
+=================================================================== */
+.app-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===================================================================
+   App page shell
+   No TrailTemps equivalent (TrailTemps has no auth/user concept).
+=================================================================== */
+.app-page {
+  min-height: 100%;
+  background: var(--color-bg);
+}
+.app-header {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.app-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.app-nav .username-label {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ===================================================================
+   Landing page
+   No TrailTemps equivalent (TrailTemps has no marketing page).
+=================================================================== */
+.landing-page {
+  background: var(--color-white);
+  display: block;
+}
+
+.landing-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.landing-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -0.3px;
+}
+
+.landing-nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.hero {
+  padding: 80px 20px 64px;
+  text-align: center;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 52px); /* overrides heading scale above for the hero only */
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+.hero-subtitle {
+  font-size: clamp(16px, 2vw, 20px);
+  color: var(--muted);
+  max-width: 520px;
+  margin: 0 auto 36px;
+  line-height: 1.6;
+}
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.placeholder-section {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  margin: 0 0 20px;
+  padding: 60px 20px;
+  text-align: center;
+}
+.placeholder-text { color: var(--muted); font-size: 14px; }
+
+/* ===================================================================
+   Map container — variable names shared with TrailTemps
+=================================================================== */
+#map {
+  width: 100%;
+  max-width: var(--mapw);
+  height: clamp(280px, 35vh, 420px);
+  display: block;
+}
+.map-wrap {
+  margin-top: 16px;
+  max-width: var(--maxw);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* ===================================================================
+   Responsive
+=================================================================== */
+@media (max-width: 720px) {
+  #map { height: clamp(220px, 32vh, 320px); }
+}
+
+@media (max-width: 480px) {
+  .auth-container { padding: 28px 20px; }
+  .landing-nav .btn-outline { display: none; }
+  .hero { padding: 48px 20px 40px; }
+}

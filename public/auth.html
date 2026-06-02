@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SectionsHiked — Sign In</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <a href="/" class="auth-logo">SectionsHiked</a>
+
+    <!-- Tab navigation — hidden when showing username or verify panels -->
+    <div id="auth-tabs" class="auth-tabs">
+      <button class="tab-btn active" data-tab="signin">Sign In</button>
+      <button class="tab-btn" data-tab="signup">Sign Up</button>
+    </div>
+
+    <!-- Sign In panel -->
+    <div id="signin-panel" class="auth-panel">
+      <button id="google-signin" class="btn btn-google" type="button">
+        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.252-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908C16.658 14.233 17.64 11.926 17.64 9.2z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.859-3.048.859-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+          <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <form id="signin-form" novalidate>
+        <div class="form-group">
+          <label for="signin-email">Email</label>
+          <input type="email" id="signin-email" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="signin-password">Password</label>
+          <input type="password" id="signin-password" autocomplete="current-password" required>
+        </div>
+        <div id="signin-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full" data-label="Sign In">Sign In</button>
+      </form>
+    </div>
+
+    <!-- Sign Up panel -->
+    <div id="signup-panel" class="auth-panel hidden">
+      <button id="google-signup" class="btn btn-google" type="button">
+        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.252-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908C16.658 14.233 17.64 11.926 17.64 9.2z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.859-3.048.859-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+          <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+          <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <form id="signup-form" novalidate>
+        <div class="form-group">
+          <label for="signup-username">Username</label>
+          <input type="text" id="signup-username" autocomplete="username" required minlength="3" maxlength="30">
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" autocomplete="new-password" required minlength="8">
+        </div>
+        <div class="form-group">
+          <label for="signup-confirm">Confirm Password</label>
+          <input type="password" id="signup-confirm" autocomplete="new-password" required>
+        </div>
+        <div id="signup-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full" data-label="Create Account">Create Account</button>
+      </form>
+    </div>
+
+    <!-- Username prompt panel — shown after Google OAuth for new users -->
+    <div id="username-panel" class="auth-panel hidden">
+      <div class="username-prompt-header">
+        <h2>One last step</h2>
+        <p>Choose a username for your SectionsHiked profile.</p>
+      </div>
+      <form id="username-form" novalidate>
+        <div class="form-group">
+          <label for="chosen-username">Username</label>
+          <input type="text" id="chosen-username" autocomplete="username" required minlength="3" maxlength="30"
+            placeholder="e.g. trailblazer42">
+        </div>
+        <div id="username-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full" data-label="Continue">Continue</button>
+      </form>
+    </div>
+
+    <!-- Email verification panel — shown after email/password sign-up -->
+    <div id="verify-panel" class="auth-panel hidden">
+      <div class="verify-message">
+        <h2>Check your email</h2>
+        <p>
+          We sent a confirmation link to<br>
+          <strong id="verify-email"></strong>.<br><br>
+          Click the link to activate your account, then sign in here.
+        </p>
+        <button id="back-to-signin" class="btn btn-outline btn-full" type="button">Back to Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    (function () {
+      let redirecting = false;
+
+      // Respect ?mode=signup link from the landing page
+      const mode = new URLSearchParams(window.location.search).get('mode');
+      if (mode === 'signup') switchTab('signup');
+
+      // Check for an existing session (also triggers PKCE code exchange after OAuth redirect)
+      sb.auth.getSession().then(({ data: { session } }) => {
+        if (session && !redirecting) handleSessionRedirect(session.user);
+      });
+
+      // onAuthStateChange fires once the OAuth code exchange completes
+      sb.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session && !redirecting) {
+          handleSessionRedirect(session.user);
+        }
+      });
+
+      async function handleSessionRedirect(user) {
+        redirecting = true;
+        try {
+          const { data: profile } = await sb.from('profiles')
+            .select('username')
+            .eq('id', user.id)
+            .single();
+          if (profile?.username) {
+            window.location.href = '/app.html';
+          } else {
+            showPanel('username-panel');
+          }
+        } catch {
+          // Profile row missing or network error — show username prompt to recover
+          showPanel('username-panel');
+        }
+      }
+
+      // --- UI helpers ---
+
+      function showPanel(id) {
+        document.querySelectorAll('.auth-panel').forEach(p => p.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        const isTabPanel = id === 'signin-panel' || id === 'signup-panel';
+        document.getElementById('auth-tabs').classList.toggle('hidden', !isTabPanel);
+      }
+
+      function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.tab === tab)
+        );
+        showPanel(tab + '-panel');
+      }
+
+      function showError(id, msg) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.classList.remove('hidden');
+      }
+
+      function clearError(id) {
+        document.getElementById(id).classList.add('hidden');
+      }
+
+      function setLoading(btn, loading) {
+        btn.disabled = loading;
+        btn.textContent = loading ? 'Please wait…' : btn.dataset.label;
+      }
+
+      function friendlyError(msg) {
+        if (msg.includes('Invalid login credentials'))  return 'Incorrect email or password.';
+        if (msg.includes('Email not confirmed'))         return 'Please confirm your email before signing in.';
+        if (msg.includes('User already registered'))    return 'An account with this email already exists.';
+        if (msg.includes('Password should be'))         return 'Password must be at least 8 characters.';
+        return msg;
+      }
+
+      function validateUsername(username) {
+        if (!/^[a-zA-Z0-9_-]{3,30}$/.test(username)) {
+          return 'Username must be 3–30 characters: letters, numbers, _ and - only.';
+        }
+        return null;
+      }
+
+      // --- Tab switching ---
+      document.querySelectorAll('.tab-btn').forEach(btn =>
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab))
+      );
+
+      // --- Sign In form ---
+      document.getElementById('signin-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = e.target.querySelector('[type=submit]');
+        clearError('signin-error');
+        setLoading(btn, true);
+        try {
+          const result = await signIn(
+            document.getElementById('signin-email').value,
+            document.getElementById('signin-password').value
+          );
+          await handleSessionRedirect(result.user);
+        } catch (err) {
+          showError('signin-error', friendlyError(err.message));
+          setLoading(btn, false);
+        }
+      });
+
+      // --- Sign Up form ---
+      document.getElementById('signup-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = e.target.querySelector('[type=submit]');
+        clearError('signup-error');
+
+        const username = document.getElementById('signup-username').value.trim();
+        const email    = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const confirm  = document.getElementById('signup-confirm').value;
+
+        const usernameErr = validateUsername(username);
+        if (usernameErr)           { showError('signup-error', usernameErr); return; }
+        if (password !== confirm)  { showError('signup-error', 'Passwords do not match.'); return; }
+        if (password.length < 8)   { showError('signup-error', 'Password must be at least 8 characters.'); return; }
+
+        setLoading(btn, true);
+        try {
+          await signUp(email, password, username);
+          document.getElementById('verify-email').textContent = email;
+          showPanel('verify-panel');
+        } catch (err) {
+          showError('signup-error', friendlyError(err.message));
+          setLoading(btn, false);
+        }
+      });
+
+      // --- Google OAuth (both buttons use the same handler) ---
+      async function handleGoogle() {
+        try {
+          await signInWithGoogle();
+          // Browser navigates to Google — nothing more to do here
+        } catch (err) {
+          console.error('Google OAuth error:', err.message);
+        }
+      }
+      document.getElementById('google-signin').addEventListener('click', handleGoogle);
+      document.getElementById('google-signup').addEventListener('click', handleGoogle);
+
+      // --- Username prompt (post-OAuth) ---
+      document.getElementById('username-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const btn = e.target.querySelector('[type=submit]');
+        clearError('username-error');
+
+        const username = document.getElementById('chosen-username').value.trim();
+        const usernameErr = validateUsername(username);
+        if (usernameErr) { showError('username-error', usernameErr); return; }
+
+        setLoading(btn, true);
+        try {
+          const { data: { user } } = await sb.auth.getUser();
+          await setUsername(user.id, username);
+          window.location.href = '/app.html';
+        } catch (err) {
+          showError('username-error', friendlyError(err.message));
+          setLoading(btn, false);
+        }
+      });
+
+      // --- Back to sign in (from verify panel) ---
+      document.getElementById('back-to-signin').addEventListener('click', () => switchTab('signin'));
+    }());
+  </script>
+
+</body>
+</html>

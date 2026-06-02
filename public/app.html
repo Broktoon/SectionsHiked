@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SectionsHiked</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="app-page">
+
+  <!-- Shown while the session check runs -->
+  <div id="app-loading" class="app-loading">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Main app shell — revealed after auth check passes -->
+  <div id="app-shell" class="hidden">
+    <header class="app-header">
+      <div class="container">
+        <div class="logo">SectionsHiked</div>
+        <nav class="app-nav">
+          <span id="username-label" class="username-label"></span>
+          <button id="signout-btn" class="btn btn-outline btn-sm" type="button">Sign Out</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container" style="padding-top: 40px;">
+      <div class="placeholder-section">
+        <p class="placeholder-text">[Trail dashboard — coming soon]</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    (async function () {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = '/auth.html';
+        return;
+      }
+
+      // Ensure this user has completed the username step
+      const { data: profile } = await sb.from('profiles')
+        .select('username')
+        .eq('id', session.user.id)
+        .single();
+
+      if (!profile?.username) {
+        window.location.href = '/auth.html';
+        return;
+      }
+
+      document.getElementById('username-label').textContent = profile.username;
+      document.getElementById('app-loading').classList.add('hidden');
+      document.getElementById('app-shell').classList.remove('hidden');
+    }());
+
+    document.getElementById('signout-btn').addEventListener('click', signOut);
+  </script>
+
+  <!--
+    Future scripts loaded here once the app is built out:
+    <script src="/js/db.js"></script>
+    <script src="/js/trails.js"></script>
+    <script src="/js/map.js"></script>
+    <script src="/js/app.js"></script>
+  -->
+
+</body>
+</html>
