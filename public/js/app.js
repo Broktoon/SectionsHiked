@@ -85,11 +85,6 @@ function renderTrailInfo(trail, segments) {
   document.getElementById('info-last').textContent =
     dates.length > 1 ? formatDate(dates[dates.length - 1]) : '—';
 
-  const temps = segments.filter(s => s.temp_f != null).map(s => s.temp_f);
-  document.getElementById('info-avg-temp').textContent =
-    temps.length > 0
-      ? `${Math.round(temps.reduce((a, b) => a + b, 0) / temps.length)}°F`
-      : '—';
 }
 
 function initTrailSelector() {
