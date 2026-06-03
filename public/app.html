@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SectionsHiked</title>
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body class="app-page">
 
@@ -15,6 +16,7 @@
 
   <!-- Main app shell — revealed after auth check passes -->
   <div id="app-shell" class="hidden">
+
     <header class="app-header">
       <div class="container">
         <div class="logo">SectionsHiked</div>
@@ -25,49 +27,55 @@
       </div>
     </header>
 
-    <main class="container" style="padding-top: 40px;">
-      <div class="placeholder-section">
-        <p class="placeholder-text">[Trail dashboard — coming soon]</p>
+    <!-- Dashboard view (default) -->
+    <div id="dashboard-view">
+      <div class="container">
+        <h2 class="dashboard-heading">Your Trails</h2>
+        <div id="trail-grid" class="trail-grid"></div>
       </div>
-    </main>
-  </div>
+    </div>
+
+    <!-- Map view — hidden until a trail card is clicked -->
+    <div id="map-view" class="hidden">
+      <div class="map-view-header">
+        <div class="container">
+          <button id="back-btn" class="btn btn-outline btn-sm" type="button">&#8592; All Trails</button>
+          <h2 id="map-trail-name" class="map-trail-name"></h2>
+        </div>
+      </div>
+      <div id="map"></div>
+    </div>
+
+  </div><!-- #app-shell -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="/js/db.js"></script>
+  <script src="/js/trails.js"></script>
+  <script src="/js/map.js"></script>
+  <script src="/js/app.js"></script>
   <script>
     (async function () {
       const { data: { session } } = await sb.auth.getSession();
-      if (!session) {
-        window.location.href = '/auth.html';
-        return;
-      }
+      if (!session) { window.location.href = '/auth.html'; return; }
 
-      // Ensure this user has completed the username step
       const { data: profile } = await sb.from('profiles')
         .select('username')
         .eq('id', session.user.id)
         .single();
-
-      if (!profile?.username) {
-        window.location.href = '/auth.html';
-        return;
-      }
+      if (!profile?.username) { window.location.href = '/auth.html'; return; }
 
       document.getElementById('username-label').textContent = profile.username;
       document.getElementById('app-loading').classList.add('hidden');
       document.getElementById('app-shell').classList.remove('hidden');
+
+      await initApp(session.user);
     }());
 
     document.getElementById('signout-btn').addEventListener('click', signOut);
+    document.getElementById('back-btn').addEventListener('click', showDashboard);
   </script>
-
-  <!--
-    Future scripts loaded here once the app is built out:
-    <script src="/js/db.js"></script>
-    <script src="/js/trails.js"></script>
-    <script src="/js/map.js"></script>
-    <script src="/js/app.js"></script>
-  -->
 
 </body>
 </html>
