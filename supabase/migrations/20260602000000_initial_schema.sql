@@ -97,3 +97,10 @@ as $$
 $$;
 
 grant execute on function is_username_available to anon, authenticated;
+
+-- Grant table-level access to authenticated users.
+-- RLS policies above control row-level access; these grants allow the role
+-- to reach the table at all (not auto-applied when creating via SQL migration).
+grant select, update                    on public.profiles       to authenticated;
+grant select, insert, update, delete    on public.hike_segments  to authenticated;
+grant select, insert                    on public.badges          to authenticated;
