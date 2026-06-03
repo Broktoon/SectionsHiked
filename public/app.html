@@ -38,9 +38,9 @@
     <!-- Map view — hidden until a trail card is clicked -->
     <div id="map-view" class="hidden">
 
+      <!-- Header bar with trail selector dropdown -->
       <div class="map-view-header">
         <div class="container">
-          <!-- Trail selector: switches trails or returns to dashboard / home -->
           <div class="trail-selector" id="trail-selector">
             <button class="trail-selector-btn" id="trail-selector-btn" type="button">
               <span id="map-trail-name">Select Trail</span>
@@ -56,7 +56,70 @@
         </div>
       </div>
 
-      <!-- Map is wrapped in a container so it aligns with the header logo -->
+      <!-- Trail + progress summary panel -->
+      <div id="trail-info" class="trail-info-panel">
+        <div class="container">
+          <div class="trail-info-grid">
+
+            <div class="trail-info-section">
+              <div class="trail-info-heading">Trail</div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Total distance</span>
+                <span class="trail-stat-value" id="info-total-miles">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">States</span>
+                <span class="trail-stat-value" id="info-states">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Start</span>
+                <span class="trail-stat-value" id="info-start">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">End</span>
+                <span class="trail-stat-value" id="info-end">—</span>
+              </div>
+            </div>
+
+            <div class="trail-info-divider"></div>
+
+            <div class="trail-info-section">
+              <div class="trail-info-heading">Your Progress</div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Distance hiked</span>
+                <span class="trail-stat-value" id="info-hiked">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Complete</span>
+                <span class="trail-stat-value" id="info-pct">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Hiking sessions</span>
+                <span class="trail-stat-value" id="info-sessions">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Trail days</span>
+                <span class="trail-stat-value" id="info-days">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">First hike</span>
+                <span class="trail-stat-value" id="info-first">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Most recent</span>
+                <span class="trail-stat-value" id="info-last">—</span>
+              </div>
+              <div class="trail-stat">
+                <span class="trail-stat-label">Avg temperature</span>
+                <span class="trail-stat-value" id="info-avg-temp">—</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div><!-- #trail-info -->
+
+      <!-- Map, constrained to container width to align with the header logo -->
       <div class="map-outer">
         <div class="container map-container">
           <div id="map"></div>

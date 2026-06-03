@@ -1,18 +1,98 @@
-// Trail metadata: slugs, display names, colors, total mileage, and GeoJSON filenames.
-// geojsonFile: null  → no GeoJSON available for this trail (AZT — file too large)
+// Trail metadata: slugs, display names, colors, total mileage, GeoJSON filenames,
+// states traversed, and terminus names.
+// geojsonFile: null  → no GeoJSON available (AZT — original file 56MB, exceeds Cloudflare limit)
 // geojsonFile: omitted → defaults to 'trail.geojson' in map.js
-// geojsonFile: string → use that filename instead of the default
+// geojsonFile: string → use that filename
 
 const TRAILS = [
-  { id: 'appalachian-trail',        name: 'Appalachian Trail',        color: '#4a7c59', totalMiles: 2198  },
-  { id: 'arizona-trail',            name: 'Arizona Trail',            color: '#4a7c59', totalMiles: 800,  geojsonFile: null },
-  { id: 'continental-divide-trail', name: 'Continental Divide Trail', color: '#4a7c59', totalMiles: 3100  },
-  { id: 'florida-trail',            name: 'Florida Trail',            color: '#4a7c59', totalMiles: 1500, geojsonFile: 'trails.geojson' },
-  { id: 'ice-age-trail',            name: 'Ice Age Trail',            color: '#4a7c59', totalMiles: 1200  },
-  { id: 'natchez-trace-trail',      name: 'Natchez Trace Trail',      color: '#4a7c59', totalMiles: 444   },
-  { id: 'new-england-trail',        name: 'New England Trail',        color: '#4a7c59', totalMiles: 215   },
-  { id: 'north-country-trail',      name: 'North Country Trail',      color: '#4a7c59', totalMiles: 4800  },
-  { id: 'pacific-crest-trail',      name: 'Pacific Crest Trail',      color: '#4a7c59', totalMiles: 2650  },
-  { id: 'pacific-northwest-trail',  name: 'Pacific Northwest Trail',  color: '#4a7c59', totalMiles: 1200  },
-  { id: 'potomac-heritage-trail',   name: 'Potomac Heritage Trail',   color: '#4a7c59', totalMiles: 830   },
+  {
+    id: 'appalachian-trail',
+    name: 'Appalachian Trail',
+    color: '#4a7c59',
+    totalMiles: 2198,
+    states: ['GA','NC','TN','VA','WV','MD','PA','NJ','NY','CT','MA','VT','NH','ME'],
+    termini: ['Springer Mtn, GA', 'Katahdin, ME'],
+  },
+  {
+    id: 'arizona-trail',
+    name: 'Arizona Trail',
+    color: '#4a7c59',
+    totalMiles: 800,
+    geojsonFile: null,
+    states: ['AZ'],
+    termini: ['Mexico border, AZ', 'Utah border, AZ'],
+  },
+  {
+    id: 'continental-divide-trail',
+    name: 'Continental Divide Trail',
+    color: '#4a7c59',
+    totalMiles: 3100,
+    states: ['NM','CO','WY','ID','MT'],
+    termini: ['Mexico border, NM', 'Canada border, MT'],
+  },
+  {
+    id: 'florida-trail',
+    name: 'Florida Trail',
+    color: '#4a7c59',
+    totalMiles: 1500,
+    geojsonFile: 'trails.geojson',
+    states: ['FL'],
+    termini: ['Big Cypress NP, FL', 'Gulf Islands NS, FL'],
+  },
+  {
+    id: 'ice-age-trail',
+    name: 'Ice Age Trail',
+    color: '#4a7c59',
+    totalMiles: 1200,
+    states: ['WI'],
+    termini: ['Potawatomi SP, WI', 'Interstate SP, WI'],
+  },
+  {
+    id: 'natchez-trace-trail',
+    name: 'Natchez Trace Trail',
+    color: '#4a7c59',
+    totalMiles: 444,
+    states: ['MS','AL','TN'],
+    termini: ['Natchez, MS', 'Nashville, TN'],
+  },
+  {
+    id: 'new-england-trail',
+    name: 'New England Trail',
+    color: '#4a7c59',
+    totalMiles: 215,
+    states: ['CT','MA'],
+    termini: ['Long Island Sound, CT', 'NH border, MA'],
+  },
+  {
+    id: 'north-country-trail',
+    name: 'North Country Trail',
+    color: '#4a7c59',
+    totalMiles: 4800,
+    states: ['NY','PA','OH','MI','WI','MN','ND'],
+    termini: ['Crown Point, NY', 'Lake Sakakawea, ND'],
+  },
+  {
+    id: 'pacific-crest-trail',
+    name: 'Pacific Crest Trail',
+    color: '#4a7c59',
+    totalMiles: 2650,
+    states: ['CA','OR','WA'],
+    termini: ['Mexico border, CA', 'Canada border, WA'],
+  },
+  {
+    id: 'pacific-northwest-trail',
+    name: 'Pacific Northwest Trail',
+    color: '#4a7c59',
+    totalMiles: 1200,
+    states: ['MT','ID','WA'],
+    termini: ['Glacier NP, MT', 'Olympic NP, WA'],
+  },
+  {
+    id: 'potomac-heritage-trail',
+    name: 'Potomac Heritage Trail',
+    color: '#4a7c59',
+    totalMiles: 830,
+    states: ['VA','DC','MD','PA'],
+    termini: ['Mt. Vernon, VA', 'Allegheny Highlands, PA'],
+  },
 ];

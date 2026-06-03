@@ -21,6 +21,13 @@ function segmentMiles(seg) {
   return haversine(seg.start_lat, seg.start_lng, seg.end_lat, seg.end_lng);
 }
 
+function formatDate(dateStr) {
+  // dateStr is 'YYYY-MM-DD'
+  const [y, m, d] = dateStr.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m, 10) - 1]} ${parseInt(d, 10)}, ${y}`;
+}
+
 function renderDashboard() {
   const grid = document.getElementById('trail-grid');
   grid.innerHTML = TRAILS.map(trail => {
@@ -46,6 +53,45 @@ function renderDashboard() {
   });
 }
 
+function renderTrailInfo(trail, segments) {
+  // Trail facts
+  const statesText = trail.states.length === 1
+    ? trail.states[0]
+    : `${trail.states.length} (${trail.states.join(' \xB7 ')})`;
+
+  document.getElementById('info-total-miles').textContent = trail.totalMiles.toLocaleString() + ' mi';
+  document.getElementById('info-states').textContent = statesText;
+  document.getElementById('info-start').textContent = trail.termini[0];
+  document.getElementById('info-end').textContent = trail.termini[1];
+
+  // Progress facts
+  const miles = segments.reduce((sum, s) => sum + segmentMiles(s), 0);
+  const pct = Math.min(100, (miles / trail.totalMiles) * 100);
+
+  document.getElementById('info-hiked').textContent =
+    miles > 0 ? `${miles.toFixed(1)} mi` : '—';
+  document.getElementById('info-pct').textContent =
+    pct > 0 ? (pct < 0.1 ? '<0.1%' : `${pct.toFixed(1)}%`) : '—';
+  document.getElementById('info-sessions').textContent =
+    segments.length > 0 ? segments.length : '—';
+
+  const dates = [...new Set(
+    segments.filter(s => s.hiked_date).map(s => s.hiked_date)
+  )].sort();
+  document.getElementById('info-days').textContent =
+    dates.length > 0 ? dates.length : '—';
+  document.getElementById('info-first').textContent =
+    dates.length > 0 ? formatDate(dates[0]) : '—';
+  document.getElementById('info-last').textContent =
+    dates.length > 1 ? formatDate(dates[dates.length - 1]) : '—';
+
+  const temps = segments.filter(s => s.temp_f != null).map(s => s.temp_f);
+  document.getElementById('info-avg-temp').textContent =
+    temps.length > 0
+      ? `${Math.round(temps.reduce((a, b) => a + b, 0) / temps.length)}°F`
+      : '—';
+}
+
 function initTrailSelector() {
   const list = document.getElementById('trail-selector-list');
   list.innerHTML = TRAILS.map(t =>
@@ -69,7 +115,6 @@ function initTrailSelector() {
     showDashboard();
   });
 
-  // Close dropdown when clicking outside it
   document.addEventListener('click', () => closeTrailSelector());
 }
 
@@ -86,6 +131,7 @@ async function showTrail(trailId) {
   document.getElementById('map-trail-name').textContent = trail.name;
 
   const segments = _allSegments.filter(s => s.trail_id === trailId);
+  renderTrailInfo(trail, segments);
   await loadTrail(trail, segments);
   requestAnimationFrame(() => { if (_map) _map.invalidateSize(); });
 }

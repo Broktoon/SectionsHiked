@@ -586,6 +586,61 @@ th {
 }
 .trail-selector-home { color: var(--muted); }
 
+/* ===================================================================
+   Trail info panel — summary stats between the trail selector and the map
+=================================================================== */
+.trail-info-panel {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.trail-info-grid {
+  display: flex;
+  gap: 0;
+  padding: 14px 0;
+  align-items: flex-start;
+}
+.trail-info-section {
+  flex: 1;
+  min-width: 0;
+}
+.trail-info-section:first-child  { padding-right: 24px; }
+.trail-info-section:last-child   { padding-left: 24px; }
+.trail-info-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.trail-info-heading {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.trail-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 2px 0;
+  line-height: 1.45;
+}
+.trail-stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.trail-stat-value {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+  min-width: 0;
+  word-break: break-word;
+}
+
 /* Map outer — gives the map container margins aligned with the header logo */
 .map-outer {
   flex: 1;
@@ -683,6 +738,12 @@ th {
 @media (max-width: 720px) {
   #map { height: clamp(220px, 32vh, 320px); }
   .trail-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Stack trail info columns vertically on tablet and below */
+  .trail-info-grid { flex-direction: column; gap: 0; padding: 12px 0; }
+  .trail-info-section:first-child { padding-right: 0; padding-bottom: 12px; }
+  .trail-info-section:last-child  { padding-left: 0; padding-top: 12px; }
+  .trail-info-divider { width: 100%; height: 1px; align-self: auto; }
 }
 
 @media (max-width: 480px) {
