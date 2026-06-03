@@ -46,6 +46,37 @@ function renderDashboard() {
   });
 }
 
+function initTrailSelector() {
+  const list = document.getElementById('trail-selector-list');
+  list.innerHTML = TRAILS.map(t =>
+    `<button class="trail-selector-item" data-trail-id="${t.id}" type="button">${t.name}</button>`
+  ).join('');
+
+  list.querySelectorAll('.trail-selector-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      closeTrailSelector();
+      showTrail(btn.dataset.trailId);
+    });
+  });
+
+  document.getElementById('trail-selector-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    document.getElementById('trail-selector-menu').classList.toggle('hidden');
+  });
+
+  document.getElementById('trail-selector-dashboard').addEventListener('click', () => {
+    closeTrailSelector();
+    showDashboard();
+  });
+
+  // Close dropdown when clicking outside it
+  document.addEventListener('click', () => closeTrailSelector());
+}
+
+function closeTrailSelector() {
+  document.getElementById('trail-selector-menu').classList.add('hidden');
+}
+
 async function showTrail(trailId) {
   const trail = TRAILS.find(t => t.id === trailId);
   if (!trail) return;
@@ -56,7 +87,6 @@ async function showTrail(trailId) {
 
   const segments = _allSegments.filter(s => s.trail_id === trailId);
   await loadTrail(trail, segments);
-  // Invalidate after paint so Leaflet measures the correct container size
   requestAnimationFrame(() => { if (_map) _map.invalidateSize(); });
 }
 
@@ -74,4 +104,5 @@ async function initApp(user) {
     _allSegments = [];
   }
   renderDashboard();
+  initTrailSelector();
 }

@@ -29,9 +29,10 @@ async function loadTrail(trail, segments) {
       if (resp.ok) {
         const geojson = await resp.json();
         _trailLayer = L.geoJSON(geojson, {
-          style: { color: trail.color, weight: 3, opacity: 0.5 },
+          style: { color: '#e06060', weight: 3, opacity: 0.75 },
         }).addTo(_map);
         _map.fitBounds(_trailLayer.getBounds(), { padding: [20, 20] });
+        _map.setZoom(_map.getZoom() + 0.5);
       }
     } catch (e) {
       console.warn('Trail GeoJSON load failed:', trail.id, e);

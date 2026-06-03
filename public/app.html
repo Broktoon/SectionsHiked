@@ -37,14 +37,33 @@
 
     <!-- Map view — hidden until a trail card is clicked -->
     <div id="map-view" class="hidden">
+
       <div class="map-view-header">
         <div class="container">
-          <button id="back-btn" class="btn btn-outline btn-sm" type="button">&#8592; All Trails</button>
-          <h2 id="map-trail-name" class="map-trail-name"></h2>
+          <!-- Trail selector: switches trails or returns to dashboard / home -->
+          <div class="trail-selector" id="trail-selector">
+            <button class="trail-selector-btn" id="trail-selector-btn" type="button">
+              <span id="map-trail-name">Select Trail</span>
+              <span class="trail-selector-arrow">&#9662;</span>
+            </button>
+            <div class="trail-selector-menu hidden" id="trail-selector-menu">
+              <div id="trail-selector-list"></div>
+              <div class="trail-selector-sep"></div>
+              <button class="trail-selector-item" id="trail-selector-dashboard" type="button">Dashboard</button>
+              <a class="trail-selector-item trail-selector-home" href="/index.html">&#8592; Home</a>
+            </div>
+          </div>
         </div>
       </div>
-      <div id="map"></div>
-    </div>
+
+      <!-- Map is wrapped in a container so it aligns with the header logo -->
+      <div class="map-outer">
+        <div class="container map-container">
+          <div id="map"></div>
+        </div>
+      </div>
+
+    </div><!-- #map-view -->
 
   </div><!-- #app-shell -->
 
@@ -74,7 +93,6 @@
     }());
 
     document.getElementById('signout-btn').addEventListener('click', signOut);
-    document.getElementById('back-btn').addEventListener('click', showDashboard);
   </script>
 
 </body>
