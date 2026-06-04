@@ -40,11 +40,16 @@ function renderDashboard() {
       : `0 of ${trail.totalMiles.toLocaleString()} mi`;
     return `
       <button class="trail-card" data-trail-id="${trail.id}" type="button">
-        <div class="trail-card-name">${trail.name}</div>
-        <div class="trail-progress-bar">
-          <div class="trail-progress-fill" style="width:${pct}%"></div>
+        <div class="trail-card-img">
+          <img src="/images/${trail.image}" alt="${trail.name} logo" loading="lazy">
         </div>
-        <div class="trail-stats">${statsText}</div>
+        <div class="trail-card-body">
+          <div class="trail-card-name">${trail.name}</div>
+          <div class="trail-progress-bar">
+            <div class="trail-progress-fill" style="width:${pct}%"></div>
+          </div>
+          <div class="trail-stats">${statsText}</div>
+        </div>
       </button>`;
   }).join('');
 
