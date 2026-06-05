@@ -3,7 +3,7 @@
 
 async function getAllSegments(userId) {
   const { data, error } = await sb.from('hike_segments')
-    .select('id, trail_id, start_lat, start_lng, end_lat, end_lng, start_mile, end_mile, hiked_date')
+    .select('id, trail_id, start_lat, start_lng, end_lat, end_lng, start_mile, end_mile, date_begun')
     .eq('user_id', userId);
   if (error) throw error;
   return data ?? [];

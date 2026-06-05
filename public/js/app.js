@@ -7,6 +7,7 @@ let _currentTrail = null;
 let _pendingStart = null;
 let _pendingEnd = null;
 let _drawerOpen = false;
+let _floraEntries = [];
 
 function haversine(lat1, lng1, lat2, lng2) {
   const R = 3958.8; // miles
@@ -85,7 +86,7 @@ function renderTrailInfo(trail, segments) {
     segments.length > 0 ? segments.length : '—';
 
   const dates = [...new Set(
-    segments.filter(s => s.hiked_date).map(s => s.hiked_date)
+    segments.filter(s => s.date_begun).map(s => s.date_begun)
   )].sort();
   document.getElementById('info-days').textContent =
     dates.length > 0 ? dates.length : '—';
@@ -152,10 +153,36 @@ function showDashboard() {
   document.getElementById('dashboard-view').classList.remove('hidden');
 }
 
+function _renderFloraChips() {
+  const list = document.getElementById('flora-tag-list');
+  list.innerHTML = _floraEntries.map((entry, i) => `
+    <span class="tag-chip">
+      ${entry}
+      <button type="button" class="tag-remove-btn" data-idx="${i}" aria-label="Remove">&#10005;</button>
+    </span>`).join('');
+  list.querySelectorAll('.tag-remove-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      _floraEntries.splice(parseInt(btn.dataset.idx, 10), 1);
+      _renderFloraChips();
+    });
+  });
+}
+
+function _addFloraEntry() {
+  const input = document.getElementById('drawer-flora-input');
+  const val = input.value.trim();
+  if (!val) return;
+  _floraEntries.push(val);
+  input.value = '';
+  _renderFloraChips();
+  input.focus();
+}
+
 function openSegmentDrawer(start, end) {
   _pendingStart = start;
   _pendingEnd = end;
   _drawerOpen = true;
+  _floraEntries = [];
 
   const miles = haversine(start.lat, start.lng, end.lat, end.lng);
   let summary;
@@ -169,11 +196,14 @@ function openSegmentDrawer(start, end) {
   document.getElementById('drawer-segment-summary').textContent = summary;
 
   const today = new Date().toISOString().slice(0, 10);
-  document.getElementById('drawer-date').value = today;
+  document.getElementById('drawer-date-begun').value = today;
+  document.getElementById('drawer-date-completed').value = '';
+  document.getElementById('drawer-duration-val').value = '';
+  document.getElementById('drawer-duration-unit').value = 'hours';
   document.getElementById('drawer-notes').value = '';
-  document.getElementById('drawer-temp').value = '';
-  document.getElementById('drawer-flora').value = '';
+  document.getElementById('drawer-flora-input').value = '';
   document.getElementById('drawer-error').classList.add('hidden');
+  _renderFloraChips();
 
   const saveBtn = document.getElementById('drawer-save-btn');
   saveBtn.disabled = false;
@@ -198,15 +228,21 @@ function cancelSegment() {
 }
 
 async function saveSegment() {
-  const dateVal = document.getElementById('drawer-date').value;
-  if (!dateVal) {
+  const dateBegun = document.getElementById('drawer-date-begun').value;
+  if (!dateBegun) {
     const errEl = document.getElementById('drawer-error');
-    errEl.textContent = 'Please enter a date.';
+    errEl.textContent = 'Please enter a start date.';
     errEl.classList.remove('hidden');
     return;
   }
 
-  const tempRaw = document.getElementById('drawer-temp').value;
+  const durationVal = document.getElementById('drawer-duration-val').value;
+  const durationUnit = document.getElementById('drawer-duration-unit').value;
+  const unitMultiplier = { minutes: 1, hours: 60, days: 1440 };
+  const durationMinutes = durationVal
+    ? Math.round(parseFloat(durationVal) * unitMultiplier[durationUnit])
+    : null;
+
   const seg = {
     user_id: _currentUser.id,
     trail_id: _currentTrail.id,
@@ -216,10 +252,11 @@ async function saveSegment() {
     end_lng: _pendingEnd.lng,
     start_mile: _pendingStart.mile,
     end_mile: _pendingEnd.mile,
-    hiked_date: dateVal,
-    temp_f: tempRaw ? parseInt(tempRaw, 10) : null,
+    date_begun: dateBegun,
+    date_completed: document.getElementById('drawer-date-completed').value || null,
+    duration_minutes: durationMinutes,
     notes: document.getElementById('drawer-notes').value.trim() || null,
-    flora_fauna: document.getElementById('drawer-flora').value.trim() || null,
+    flora_fauna: _floraEntries.length > 0 ? JSON.stringify(_floraEntries) : null,
   };
 
   const saveBtn = document.getElementById('drawer-save-btn');
@@ -258,6 +295,11 @@ function initSegmentTracking() {
   document.getElementById('drawer-form').addEventListener('submit', e => {
     e.preventDefault();
     saveSegment();
+  });
+
+  document.getElementById('flora-add-btn').addEventListener('click', _addFloraEntry);
+  document.getElementById('drawer-flora-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); _addFloraEntry(); }
   });
 
   document.addEventListener('keydown', e => {

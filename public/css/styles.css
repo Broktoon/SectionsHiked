@@ -950,6 +950,114 @@ th {
   gap: 12px;
 }
 
+/* Duration: number input + unit select side by side */
+.duration-input-row {
+  display: flex;
+  gap: 8px;
+}
+.duration-input-row input { flex: 1; min-width: 0; }
+.duration-input-row select {
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  color: var(--color-text);
+  cursor: pointer;
+  min-height: 44px;
+  flex-shrink: 0;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.duration-input-row select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, .15);
+}
+
+/* Flora / fauna tag input */
+.tag-input-wrap {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  padding: 8px 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.tag-input-wrap:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, .15);
+}
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag-list:not(:empty) { margin-bottom: 8px; }
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px 3px 10px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.tag-remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  color: var(--color-primary);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.1s, background 0.1s;
+  flex-shrink: 0;
+}
+.tag-remove-btn:hover { opacity: 1; background: rgba(74, 124, 89, .15); }
+.tag-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.tag-input-row input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: var(--font);
+  background: transparent;
+  color: var(--color-text);
+  min-width: 0;
+  min-height: 32px;
+  padding: 2px 4px;
+}
+.tag-input-row input::placeholder { color: #9ca3af; }
+.tag-add-btn {
+  padding: 4px 12px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius);
+  cursor: pointer;
+  min-height: 32px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.1s;
+}
+.tag-add-btn:hover { background: var(--color-primary-light); }
+
 .drawer-actions {
   display: flex;
   gap: 10px;
