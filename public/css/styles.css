@@ -773,3 +773,191 @@ th {
   .hero { padding: 48px 20px 40px; }
   .trail-grid { grid-template-columns: 1fr; }
 }
+
+/* ===================================================================
+   Select mode — status bar overlaid at top of map, FAB at bottom-right
+=================================================================== */
+.map-container { position: relative; }
+
+.select-status-bar {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px 8px 18px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-md);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.select-cancel-btn {
+  padding: 4px 12px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  min-height: 28px;
+  transition: color 0.1s, background 0.1s;
+}
+.select-cancel-btn:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.track-segment-fab {
+  position: absolute;
+  bottom: 28px;
+  right: 36px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 18px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-white);
+  background: var(--color-primary);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: background 0.12s, box-shadow 0.12s, transform 0.1s;
+}
+.track-segment-fab:hover {
+  background: var(--color-primary-dark);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+.track-segment-fab:active { transform: scale(0.96); }
+
+/* ===================================================================
+   Segment drawer — slides up from bottom after both points selected
+=================================================================== */
+.segment-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--color-white);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 28px rgba(0, 0, 0, 0.14);
+  padding: 12px 20px 36px;
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  max-height: 82vh;
+  overflow-y: auto;
+}
+.segment-drawer.open { transform: translateY(0); }
+
+@media (min-width: 640px) {
+  .segment-drawer {
+    left: 50%;
+    right: auto;
+    width: 520px;
+    transform: translate(-50%, 100%);
+  }
+  .segment-drawer.open { transform: translate(-50%, 0); }
+}
+
+.drawer-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.drawer-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+.drawer-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  color: var(--muted);
+  background: var(--color-bg);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.1s, background 0.1s;
+}
+.drawer-close-btn:hover {
+  color: var(--color-text);
+  background: var(--border);
+}
+
+.drawer-summary {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+
+.required-star { color: var(--color-error); }
+
+.form-group textarea {
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  color: var(--color-text);
+  width: 100%;
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, .15);
+}
+.form-group textarea::placeholder { color: #9ca3af; }
+
+.drawer-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.drawer-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+.drawer-actions .btn { flex: 1; }
+
+@media (max-width: 480px) {
+  .track-segment-fab { bottom: 20px; right: 20px; font-size: 13px; }
+  .drawer-row { grid-template-columns: 1fr; }
+}

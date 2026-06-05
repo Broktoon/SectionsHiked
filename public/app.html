@@ -118,7 +118,14 @@
       <!-- Map, constrained to container width to align with the header logo -->
       <div class="map-outer">
         <div class="container map-container">
+          <div class="select-status-bar hidden" id="select-status-bar">
+            <span id="select-status-text"></span>
+            <button class="select-cancel-btn" id="select-cancel-btn" type="button">Cancel</button>
+          </div>
           <div id="map"></div>
+          <button class="track-segment-fab" id="track-segment-btn" type="button">
+            + Track a Segment
+          </button>
         </div>
       </div>
 
@@ -153,6 +160,41 @@
 
     document.getElementById('signout-btn').addEventListener('click', signOut);
   </script>
+
+  <!-- Segment drawer — slides up after both map points are selected -->
+  <div class="segment-drawer hidden" id="segment-drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <div class="drawer-title">Track a Segment</div>
+      <button class="drawer-close-btn" id="drawer-close-btn" type="button" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="drawer-summary" id="drawer-segment-summary"></div>
+    <div class="form-error hidden" id="drawer-error"></div>
+    <form id="drawer-form" novalidate>
+      <div class="form-group">
+        <label for="drawer-date">Date hiked <span class="required-star">*</span></label>
+        <input type="date" id="drawer-date" required>
+      </div>
+      <div class="form-group">
+        <label for="drawer-notes">Notes</label>
+        <textarea id="drawer-notes" rows="3" placeholder="Trail conditions, highlights, gear…"></textarea>
+      </div>
+      <div class="drawer-row">
+        <div class="form-group">
+          <label for="drawer-temp">Temp (°F)</label>
+          <input type="number" id="drawer-temp" min="-40" max="130" placeholder="72">
+        </div>
+        <div class="form-group">
+          <label for="drawer-flora">Flora / fauna</label>
+          <input type="text" id="drawer-flora" placeholder="Wildflowers, deer…">
+        </div>
+      </div>
+      <div class="drawer-actions">
+        <button type="button" class="btn btn-outline" id="drawer-cancel-btn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="drawer-save-btn">Save</button>
+      </div>
+    </form>
+  </div>
 
 </body>
 </html>

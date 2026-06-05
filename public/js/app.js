@@ -3,6 +3,10 @@
 
 let _currentUser = null;
 let _allSegments = [];
+let _currentTrail = null;
+let _pendingStart = null;
+let _pendingEnd = null;
+let _drawerOpen = false;
 
 function haversine(lat1, lng1, lat2, lng2) {
   const R = 3958.8; // miles
@@ -126,6 +130,10 @@ async function showTrail(trailId) {
   const trail = TRAILS.find(t => t.id === trailId);
   if (!trail) return;
 
+  exitSelectMode();
+  closeSegmentDrawer();
+  _currentTrail = trail;
+
   document.getElementById('dashboard-view').classList.add('hidden');
   document.getElementById('map-view').classList.remove('hidden');
   document.getElementById('map-trail-name').textContent = trail.name;
@@ -137,8 +145,124 @@ async function showTrail(trailId) {
 }
 
 function showDashboard() {
+  exitSelectMode();
+  closeSegmentDrawer();
+  _currentTrail = null;
   document.getElementById('map-view').classList.add('hidden');
   document.getElementById('dashboard-view').classList.remove('hidden');
+}
+
+function openSegmentDrawer(start, end) {
+  _pendingStart = start;
+  _pendingEnd = end;
+  _drawerOpen = true;
+
+  const miles = haversine(start.lat, start.lng, end.lat, end.lng);
+  let summary;
+  if (start.mile != null && end.mile != null) {
+    const lo = Math.min(start.mile, end.mile).toFixed(1);
+    const hi = Math.max(start.mile, end.mile).toFixed(1);
+    summary = `~${miles.toFixed(1)} mi · Mile ${lo} → ${hi}`;
+  } else {
+    summary = `~${miles.toFixed(1)} mi`;
+  }
+  document.getElementById('drawer-segment-summary').textContent = summary;
+
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById('drawer-date').value = today;
+  document.getElementById('drawer-notes').value = '';
+  document.getElementById('drawer-temp').value = '';
+  document.getElementById('drawer-flora').value = '';
+  document.getElementById('drawer-error').classList.add('hidden');
+
+  const saveBtn = document.getElementById('drawer-save-btn');
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Save';
+
+  const drawer = document.getElementById('segment-drawer');
+  drawer.classList.remove('hidden');
+  requestAnimationFrame(() => requestAnimationFrame(() => drawer.classList.add('open')));
+}
+
+function closeSegmentDrawer() {
+  if (!_drawerOpen) return;
+  _drawerOpen = false;
+  const drawer = document.getElementById('segment-drawer');
+  drawer.classList.remove('open');
+  drawer.addEventListener('transitionend', () => drawer.classList.add('hidden'), { once: true });
+}
+
+function cancelSegment() {
+  exitSelectMode();
+  closeSegmentDrawer();
+}
+
+async function saveSegment() {
+  const dateVal = document.getElementById('drawer-date').value;
+  if (!dateVal) {
+    const errEl = document.getElementById('drawer-error');
+    errEl.textContent = 'Please enter a date.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const tempRaw = document.getElementById('drawer-temp').value;
+  const seg = {
+    user_id: _currentUser.id,
+    trail_id: _currentTrail.id,
+    start_lat: _pendingStart.lat,
+    start_lng: _pendingStart.lng,
+    end_lat: _pendingEnd.lat,
+    end_lng: _pendingEnd.lng,
+    start_mile: _pendingStart.mile,
+    end_mile: _pendingEnd.mile,
+    hiked_date: dateVal,
+    temp_f: tempRaw ? parseInt(tempRaw, 10) : null,
+    notes: document.getElementById('drawer-notes').value.trim() || null,
+    flora_fauna: document.getElementById('drawer-flora').value.trim() || null,
+  };
+
+  const saveBtn = document.getElementById('drawer-save-btn');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving…';
+
+  try {
+    const saved = await addSegment(seg);
+    _allSegments.push(saved);
+    addSegmentToMap(saved);
+    renderTrailInfo(_currentTrail, _allSegments.filter(s => s.trail_id === _currentTrail.id));
+    exitSelectMode();
+    closeSegmentDrawer();
+  } catch (e) {
+    const errEl = document.getElementById('drawer-error');
+    errEl.textContent = 'Save failed. Please try again.';
+    errEl.classList.remove('hidden');
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save';
+  }
+}
+
+function initSegmentTracking() {
+  onSegmentChosen = function(start, end) {
+    openSegmentDrawer(start, end);
+  };
+
+  document.getElementById('track-segment-btn').addEventListener('click', () => {
+    if (_currentTrail) enterSelectMode(_currentTrail);
+  });
+
+  document.getElementById('select-cancel-btn').addEventListener('click', cancelSegment);
+  document.getElementById('drawer-cancel-btn').addEventListener('click', cancelSegment);
+  document.getElementById('drawer-close-btn').addEventListener('click', cancelSegment);
+
+  document.getElementById('drawer-form').addEventListener('submit', e => {
+    e.preventDefault();
+    saveSegment();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cancelSegment();
+  });
 }
 
 async function initApp(user) {
@@ -151,4 +275,5 @@ async function initApp(user) {
   }
   renderDashboard();
   initTrailSelector();
+  initSegmentTracking();
 }
