@@ -171,22 +171,39 @@
     <div class="drawer-summary" id="drawer-segment-summary"></div>
     <div class="form-error hidden" id="drawer-error"></div>
     <form id="drawer-form" novalidate>
+      <div class="drawer-row">
+        <div class="form-group">
+          <label for="drawer-date-begun">Date begun <span class="required-star">*</span></label>
+          <input type="date" id="drawer-date-begun" required>
+        </div>
+        <div class="form-group">
+          <label for="drawer-date-completed">Date completed</label>
+          <input type="date" id="drawer-date-completed">
+        </div>
+      </div>
       <div class="form-group">
-        <label for="drawer-date">Date hiked <span class="required-star">*</span></label>
-        <input type="date" id="drawer-date" required>
+        <label>Duration</label>
+        <div class="duration-input-row">
+          <input type="number" id="drawer-duration-val" min="1" max="9999" placeholder="e.g. 3">
+          <select id="drawer-duration-unit">
+            <option value="minutes">Minutes</option>
+            <option value="hours" selected>Hours</option>
+            <option value="days">Days</option>
+          </select>
+        </div>
       </div>
       <div class="form-group">
         <label for="drawer-notes">Notes</label>
         <textarea id="drawer-notes" rows="3" placeholder="Trail conditions, highlights, gear…"></textarea>
       </div>
-      <div class="drawer-row">
-        <div class="form-group">
-          <label for="drawer-temp">Temp (°F)</label>
-          <input type="number" id="drawer-temp" min="-40" max="130" placeholder="72">
-        </div>
-        <div class="form-group">
-          <label for="drawer-flora">Flora / fauna</label>
-          <input type="text" id="drawer-flora" placeholder="Wildflowers, deer…">
+      <div class="form-group">
+        <label>Flora / fauna</label>
+        <div class="tag-input-wrap" id="flora-wrap">
+          <div class="tag-list" id="flora-tag-list"></div>
+          <div class="tag-input-row">
+            <input type="text" id="drawer-flora-input" placeholder="Add an entry…" autocomplete="off">
+            <button type="button" class="tag-add-btn" id="flora-add-btn">Add</button>
+          </div>
         </div>
       </div>
       <div class="drawer-actions">
