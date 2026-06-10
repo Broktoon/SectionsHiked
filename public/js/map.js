@@ -15,7 +15,7 @@ let _endMarker = null;
 let _previewLine = null;
 let _selectActive = false;
 
-// Set by app.js; called with (startSnap, endSnap) once both points are chosen.
+// Set by app.js; called with (startSnap, endSnap, states) once both points are chosen.
 let onSegmentChosen = null;
 
 function initMap() {
@@ -27,12 +27,43 @@ function initMap() {
   }).addTo(_map);
 }
 
+async function _loadPoints(trail) {
+  if (_pointsTrailId === trail.id) return; // already cached
+  _points = null;
+  _pointsTrailId = null;
+  try {
+    const resp = await fetch(`/trails/${trail.id}/data/points.json`);
+    if (resp.ok) {
+      _points = await resp.json();
+      _pointsTrailId = trail.id;
+    }
+  } catch (e) {
+    console.warn('points.json load failed:', trail.id, e);
+  }
+}
+
+// Return [lat, lon] pairs for all points between startMile and endMile.
+// Points are in NOBO order (low → high mile), which is correct for display.
+function _getTrailPath(startMile, endMile) {
+  if (!_points || startMile == null || endMile == null) return null;
+  const lo = Math.min(startMile, endMile);
+  const hi = Math.max(startMile, endMile);
+  const coords = [];
+  for (const p of _points) {
+    if (p.mile >= lo - 0.05 && p.mile <= hi + 0.05) coords.push([p.lat, p.lon]);
+  }
+  return coords.length >= 2 ? coords : null;
+}
+
 async function loadTrail(trail, segments) {
   initMap();
 
   if (_trailLayer) { _map.removeLayer(_trailLayer); _trailLayer = null; }
   _segmentLayers.forEach(l => _map.removeLayer(l));
   _segmentLayers = [];
+
+  // Load points.json now so segment lines follow the trail path.
+  await _loadPoints(trail);
 
   // trail.geojsonFile === null means no file exists for this trail
   if (trail.geojsonFile !== null) {
@@ -42,7 +73,7 @@ async function loadTrail(trail, segments) {
       if (resp.ok) {
         const geojson = await resp.json();
         _trailLayer = L.geoJSON(geojson, {
-          style: { color: '#4a7c59', weight: 3, opacity: 0.75 },
+          style: { color: '#e06060', weight: 3, opacity: 0.75 },
         }).addTo(_map);
         _map.fitBounds(_trailLayer.getBounds(), { padding: [20, 20] });
         _map.setZoom(_map.getZoom() + 0.5);
@@ -62,10 +93,10 @@ async function loadTrail(trail, segments) {
 }
 
 function _addSegmentLine(seg) {
-  const line = L.polyline(
-    [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]],
-    { color: '#2ecc71', weight: 5, opacity: 0.85 },
-  ).addTo(_map);
+  const path = _getTrailPath(seg.start_mile, seg.end_mile)
+    ?? [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
+
+  const line = L.polyline(path, { color: '#2ecc71', weight: 5, opacity: 0.85 }).addTo(_map);
 
   const parts = [];
   if (seg.start_mile != null && seg.end_mile != null) {
@@ -103,20 +134,7 @@ async function enterSelectMode(trail) {
     if (_map.tap) _map.tap.disable();
   }
 
-  // Load points.json lazily; cache per trail
-  if (_pointsTrailId !== trail.id) {
-    _points = null;
-    _pointsTrailId = null;
-    try {
-      const resp = await fetch(`/trails/${trail.id}/data/points.json`);
-      if (resp.ok) {
-        _points = await resp.json();
-        _pointsTrailId = trail.id;
-      }
-    } catch (e) {
-      console.warn('points.json load failed:', trail.id, e);
-    }
-  }
+  await _loadPoints(trail); // no-op if already cached from loadTrail
 
   _setStatusText('Tap your start point');
   _map.on('click', _onMapClick);
@@ -174,7 +192,7 @@ function _onMapClick(e) {
   if (!_startSnap) {
     _startSnap = snap;
     _startMarker = L.circleMarker([snap.lat, snap.lng], {
-      radius: 8, fillColor: '#4a7c59', color: '#fff', weight: 2.5, fillOpacity: 1,
+      radius: 8, fillColor: '#e06060', color: '#fff', weight: 2.5, fillOpacity: 1,
     }).addTo(_map);
     _setStatusText('Tap your end point');
   } else {
@@ -182,10 +200,13 @@ function _onMapClick(e) {
     _endMarker = L.circleMarker([snap.lat, snap.lng], {
       radius: 8, fillColor: '#2ecc71', color: '#fff', weight: 2.5, fillOpacity: 1,
     }).addTo(_map);
-    _previewLine = L.polyline(
-      [[_startSnap.lat, _startSnap.lng], [snap.lat, snap.lng]],
-      { color: '#2ecc71', weight: 4, opacity: 0.7, dashArray: '8 6' },
-    ).addTo(_map);
+
+    const previewPath = _getTrailPath(_startSnap.mile, snap.mile)
+      ?? [[_startSnap.lat, _startSnap.lng], [snap.lat, snap.lng]];
+    _previewLine = L.polyline(previewPath, {
+      color: '#2ecc71', weight: 4, opacity: 0.7, dashArray: '8 6',
+    }).addTo(_map);
+
     _setStatusText('Review your segment below');
     _map.off('click', _onMapClick);
 
