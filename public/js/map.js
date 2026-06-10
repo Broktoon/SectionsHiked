@@ -66,6 +66,18 @@ function _addSegmentLine(seg) {
     [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]],
     { color: '#2ecc71', weight: 5, opacity: 0.85 },
   ).addTo(_map);
+
+  const parts = [];
+  if (seg.start_mile != null && seg.end_mile != null) {
+    const lo = Math.min(seg.start_mile, seg.end_mile).toFixed(1);
+    const hi = Math.max(seg.start_mile, seg.end_mile).toFixed(1);
+    const dist = Math.abs(seg.end_mile - seg.start_mile).toFixed(1);
+    parts.push(`<strong>Mile ${lo} → ${hi}</strong> &nbsp;(${dist} mi)`);
+  }
+  if (seg.states) parts.push(seg.states);
+  if (seg.date_begun) parts.push(seg.date_begun);
+  if (parts.length > 0) line.bindPopup(parts.join('<br>'));
+
   _segmentLayers.push(line);
 }
 
@@ -134,14 +146,25 @@ function exitSelectMode() {
 }
 
 function _snapToNearest(lat, lng) {
-  if (!_points || _points.length === 0) return { lat, lng, mile: null };
+  if (!_points || _points.length === 0) return { lat, lng, mile: null, state: null };
   let best = _points[0];
   let bestDist = haversine(lat, lng, best.lat, best.lon);
   for (let i = 1; i < _points.length; i++) {
     const d = haversine(lat, lng, _points[i].lat, _points[i].lon);
     if (d < bestDist) { bestDist = d; best = _points[i]; }
   }
-  return { lat: best.lat, lng: best.lon, mile: best.mile ?? null };
+  return { lat: best.lat, lng: best.lon, mile: best.mile ?? null, state: best.state ?? null };
+}
+
+function _getStatesForSegment(startMile, endMile) {
+  if (!_points || startMile == null || endMile == null) return null;
+  const lo = Math.min(startMile, endMile);
+  const hi = Math.max(startMile, endMile);
+  const seen = new Set();
+  for (const p of _points) {
+    if (p.mile >= lo - 0.05 && p.mile <= hi + 0.05 && p.state) seen.add(p.state);
+  }
+  return seen.size > 0 ? [...seen].join(' · ') : null;
 }
 
 function _onMapClick(e) {
@@ -166,7 +189,10 @@ function _onMapClick(e) {
     _setStatusText('Review your segment below');
     _map.off('click', _onMapClick);
 
-    if (onSegmentChosen) onSegmentChosen(_startSnap, _endSnap);
+    if (onSegmentChosen) {
+      const states = _getStatesForSegment(_startSnap.mile, _endSnap.mile);
+      onSegmentChosen(_startSnap, _endSnap, states);
+    }
   }
 }
 

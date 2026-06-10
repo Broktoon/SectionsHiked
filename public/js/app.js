@@ -6,6 +6,7 @@ let _allSegments = [];
 let _currentTrail = null;
 let _pendingStart = null;
 let _pendingEnd = null;
+let _pendingStates = null;
 let _drawerOpen = false;
 let _floraEntries = [];
 
@@ -178,21 +179,25 @@ function _addFloraEntry() {
   input.focus();
 }
 
-function openSegmentDrawer(start, end) {
+function openSegmentDrawer(start, end, states) {
   _pendingStart = start;
   _pendingEnd = end;
+  _pendingStates = states ?? null;
   _drawerOpen = true;
   _floraEntries = [];
 
-  const miles = haversine(start.lat, start.lng, end.lat, end.lng);
+  const miles = (start.mile != null && end.mile != null)
+    ? Math.abs(end.mile - start.mile)
+    : haversine(start.lat, start.lng, end.lat, end.lng);
   let summary;
   if (start.mile != null && end.mile != null) {
     const lo = Math.min(start.mile, end.mile).toFixed(1);
     const hi = Math.max(start.mile, end.mile).toFixed(1);
-    summary = `~${miles.toFixed(1)} mi · Mile ${lo} → ${hi}`;
+    summary = `${miles.toFixed(1)} mi · Mile ${lo} → ${hi}`;
   } else {
     summary = `~${miles.toFixed(1)} mi`;
   }
+  if (states) summary += ` · ${states}`;
   document.getElementById('drawer-segment-summary').textContent = summary;
 
   const today = new Date().toISOString().slice(0, 10);
@@ -252,6 +257,7 @@ async function saveSegment() {
     end_lng: _pendingEnd.lng,
     start_mile: _pendingStart.mile,
     end_mile: _pendingEnd.mile,
+    states: _pendingStates,
     date_begun: dateBegun,
     date_completed: document.getElementById('drawer-date-completed').value || null,
     duration_minutes: durationMinutes,
@@ -280,8 +286,8 @@ async function saveSegment() {
 }
 
 function initSegmentTracking() {
-  onSegmentChosen = function(start, end) {
-    openSegmentDrawer(start, end);
+  onSegmentChosen = function(start, end, states) {
+    openSegmentDrawer(start, end, states);
   };
 
   document.getElementById('track-segment-btn').addEventListener('click', () => {
