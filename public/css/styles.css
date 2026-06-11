@@ -844,6 +844,18 @@ th {
 }
 .track-segment-fab:active { transform: scale(0.96); }
 
+.popup-delete-btn {
+  margin-top: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  background: transparent;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.popup-delete-btn:hover { background: #fdf0ee; }
+
 /* ===================================================================
    Segment drawer — slides up from bottom after both points selected
 =================================================================== */

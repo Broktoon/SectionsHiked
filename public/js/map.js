@@ -18,6 +18,9 @@ let _selectActive = false;
 // Set by app.js; called with (startSnap, endSnap, states) once both points are chosen.
 let onSegmentChosen = null;
 
+// Set by app.js; called with (segmentId, layer) when user clicks Delete in a segment popup.
+let onSegmentDelete = null;
+
 function initMap() {
   if (_map) return;
   _map = L.map('map').setView([39.5, -98.35], 4);
@@ -117,7 +120,16 @@ function _addSegmentLine(seg) {
   }
   if (seg.states) parts.push(seg.states);
   if (seg.date_begun) parts.push(seg.date_begun);
-  if (parts.length > 0) line.bindPopup(parts.join('<br>'));
+  parts.push(`<button class="popup-delete-btn" data-segid="${seg.id}">Delete segment</button>`);
+  line.bindPopup(parts.join('<br>'));
+
+  line.on('popupopen', () => {
+    const btn = document.querySelector(`.popup-delete-btn[data-segid="${seg.id}"]`);
+    if (btn) btn.addEventListener('click', () => {
+      line.closePopup();
+      if (onSegmentDelete) onSegmentDelete(seg.id, line);
+    }, { once: true });
+  });
 
   _segmentLayers.push(line);
 }
@@ -125,6 +137,13 @@ function _addSegmentLine(seg) {
 // Called from app.js after a segment is saved to add it to the map immediately.
 function addSegmentToMap(seg) {
   _addSegmentLine(seg);
+}
+
+// Called from app.js after a segment is deleted to remove it from the map.
+function removeSegmentLayer(layer) {
+  _map.removeLayer(layer);
+  const idx = _segmentLayers.indexOf(layer);
+  if (idx !== -1) _segmentLayers.splice(idx, 1);
 }
 
 async function enterSelectMode(trail) {

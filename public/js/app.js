@@ -290,6 +290,19 @@ function initSegmentTracking() {
     openSegmentDrawer(start, end, states);
   };
 
+  onSegmentDelete = async function(id, layer) {
+    try {
+      await deleteSegment(id);
+      removeSegmentLayer(layer);
+      _allSegments = _allSegments.filter(s => s.id !== id);
+      if (_currentTrail) {
+        renderTrailInfo(_currentTrail, _allSegments.filter(s => s.trail_id === _currentTrail.id));
+      }
+    } catch (e) {
+      console.error('Delete failed:', e);
+    }
+  };
+
   document.getElementById('track-segment-btn').addEventListener('click', () => {
     if (_currentTrail) enterSelectMode(_currentTrail);
   });
