@@ -109,7 +109,7 @@ function _addSegmentLine(seg) {
   const path = _getTrailPath(startMile, endMile)
     ?? [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
 
-  const line = L.polyline(path, { color: '#2ecc71', weight: 5, opacity: 0.85 }).addTo(_map);
+  const line = L.polyline(path, { color: '#2ecc71', weight: 5, opacity: 0.85, smoothFactor: 0 }).addTo(_map);
 
   const parts = [];
   if (seg.start_mile != null && seg.end_mile != null) {
@@ -233,7 +233,7 @@ function _onMapClick(e) {
     const previewPath = _getTrailPath(_startSnap.mile, snap.mile)
       ?? [[_startSnap.lat, _startSnap.lng], [snap.lat, snap.lng]];
     _previewLine = L.polyline(previewPath, {
-      color: '#2ecc71', weight: 4, opacity: 0.7, dashArray: '8 6',
+      color: '#2ecc71', weight: 4, opacity: 0.7, dashArray: '8 6', smoothFactor: 0,
     }).addTo(_map);
 
     _setStatusText('Review your segment below');
