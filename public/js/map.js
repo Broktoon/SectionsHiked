@@ -93,7 +93,17 @@ async function loadTrail(trail, segments) {
 }
 
 function _addSegmentLine(seg) {
-  const path = _getTrailPath(seg.start_mile, seg.end_mile)
+  let startMile = seg.start_mile;
+  let endMile = seg.end_mile;
+
+  // Segments saved before high-res points.json existed may have null miles.
+  // Recover by snapping stored lat/lng to the nearest point.
+  if (_points && (startMile == null || endMile == null)) {
+    if (startMile == null) startMile = _snapToNearest(seg.start_lat, seg.start_lng).mile;
+    if (endMile == null)   endMile   = _snapToNearest(seg.end_lat,   seg.end_lng).mile;
+  }
+
+  const path = _getTrailPath(startMile, endMile)
     ?? [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
 
   const line = L.polyline(path, { color: '#2ecc71', weight: 5, opacity: 0.85 }).addTo(_map);

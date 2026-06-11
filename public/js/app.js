@@ -272,10 +272,10 @@ async function saveSegment() {
   try {
     const saved = await addSegment(seg);
     _allSegments.push(saved);
-    addSegmentToMap(saved);
-    renderTrailInfo(_currentTrail, _allSegments.filter(s => s.trail_id === _currentTrail.id));
     exitSelectMode();
     closeSegmentDrawer();
+    addSegmentToMap(saved);
+    renderTrailInfo(_currentTrail, _allSegments.filter(s => s.trail_id === _currentTrail.id));
   } catch (e) {
     const errEl = document.getElementById('drawer-error');
     errEl.textContent = 'Save failed. Please try again.';
