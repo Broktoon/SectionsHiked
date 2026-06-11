@@ -186,12 +186,9 @@ async function enterSelectMode(trail) {
   document.getElementById('track-segment-btn').classList.add('hidden');
   _setStatusText('Loading trail data…');
 
+  // Disable double-click zoom only — pan and pinch-zoom stay active so the
+  // user can navigate between selecting the start and end points.
   _map.doubleClickZoom.disable();
-  if (L.Browser.touch) {
-    _map.dragging.disable();
-    _map.touchZoom.disable();
-    if (_map.tap) _map.tap.disable();
-  }
 
   await _loadPoints(trail); // no-op if already cached
 
@@ -205,11 +202,6 @@ function exitSelectMode() {
   _map.off('click', _onMapClick);
 
   _map.doubleClickZoom.enable();
-  if (L.Browser.touch) {
-    _map.dragging.enable();
-    _map.touchZoom.enable();
-    if (_map.tap) _map.tap.enable();
-  }
 
   if (_startMarker) { _map.removeLayer(_startMarker); _startMarker = null; }
   if (_endMarker)   { _map.removeLayer(_endMarker);   _endMarker = null;   }
