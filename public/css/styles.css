@@ -503,7 +503,7 @@ th {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* ===================================================================
@@ -643,24 +643,18 @@ th {
 
 /* Map outer — gives the map container margins aligned with the header logo */
 .map-outer {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  flex-shrink: 0;
   padding: 16px 0;
   background: var(--color-bg);
 }
 .map-container {
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Override the default fixed #map height when inside the map view.
-   flex:1 on the map lets the flex container drive its height instead. */
+/* Map height in the app view — fixed clamp so form and stats can sit below. */
 #map-view #map {
-  flex: 1;
-  height: 0 !important;
+  height: clamp(300px, 45vh, 520px);
   max-width: 100%;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -757,7 +751,7 @@ th {
    Responsive
 =================================================================== */
 @media (max-width: 720px) {
-  #map { height: clamp(220px, 32vh, 320px); }
+  #map-view #map { height: clamp(220px, 35vh, 360px); }
   .trail-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
 
   /* Stack trail info columns vertically on tablet and below */
@@ -1079,5 +1073,173 @@ th {
 
 @media (max-width: 480px) {
   .track-segment-fab { bottom: 20px; right: 20px; font-size: 13px; }
+  .track-mode-toggle { bottom: 20px; right: 20px; }
   .drawer-row { grid-template-columns: 1fr; }
+}
+
+/* ===================================================================
+   Instructions banner — always visible above map and stats
+=================================================================== */
+.track-instructions {
+  background: var(--color-primary-light);
+  border-bottom: 1px solid #c8dfd1;
+  padding: 10px 0;
+  flex-shrink: 0;
+}
+.track-instructions p {
+  margin: 0;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
+}
+.track-instructions strong {
+  color: var(--color-primary-dark);
+}
+
+/* ===================================================================
+   Mode toggle — floats over map like FAB; shown when FAB is clicked
+=================================================================== */
+.track-mode-toggle {
+  position: absolute;
+  bottom: 28px;
+  right: 36px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-white);
+  border-radius: 999px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.28);
+  padding: 5px;
+}
+
+.mode-btn {
+  padding: 8px 20px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 36px;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+}
+.mode-btn:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.mode-cancel-btn {
+  padding: 6px 14px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-radius: 0 999px 999px 0;
+  cursor: pointer;
+  min-height: 36px;
+  white-space: nowrap;
+  transition: color 0.1s;
+}
+.mode-cancel-btn:hover { color: var(--color-text); }
+
+/* ===================================================================
+   Form mode panel — inline below map, above stats
+=================================================================== */
+.form-mode-panel {
+  background: var(--color-white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0 24px;
+  flex-shrink: 0;
+}
+
+.form-mode-heading {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.form-mode-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.form-endpoint-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-endpoint-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text);
+}
+
+.form-endpoint-select {
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: var(--font);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  color: var(--color-text);
+  min-height: 44px;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-endpoint-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, .15);
+}
+
+.form-endpoint-mile-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.form-endpoint-mile {
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  color: var(--color-text);
+  min-height: 44px;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-endpoint-mile:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, .15);
+}
+.form-endpoint-mile::placeholder { color: #9ca3af; }
+
+.form-mode-actions {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .form-mode-row { grid-template-columns: 1fr; gap: 14px; }
+  .form-mode-actions .btn { flex: 1; }
 }

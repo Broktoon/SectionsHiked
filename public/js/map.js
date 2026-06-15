@@ -197,11 +197,11 @@ async function enterSelectMode(trail) {
 }
 
 function exitSelectMode() {
-  if (!_selectActive) return;
+  if (_map) {
+    _map.off('click', _onMapClick);
+    if (_selectActive) _map.doubleClickZoom.enable();
+  }
   _selectActive = false;
-  _map.off('click', _onMapClick);
-
-  _map.doubleClickZoom.enable();
 
   if (_startMarker) { _map.removeLayer(_startMarker); _startMarker = null; }
   if (_endMarker)   { _map.removeLayer(_endMarker);   _endMarker = null;   }
@@ -209,6 +209,7 @@ function exitSelectMode() {
 
   document.getElementById('select-status-bar').classList.add('hidden');
   document.getElementById('track-segment-btn').classList.remove('hidden');
+  document.getElementById('track-mode-toggle').classList.add('hidden');
 
   _startSnap = null;
   _endSnap = null;
@@ -272,4 +273,58 @@ function _onMapClick(e) {
 
 function _setStatusText(text) {
   document.getElementById('select-status-text').textContent = text;
+}
+
+// Expose loaded points so app.js can build state dropdowns for form mode.
+function getLoadedPoints() {
+  return _points;
+}
+
+// Find the nearest point by mile value, optionally filtered to one state.
+// Used by form mode to snap typed miles to real trail coordinates.
+function snapByMile(targetMile, state) {
+  if (!_points || _points.length === 0) return null;
+  const candidates = state ? _points.filter(p => p.state === state) : _points;
+  if (candidates.length === 0) return null;
+  let best = candidates[0];
+  let bestDist = Math.abs((best.mile ?? 0) - targetMile);
+  for (const p of candidates) {
+    const d = Math.abs((p.mile ?? 0) - targetMile);
+    if (d < bestDist) { bestDist = d; best = p; }
+  }
+  return { lat: best.lat, lng: best.lon, mile: best.mile ?? null, state: best.state ?? null };
+}
+
+// Draw a preview segment from form-mode inputs, then fire onSegmentChosen.
+// Mirrors the end of _onMapClick but without requiring select mode to be active.
+function enterFormPreview(startSnap, endSnap) {
+  if (_startMarker) { _map.removeLayer(_startMarker); _startMarker = null; }
+  if (_endMarker)   { _map.removeLayer(_endMarker);   _endMarker = null;   }
+  if (_previewLine) { _map.removeLayer(_previewLine); _previewLine = null; }
+
+  _startMarker = L.circleMarker([startSnap.lat, startSnap.lng], {
+    radius: 8, fillColor: '#e06060', color: '#fff', weight: 2.5, fillOpacity: 1,
+  }).addTo(_map);
+  _endMarker = L.circleMarker([endSnap.lat, endSnap.lng], {
+    radius: 8, fillColor: '#2ecc71', color: '#fff', weight: 2.5, fillOpacity: 1,
+  }).addTo(_map);
+
+  const path = _sliceTrailCoords(
+    startSnap.lat, startSnap.lng, startSnap.mile,
+    endSnap.lat,   endSnap.lng,   endSnap.mile
+  ) ?? [[startSnap.lat, startSnap.lng], [endSnap.lat, endSnap.lng]];
+
+  _previewLine = L.polyline(path, {
+    color: '#2ecc71', weight: 4, opacity: 0.7, dashArray: '8 6', smoothFactor: 0,
+  }).addTo(_map);
+
+  _map.fitBounds(
+    L.featureGroup([_startMarker, _endMarker]).getBounds(),
+    { padding: [60, 60] }
+  );
+
+  if (onSegmentChosen) {
+    const states = _getStatesForSegment(startSnap.mile, endSnap.mile);
+    onSegmentChosen(startSnap, endSnap, states);
+  }
 }

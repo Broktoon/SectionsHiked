@@ -56,7 +56,63 @@
         </div>
       </div>
 
-      <!-- Trail + progress summary panel -->
+      <!-- Instructions — always visible above map and stats -->
+      <div class="track-instructions">
+        <div class="container">
+          <p>Track segments you've hiked using <strong>Map mode</strong> (tap two points on the trail) or <strong>Form mode</strong> (enter start and end northbound mile markers). Miles are northbound (NOBO) — the same numbers on trail signs and in guidebooks like the AWOL.</p>
+        </div>
+      </div>
+
+      <!-- Map, constrained to container width to align with the header logo -->
+      <div class="map-outer">
+        <div class="container map-container">
+          <div class="select-status-bar hidden" id="select-status-bar">
+            <span id="select-status-text"></span>
+            <button class="select-cancel-btn" id="select-cancel-btn" type="button">Cancel</button>
+          </div>
+          <div id="map"></div>
+          <button class="track-segment-fab" id="track-segment-btn" type="button">
+            + Track a Segment
+          </button>
+          <div class="track-mode-toggle hidden" id="track-mode-toggle">
+            <button class="mode-btn" id="mode-map-btn" type="button">Map</button>
+            <button class="mode-btn" id="mode-form-btn" type="button">Form</button>
+            <button class="mode-cancel-btn" id="mode-cancel-btn" type="button">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form mode panel — inline below map, above stats -->
+      <div id="form-mode-panel" class="form-mode-panel hidden">
+        <div class="container">
+          <div class="form-mode-heading">Enter Segment</div>
+          <div class="form-mode-row">
+            <div class="form-endpoint-group">
+              <div class="form-endpoint-label">Start</div>
+              <select id="form-start-state" class="form-endpoint-select">
+                <option value="" disabled selected>— select state —</option>
+              </select>
+              <div class="form-endpoint-mile-label">Northbound mile</div>
+              <input type="number" id="form-start-mile" class="form-endpoint-mile" min="0" step="0.1" placeholder="e.g. 31.5">
+            </div>
+            <div class="form-endpoint-group">
+              <div class="form-endpoint-label">End</div>
+              <select id="form-end-state" class="form-endpoint-select">
+                <option value="" disabled selected>— select state —</option>
+              </select>
+              <div class="form-endpoint-mile-label">Northbound mile</div>
+              <input type="number" id="form-end-mile" class="form-endpoint-mile" min="0" step="0.1" placeholder="e.g. 46.2">
+            </div>
+          </div>
+          <div class="form-error hidden" id="form-mode-error"></div>
+          <div class="form-mode-actions">
+            <button type="button" class="btn btn-outline" id="form-mode-cancel-btn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="form-preview-btn">Preview &amp; Continue &#8594;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trail + progress summary panel — below map and form -->
       <div id="trail-info" class="trail-info-panel">
         <div class="container">
           <div class="trail-info-grid">
@@ -114,20 +170,6 @@
           </div>
         </div>
       </div><!-- #trail-info -->
-
-      <!-- Map, constrained to container width to align with the header logo -->
-      <div class="map-outer">
-        <div class="container map-container">
-          <div class="select-status-bar hidden" id="select-status-bar">
-            <span id="select-status-text"></span>
-            <button class="select-cancel-btn" id="select-cancel-btn" type="button">Cancel</button>
-          </div>
-          <div id="map"></div>
-          <button class="track-segment-fab" id="track-segment-btn" type="button">
-            + Track a Segment
-          </button>
-        </div>
-      </div>
 
     </div><!-- #map-view -->
 

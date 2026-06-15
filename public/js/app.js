@@ -9,6 +9,19 @@ let _pendingEnd = null;
 let _pendingStates = null;
 let _drawerOpen = false;
 let _floraEntries = [];
+let _formModeActive = false;
+
+const STATE_NAMES = {
+  AL:'Alabama', AZ:'Arizona', CA:'California', CO:'Colorado',
+  CT:'Connecticut', DC:'District of Columbia', FL:'Florida',
+  GA:'Georgia', ID:'Idaho', MA:'Massachusetts', MD:'Maryland',
+  ME:'Maine', MI:'Michigan', MN:'Minnesota', MS:'Mississippi',
+  MT:'Montana', NC:'North Carolina', ND:'North Dakota', NH:'New Hampshire',
+  NJ:'New Jersey', NM:'New Mexico', NY:'New York', OH:'Ohio',
+  OR:'Oregon', PA:'Pennsylvania', TN:'Tennessee', VA:'Virginia',
+  VT:'Vermont', WA:'Washington', WI:'Wisconsin', WV:'West Virginia',
+  WY:'Wyoming',
+};
 
 function haversine(lat1, lng1, lat2, lng2) {
   const R = 3958.8; // miles
@@ -133,6 +146,7 @@ async function showTrail(trailId) {
   if (!trail) return;
 
   exitSelectMode();
+  exitFormMode();
   closeSegmentDrawer();
   _currentTrail = trail;
 
@@ -148,6 +162,7 @@ async function showTrail(trailId) {
 
 function showDashboard() {
   exitSelectMode();
+  exitFormMode();
   closeSegmentDrawer();
   _currentTrail = null;
   document.getElementById('map-view').classList.add('hidden');
@@ -229,6 +244,7 @@ function closeSegmentDrawer() {
 
 function cancelSegment() {
   exitSelectMode();
+  exitFormMode();
   closeSegmentDrawer();
 }
 
@@ -285,6 +301,133 @@ async function saveSegment() {
   }
 }
 
+// Populate a state <select> from the currently loaded points.json.
+// States appear in northbound (NOBO) order with their mile range shown.
+function _buildStateOptions(selectEl) {
+  const points = getLoadedPoints();
+  selectEl.innerHTML = '';
+
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = points ? '— select state —' : '(loading trail data…)';
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  selectEl.appendChild(placeholder);
+
+  if (!points || points.length === 0) return;
+
+  // Derive NOBO state order from mile-sorted points
+  const sorted = [...points].sort((a, b) => (a.mile ?? 0) - (b.mile ?? 0));
+  const stateOrder = [];
+  const seen = new Set();
+  for (const p of sorted) {
+    if (p.state && !seen.has(p.state)) { seen.add(p.state); stateOrder.push(p.state); }
+  }
+
+  // Compute mile range per state
+  const ranges = new Map();
+  for (const p of points) {
+    if (!p.state) continue;
+    if (!ranges.has(p.state)) ranges.set(p.state, { min: p.mile, max: p.mile });
+    const r = ranges.get(p.state);
+    if (p.mile < r.min) r.min = p.mile;
+    if (p.mile > r.max) r.max = p.mile;
+  }
+
+  for (const state of stateOrder) {
+    const r = ranges.get(state);
+    const opt = document.createElement('option');
+    opt.value = state;
+    const name = STATE_NAMES[state] || state;
+    const range = r ? ` (Miles ${Math.round(r.min)}–${Math.round(r.max)})` : '';
+    opt.textContent = name + range;
+    selectEl.appendChild(opt);
+  }
+}
+
+function _showModeToggle() {
+  document.getElementById('track-segment-btn').classList.add('hidden');
+  document.getElementById('track-mode-toggle').classList.remove('hidden');
+}
+
+function _hideModeToggle() {
+  document.getElementById('track-mode-toggle').classList.add('hidden');
+  document.getElementById('track-segment-btn').classList.remove('hidden');
+}
+
+function enterFormMode() {
+  _formModeActive = true;
+  _hideModeToggle();
+
+  // Reset and populate the form
+  document.getElementById('form-start-state').value = '';
+  document.getElementById('form-start-mile').value = '';
+  document.getElementById('form-end-state').value = '';
+  document.getElementById('form-end-mile').value = '';
+  document.getElementById('form-mode-error').classList.add('hidden');
+
+  _buildStateOptions(document.getElementById('form-start-state'));
+  _buildStateOptions(document.getElementById('form-end-state'));
+
+  document.getElementById('form-mode-panel').classList.remove('hidden');
+  document.getElementById('form-start-state').focus();
+}
+
+function exitFormMode() {
+  if (!_formModeActive) return;
+  _formModeActive = false;
+  document.getElementById('form-mode-panel').classList.add('hidden');
+  document.getElementById('track-segment-btn').classList.remove('hidden');
+}
+
+function _previewAndContinue() {
+  const errEl = document.getElementById('form-mode-error');
+  errEl.classList.add('hidden');
+
+  const startState = document.getElementById('form-start-state').value;
+  const endState   = document.getElementById('form-end-state').value;
+  const startRaw   = document.getElementById('form-start-mile').value;
+  const endRaw     = document.getElementById('form-end-mile').value;
+
+  if (!startState || !endState) {
+    errEl.textContent = 'Please select a state for both start and end.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  if (startRaw === '' || endRaw === '') {
+    errEl.textContent = 'Please enter a northbound mile for both start and end.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const startMile = parseFloat(startRaw);
+  const endMile   = parseFloat(endRaw);
+  if (!isFinite(startMile) || !isFinite(endMile)) {
+    errEl.textContent = 'Please enter valid mile numbers.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  const startSnap = snapByMile(startMile, startState);
+  const endSnap   = snapByMile(endMile, endState);
+
+  if (!startSnap || !endSnap) {
+    errEl.textContent = 'No trail data found for the selected state. Please choose a different trail.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  if (startSnap.mile === endSnap.mile) {
+    errEl.textContent = 'Start and end resolve to the same point. Please enter a wider range.';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  // Hide form panel, draw map preview, open metadata drawer (via onSegmentChosen callback)
+  exitFormMode();
+  enterFormPreview(startSnap, endSnap);
+}
+
 function initSegmentTracking() {
   onSegmentChosen = function(start, end, states) {
     openSegmentDrawer(start, end, states);
@@ -304,8 +447,24 @@ function initSegmentTracking() {
   };
 
   document.getElementById('track-segment-btn').addEventListener('click', () => {
+    if (_currentTrail) _showModeToggle();
+  });
+
+  document.getElementById('mode-map-btn').addEventListener('click', () => {
+    _hideModeToggle();
     if (_currentTrail) enterSelectMode(_currentTrail);
   });
+
+  document.getElementById('mode-form-btn').addEventListener('click', () => {
+    enterFormMode();
+  });
+
+  document.getElementById('mode-cancel-btn').addEventListener('click', () => {
+    _hideModeToggle();
+  });
+
+  document.getElementById('form-mode-cancel-btn').addEventListener('click', cancelSegment);
+  document.getElementById('form-preview-btn').addEventListener('click', _previewAndContinue);
 
   document.getElementById('select-cancel-btn').addEventListener('click', cancelSegment);
   document.getElementById('drawer-cancel-btn').addEventListener('click', cancelSegment);
