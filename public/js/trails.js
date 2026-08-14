@@ -1,6 +1,6 @@
 // Trail metadata: slugs, display names, colors, total mileage, GeoJSON filenames,
 // states traversed, terminus names, and logo image filenames.
-// geojsonFile: null  → no GeoJSON available (AZT — original file 56MB, exceeds Cloudflare limit)
+// geojsonFile: null  → no GeoJSON available for this trail
 // geojsonFile: omitted → defaults to 'trail.geojson' in map.js
 // geojsonFile: string → use that filename
 
@@ -19,7 +19,6 @@ const TRAILS = [
     name: 'Arizona Trail',
     color: '#4a7c59',
     totalMiles: 800,
-    geojsonFile: null,
     image: 'Arizona_trail_logo_transparent.png',
     states: ['AZ'],
     termini: ['Mexico border, AZ', 'Utah border, AZ'],
