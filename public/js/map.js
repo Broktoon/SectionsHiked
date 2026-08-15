@@ -82,15 +82,59 @@ function _sliceTrailCoords(startLat, startLng, startMile, endLat, endLng, endMil
   return result;
 }
 
-// Returns the longest part of a MultiLineString's getLatLngs() array
-// (array of LatLng[]), discarding shorter parts — typically GPS survey
-// artifacts or disconnected stray fragments.
-function _longestPart(parts) {
-  let best = parts[0];
-  for (const part of parts) {
-    if (part.length > best.length) best = part;
+// Some trails' source data splits one continuous trail into multiple
+// MultiLineString parts (e.g. at digitizing boundaries); others have
+// genuinely disconnected GPS survey artifacts mixed in as extra parts.
+// Parts whose endpoints land within this distance of each other are
+// treated as continuations of the same line; parts that never connect
+// to anything are artifacts and get dropped. ~100ft.
+const _CHAIN_TOLERANCE_MI = 100 / 5280;
+
+function _latLngClose(a, b) {
+  return haversine(a.lat, a.lng, b.lat, b.lng) <= _CHAIN_TOLERANCE_MI;
+}
+
+// Merges a MultiLineString's parts (array of LatLng[]) into one continuous
+// LatLng[] by iteratively attaching any part whose start or end connects
+// to either end of the growing chain (in either direction). Seeded from
+// the longest part, since that's most likely to be real primary geometry
+// rather than a stray fragment. Parts that never attach are left out.
+function _chainParts(parts) {
+  if (parts.length === 1) return parts[0];
+
+  const remaining = parts.slice();
+  let seedIdx = 0;
+  for (let i = 1; i < remaining.length; i++) {
+    if (remaining[i].length > remaining[seedIdx].length) seedIdx = i;
   }
-  return best;
+  let chain = remaining.splice(seedIdx, 1)[0].slice();
+
+  let attached = true;
+  while (attached && remaining.length > 0) {
+    attached = false;
+    for (let i = 0; i < remaining.length; i++) {
+      const part = remaining[i];
+      const partStart = part[0], partEnd = part[part.length - 1];
+      const chainStart = chain[0], chainEnd = chain[chain.length - 1];
+
+      if (_latLngClose(chainEnd, partStart)) {
+        chain = chain.concat(part);
+      } else if (_latLngClose(chainEnd, partEnd)) {
+        chain = chain.concat(part.slice().reverse());
+      } else if (_latLngClose(chainStart, partEnd)) {
+        chain = part.concat(chain);
+      } else if (_latLngClose(chainStart, partStart)) {
+        chain = part.slice().reverse().concat(chain);
+      } else {
+        continue;
+      }
+      remaining.splice(i, 1);
+      attached = true;
+      break;
+    }
+  }
+
+  return chain;
 }
 
 async function loadTrail(trail, segments) {
@@ -123,9 +167,9 @@ async function loadTrail(trail, segments) {
         _trailCoords = [];
         for (const layer of _trailLayer.getLayers()) {
           const latlngs = layer.getLatLngs();
-          // MultiLineString → latlngs is an array of parts; keep the longest
-          // part (real trail geometry) and drop shorter stray/artifact parts.
-          const part = Array.isArray(latlngs[0]) ? _longestPart(latlngs) : latlngs;
+          // MultiLineString → latlngs is an array of parts; chain together
+          // whichever parts form one continuous line and drop the rest.
+          const part = Array.isArray(latlngs[0]) ? _chainParts(latlngs) : latlngs;
           for (const pt of part) _trailCoords.push(pt);
         }
 
