@@ -82,6 +82,17 @@ function _sliceTrailCoords(startLat, startLng, startMile, endLat, endLng, endMil
   return result;
 }
 
+// Returns the longest part of a MultiLineString's getLatLngs() array
+// (array of LatLng[]), discarding shorter parts — typically GPS survey
+// artifacts or disconnected stray fragments.
+function _longestPart(parts) {
+  let best = parts[0];
+  for (const part of parts) {
+    if (part.length > best.length) best = part;
+  }
+  return best;
+}
+
 async function loadTrail(trail, segments) {
   initMap();
 
@@ -104,12 +115,18 @@ async function loadTrail(trail, segments) {
           style: { color: '#e06060', weight: 3, opacity: 0.75 },
         }).addTo(_map);
 
-        // Cache run 0 coords so segments can reuse the exact same geometry.
-        const layers = _trailLayer.getLayers();
-        if (layers.length > 0) {
-          const latlngs = layers[0].getLatLngs();
-          // MultiLineString → latlngs is array of arrays; run 0 is the complete trail.
-          _trailCoords = Array.isArray(latlngs[0]) ? latlngs[0] : latlngs;
+        // Cache trail coords so segments can reuse the exact same geometry.
+        // Most trails' geojson has one feature per passage/section/state rather
+        // than a single combined line, so every feature must be included —
+        // concatenated in document order, which is already south-to-north (or
+        // equivalent) in each trail's build script.
+        _trailCoords = [];
+        for (const layer of _trailLayer.getLayers()) {
+          const latlngs = layer.getLatLngs();
+          // MultiLineString → latlngs is an array of parts; keep the longest
+          // part (real trail geometry) and drop shorter stray/artifact parts.
+          const part = Array.isArray(latlngs[0]) ? _longestPart(latlngs) : latlngs;
+          for (const pt of part) _trailCoords.push(pt);
         }
 
         _map.fitBounds(_trailLayer.getBounds(), { padding: [20, 20] });
