@@ -14126,5 +14126,541 @@
     "lon": -112.03499,
     "passage_id": "p43",
     "trail_elev": 4987
+  },
+  {
+    "id": "azt-p11e-mi0000",
+    "mile": 164.5,
+    "lat": 32.33738,
+    "lon": -110.718132,
+    "passage_id": "p11e",
+    "trail_elev": 4874
+  },
+  {
+    "id": "azt-p11e-mi0005",
+    "mile": 165,
+    "lat": 32.342949,
+    "lon": -110.717906,
+    "passage_id": "p11e",
+    "trail_elev": 4929
+  },
+  {
+    "id": "azt-p11e-mi0010",
+    "mile": 165.5,
+    "lat": 32.344892,
+    "lon": -110.716128,
+    "passage_id": "p11e",
+    "trail_elev": 5187
+  },
+  {
+    "id": "azt-p11e-mi0015",
+    "mile": 166,
+    "lat": 32.349217,
+    "lon": -110.711707,
+    "passage_id": "p11e",
+    "trail_elev": 5430
+  },
+  {
+    "id": "azt-p11e-mi0020",
+    "mile": 166.5,
+    "lat": 32.352734,
+    "lon": -110.713663,
+    "passage_id": "p11e",
+    "trail_elev": 5621
+  },
+  {
+    "id": "azt-p11e-mi0025",
+    "mile": 167,
+    "lat": 32.357622,
+    "lon": -110.711326,
+    "passage_id": "p11e",
+    "trail_elev": 5882
+  },
+  {
+    "id": "azt-p11e-mi0030",
+    "mile": 167.5,
+    "lat": 32.360319,
+    "lon": -110.705475,
+    "passage_id": "p11e",
+    "trail_elev": 5866
+  },
+  {
+    "id": "azt-p11e-mi0035",
+    "mile": 168,
+    "lat": 32.363289,
+    "lon": -110.699167,
+    "passage_id": "p11e",
+    "trail_elev": 5879
+  },
+  {
+    "id": "azt-p11e-mi0040",
+    "mile": 168.5,
+    "lat": 32.365681,
+    "lon": -110.692474,
+    "passage_id": "p11e",
+    "trail_elev": 6032
+  },
+  {
+    "id": "azt-p11e-mi0045",
+    "mile": 169,
+    "lat": 32.370296,
+    "lon": -110.689002,
+    "passage_id": "p11e",
+    "trail_elev": 6267
+  },
+  {
+    "id": "azt-p11e-mi0050",
+    "mile": 169.5,
+    "lat": 32.3752,
+    "lon": -110.688691,
+    "passage_id": "p11e",
+    "trail_elev": 5940
+  },
+  {
+    "id": "azt-p11e-mi0055",
+    "mile": 170,
+    "lat": 32.378542,
+    "lon": -110.682935,
+    "passage_id": "p11e",
+    "trail_elev": 6003
+  },
+  {
+    "id": "azt-p11e-mi0060",
+    "mile": 170.5,
+    "lat": 32.380281,
+    "lon": -110.676837,
+    "passage_id": "p11e",
+    "trail_elev": 6321
+  },
+  {
+    "id": "azt-p11e-mi0065",
+    "mile": 171,
+    "lat": 32.385384,
+    "lon": -110.676202,
+    "passage_id": "p11e",
+    "trail_elev": 6597
+  },
+  {
+    "id": "azt-p11e-mi0070",
+    "mile": 171.5,
+    "lat": 32.391124,
+    "lon": -110.672663,
+    "passage_id": "p11e",
+    "trail_elev": 6790
+  },
+  {
+    "id": "azt-p11e-mi0075",
+    "mile": 172,
+    "lat": 32.395609,
+    "lon": -110.67492,
+    "passage_id": "p11e",
+    "trail_elev": 6724
+  },
+  {
+    "id": "azt-p11e-mi0080",
+    "mile": 172.5,
+    "lat": 32.398337,
+    "lon": -110.679714,
+    "passage_id": "p11e",
+    "trail_elev": 6769
+  },
+  {
+    "id": "azt-p11e-mi0085",
+    "mile": 173,
+    "lat": 32.396311,
+    "lon": -110.682754,
+    "passage_id": "p11e",
+    "trail_elev": 7180
+  },
+  {
+    "id": "azt-p11e-mi0090",
+    "mile": 173.5,
+    "lat": 32.399061,
+    "lon": -110.688181,
+    "passage_id": "p11e",
+    "trail_elev": 7323
+  },
+  {
+    "id": "azt-p11e-mi0095",
+    "mile": 174,
+    "lat": 32.402819,
+    "lon": -110.69405,
+    "passage_id": "p11e",
+    "trail_elev": 7564
+  },
+  {
+    "id": "azt-p11e-mi0100",
+    "mile": 174.5,
+    "lat": 32.405087,
+    "lon": -110.697351,
+    "passage_id": "p11e",
+    "trail_elev": 7787
+  },
+  {
+    "id": "azt-p11e-mi0105",
+    "mile": 175,
+    "lat": 32.409181,
+    "lon": -110.701592,
+    "passage_id": "p11e",
+    "trail_elev": 8115
+  },
+  {
+    "id": "azt-p11e-mi0110",
+    "mile": 175.5,
+    "lat": 32.41255,
+    "lon": -110.707429,
+    "passage_id": "p11e",
+    "trail_elev": 8114
+  },
+  {
+    "id": "azt-p11e-mi0115",
+    "mile": 176,
+    "lat": 32.415249,
+    "lon": -110.710365,
+    "passage_id": "p11e",
+    "trail_elev": 8154
+  },
+  {
+    "id": "azt-p11e-mi0120",
+    "mile": 176.5,
+    "lat": 32.420846,
+    "lon": -110.710795,
+    "passage_id": "p11e",
+    "trail_elev": 7767
+  },
+  {
+    "id": "azt-p11e-mi0125",
+    "mile": 177,
+    "lat": 32.425728,
+    "lon": -110.713162,
+    "passage_id": "p11e",
+    "trail_elev": 7701
+  },
+  {
+    "id": "azt-p11e-mi0130",
+    "mile": 177.5,
+    "lat": 32.429099,
+    "lon": -110.712216,
+    "passage_id": "p11e",
+    "trail_elev": 7284
+  },
+  {
+    "id": "azt-p11e-mi0135",
+    "mile": 178,
+    "lat": 32.427379,
+    "lon": -110.717017,
+    "passage_id": "p11e",
+    "trail_elev": 6895
+  },
+  {
+    "id": "azt-p11e-mi0140",
+    "mile": 178.5,
+    "lat": 32.428016,
+    "lon": -110.721578,
+    "passage_id": "p11e",
+    "trail_elev": 6554
+  },
+  {
+    "id": "azt-p11e-mi0145",
+    "mile": 179,
+    "lat": 32.428075,
+    "lon": -110.725457,
+    "passage_id": "p11e",
+    "trail_elev": 7011
+  },
+  {
+    "id": "azt-p11e-mi0150",
+    "mile": 179.5,
+    "lat": 32.429879,
+    "lon": -110.728478,
+    "passage_id": "p11e",
+    "trail_elev": 6987
+  },
+  {
+    "id": "azt-p11e-mi0155",
+    "mile": 180,
+    "lat": 32.427703,
+    "lon": -110.732639,
+    "passage_id": "p11e",
+    "trail_elev": 7393
+  },
+  {
+    "id": "azt-p11e-mi0160",
+    "mile": 180.5,
+    "lat": 32.428917,
+    "lon": -110.738365,
+    "passage_id": "p11e",
+    "trail_elev": 7645
+  },
+  {
+    "id": "azt-p11e-mi0165",
+    "mile": 181,
+    "lat": 32.427528,
+    "lon": -110.744159,
+    "passage_id": "p11e",
+    "trail_elev": 7742
+  },
+  {
+    "id": "azt-p11e-mi0170",
+    "mile": 181.5,
+    "lat": 32.424493,
+    "lon": -110.750225,
+    "passage_id": "p11e",
+    "trail_elev": 7622
+  },
+  {
+    "id": "azt-p11e-mi0175",
+    "mile": 182,
+    "lat": 32.427486,
+    "lon": -110.755194,
+    "passage_id": "p11e",
+    "trail_elev": 7432
+  },
+  {
+    "id": "azt-p33-mi0000",
+    "mile": 581.5,
+    "lat": 35.150865,
+    "lon": -111.599969,
+    "passage_id": "p33",
+    "trail_elev": 6623
+  },
+  {
+    "id": "azt-p33-mi0005",
+    "mile": 582,
+    "lat": 35.155034,
+    "lon": -111.606368,
+    "passage_id": "p33",
+    "trail_elev": 6680
+  },
+  {
+    "id": "azt-p33-mi0010",
+    "mile": 582.5,
+    "lat": 35.160024,
+    "lon": -111.612048,
+    "passage_id": "p33",
+    "trail_elev": 6749
+  },
+  {
+    "id": "azt-p33-mi0015",
+    "mile": 583,
+    "lat": 35.164677,
+    "lon": -111.618384,
+    "passage_id": "p33",
+    "trail_elev": 6877
+  },
+  {
+    "id": "azt-p33-mi0020",
+    "mile": 583.5,
+    "lat": 35.169613,
+    "lon": -111.620711,
+    "passage_id": "p33",
+    "trail_elev": 6844
+  },
+  {
+    "id": "azt-p33-mi0025",
+    "mile": 584,
+    "lat": 35.174318,
+    "lon": -111.624072,
+    "passage_id": "p33",
+    "trail_elev": 6855
+  },
+  {
+    "id": "azt-p33-mi0030",
+    "mile": 584.5,
+    "lat": 35.179827,
+    "lon": -111.626829,
+    "passage_id": "p33",
+    "trail_elev": 6903
+  },
+  {
+    "id": "azt-p33-mi0035",
+    "mile": 585,
+    "lat": 35.183956,
+    "lon": -111.632095,
+    "passage_id": "p33",
+    "trail_elev": 6801
+  },
+  {
+    "id": "azt-p33-mi0040",
+    "mile": 585.5,
+    "lat": 35.189826,
+    "lon": -111.630614,
+    "passage_id": "p33",
+    "trail_elev": 6868
+  },
+  {
+    "id": "azt-p33-mi0045",
+    "mile": 586,
+    "lat": 35.195077,
+    "lon": -111.628519,
+    "passage_id": "p33",
+    "trail_elev": 6869
+  },
+  {
+    "id": "azt-p33-mi0050",
+    "mile": 586.5,
+    "lat": 35.201756,
+    "lon": -111.630501,
+    "passage_id": "p33",
+    "trail_elev": 6986
+  },
+  {
+    "id": "azt-p33-mi0055",
+    "mile": 587,
+    "lat": 35.203891,
+    "lon": -111.625892,
+    "passage_id": "p33",
+    "trail_elev": 7053
+  },
+  {
+    "id": "azt-p33-mi0060",
+    "mile": 587.5,
+    "lat": 35.210679,
+    "lon": -111.626733,
+    "passage_id": "p33",
+    "trail_elev": 7103
+  },
+  {
+    "id": "azt-p33-mi0065",
+    "mile": 588,
+    "lat": 35.215296,
+    "lon": -111.631412,
+    "passage_id": "p33",
+    "trail_elev": 7104
+  },
+  {
+    "id": "azt-p33-mi0070",
+    "mile": 588.5,
+    "lat": 35.22178,
+    "lon": -111.632025,
+    "passage_id": "p33",
+    "trail_elev": 7133
+  },
+  {
+    "id": "azt-p33-mi0075",
+    "mile": 589,
+    "lat": 35.227547,
+    "lon": -111.630068,
+    "passage_id": "p33",
+    "trail_elev": 7128
+  },
+  {
+    "id": "azt-p33-mi0080",
+    "mile": 589.5,
+    "lat": 35.233697,
+    "lon": -111.630246,
+    "passage_id": "p33",
+    "trail_elev": 7111
+  },
+  {
+    "id": "azt-p33-mi0085",
+    "mile": 590,
+    "lat": 35.239694,
+    "lon": -111.62814,
+    "passage_id": "p33",
+    "trail_elev": 7255
+  },
+  {
+    "id": "azt-p33-mi0090",
+    "mile": 590.5,
+    "lat": 35.245444,
+    "lon": -111.630059,
+    "passage_id": "p33",
+    "trail_elev": 7293
+  },
+  {
+    "id": "azt-p33-mi0095",
+    "mile": 591,
+    "lat": 35.248954,
+    "lon": -111.634834,
+    "passage_id": "p33",
+    "trail_elev": 7356
+  },
+  {
+    "id": "azt-p33-mi0100",
+    "mile": 591.5,
+    "lat": 35.244566,
+    "lon": -111.641303,
+    "passage_id": "p33",
+    "trail_elev": 7373
+  },
+  {
+    "id": "azt-p33-mi0105",
+    "mile": 592,
+    "lat": 35.24516,
+    "lon": -111.648736,
+    "passage_id": "p33",
+    "trail_elev": 7427
+  },
+  {
+    "id": "azt-p33-mi0110",
+    "mile": 592.5,
+    "lat": 35.244922,
+    "lon": -111.654261,
+    "passage_id": "p33",
+    "trail_elev": 7288
+  },
+  {
+    "id": "azt-p33-mi0115",
+    "mile": 593,
+    "lat": 35.245824,
+    "lon": -111.660718,
+    "passage_id": "p33",
+    "trail_elev": 7210
+  },
+  {
+    "id": "azt-p33-mi0120",
+    "mile": 593.5,
+    "lat": 35.25131,
+    "lon": -111.664711,
+    "passage_id": "p33",
+    "trail_elev": 7302
+  },
+  {
+    "id": "azt-p33-mi0125",
+    "mile": 594,
+    "lat": 35.257319,
+    "lon": -111.662298,
+    "passage_id": "p33",
+    "trail_elev": 7381
+  },
+  {
+    "id": "azt-p33-mi0130",
+    "mile": 594.5,
+    "lat": 35.263861,
+    "lon": -111.661177,
+    "passage_id": "p33",
+    "trail_elev": 7484
+  },
+  {
+    "id": "azt-p33-mi0135",
+    "mile": 595,
+    "lat": 35.268021,
+    "lon": -111.655504,
+    "passage_id": "p33",
+    "trail_elev": 7582
+  },
+  {
+    "id": "azt-p33-mi0140",
+    "mile": 595.5,
+    "lat": 35.270589,
+    "lon": -111.648537,
+    "passage_id": "p33",
+    "trail_elev": 7690
+  },
+  {
+    "id": "azt-p33-mi0145",
+    "mile": 596,
+    "lat": 35.27062,
+    "lon": -111.6509,
+    "passage_id": "p33",
+    "trail_elev": 7805
+  },
+  {
+    "id": "azt-p33-mi0148",
+    "mile": 596.3,
+    "lat": 35.272884,
+    "lon": -111.652731,
+    "passage_id": "p33",
+    "trail_elev": 7813
   }
 ]

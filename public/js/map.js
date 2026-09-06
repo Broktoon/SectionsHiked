@@ -4,6 +4,8 @@
 let _map = null;
 let _trailLayer = null;
 let _trailCoords = null;   // LatLng[] for run 0 of trail.geojson; set after trail loads
+let _trailTotalMiles = null; // trail.totalMiles for the currently loaded trail
+let _altBranches = {};     // passage id (e.g. "11e") -> { altOf, coords: LatLng[] }; alt-route passages only
 let _segmentLayers = [];
 
 // Select mode state
@@ -49,12 +51,15 @@ async function _loadPoints(trail) {
 // Find the index in _trailCoords nearest to (lat, lng).
 // approxMile lets us start the search at the right part of the trail
 // instead of scanning all 312K coords. Window covers ±10% of trail length.
+// Normalized against the current trail's own totalMiles — every trail has a
+// different length, so a fixed mile constant here would misjudge the search
+// window for anything that isn't that one trail.
 function _nearestTrailIndex(lat, lng, approxMile) {
   if (!_trailCoords || _trailCoords.length === 0) return -1;
   const n = _trailCoords.length;
-  const frac = Math.max(0, Math.min(1, (approxMile ?? 0) / 2190));
+  const frac = Math.max(0, Math.min(1, (approxMile ?? 0) / (_trailTotalMiles || 1)));
   const center = Math.round(frac * (n - 1));
-  const radius = Math.round(n * 0.10); // ±10% ≈ ±219 AT miles — generous enough
+  const radius = Math.round(n * 0.10); // ±10% of trail length — generous enough
   const lo = Math.max(0, center - radius);
   const hi = Math.min(n - 1, center + radius);
   let bestIdx = center, bestDist = Infinity;
@@ -65,21 +70,66 @@ function _nearestTrailIndex(lat, lng, approxMile) {
   return bestIdx;
 }
 
-// Return the slice of _trailCoords between two lat/lng points as [[lat,lng],...].
-// This uses the same coordinates Leaflet already drew for the red trail —
-// the resulting green overlay is geometrically identical to the trail itself.
-function _sliceTrailCoords(startLat, startLng, startMile, endLat, endLng, endMile) {
-  if (!_trailCoords || _trailCoords.length === 0) return null;
-  const si = _nearestTrailIndex(startLat, startLng, startMile);
-  const ei = _nearestTrailIndex(endLat, endLng, endMile);
+// Brute-force nearest-point search over a small coordinate array (an alt
+// branch, not the full trail spine) — no windowing needed at this size.
+function _nearestIndexInArray(coords, lat, lng) {
+  let bestIdx = 0, bestDist = Infinity;
+  for (let i = 0; i < coords.length; i++) {
+    const d = haversine(lat, lng, coords[i].lat, coords[i].lng);
+    if (d < bestDist) { bestDist = d; bestIdx = i; }
+  }
+  return { idx: bestIdx, dist: bestDist };
+}
+
+// Which branch a lat/lng belongs to: 'main' spine, or an alt-route passage id
+// (e.g. "11e"). Alt routes run physically separate from the main spine, so a
+// point genuinely on one lands within _CHAIN_TOLERANCE_MI of its own coords.
+function _branchAt(lat, lng) {
+  for (const [passageId, branch] of Object.entries(_altBranches)) {
+    if (_nearestIndexInArray(branch.coords, lat, lng).dist <= _CHAIN_TOLERANCE_MI) {
+      return passageId;
+    }
+  }
+  return 'main';
+}
+
+function _sliceArrayByIndex(arr, si, ei) {
   const lo = Math.min(si, ei);
   const hi = Math.max(si, ei);
   if (hi <= lo) return null;
   const result = [];
   for (let i = lo; i <= hi; i++) {
-    result.push([_trailCoords[i].lat, _trailCoords[i].lng]);
+    result.push([arr[i].lat, arr[i].lng]);
   }
   return result;
+}
+
+// Return the slice of trail coords between two lat/lng points as [[lat,lng],...].
+// This uses the same coordinates Leaflet already drew for the red trail —
+// the resulting green overlay is geometrically identical to the trail itself.
+// When the trail has alt routes (e.g. AZT's 11e, 33), a segment that stays on
+// one branch (all main, or both ends on the same alt route) slices from that
+// branch's own coords; a segment that crosses between branches returns null
+// so the caller falls back to a straight line between the two points.
+function _sliceTrailCoords(startLat, startLng, startMile, endLat, endLng, endMile) {
+  if (!_trailCoords || _trailCoords.length === 0) return null;
+
+  if (Object.keys(_altBranches).length > 0) {
+    const startBranch = _branchAt(startLat, startLng);
+    const endBranch = _branchAt(endLat, endLng);
+    if (startBranch !== endBranch) return null;
+
+    if (startBranch !== 'main') {
+      const coords = _altBranches[startBranch].coords;
+      const si = _nearestIndexInArray(coords, startLat, startLng).idx;
+      const ei = _nearestIndexInArray(coords, endLat, endLng).idx;
+      return _sliceArrayByIndex(coords, si, ei);
+    }
+  }
+
+  const si = _nearestTrailIndex(startLat, startLng, startMile);
+  const ei = _nearestTrailIndex(endLat, endLng, endMile);
+  return _sliceArrayByIndex(_trailCoords, si, ei);
 }
 
 // Some trails' source data splits one continuous trail into multiple
@@ -142,6 +192,8 @@ async function loadTrail(trail, segments) {
 
   if (_trailLayer) { _map.removeLayer(_trailLayer); _trailLayer = null; }
   _trailCoords = null;
+  _altBranches = {};
+  _trailTotalMiles = trail.totalMiles;
   _segmentLayers.forEach(l => _map.removeLayer(l));
   _segmentLayers = [];
 
@@ -164,13 +216,23 @@ async function loadTrail(trail, segments) {
         // than a single combined line, so every feature must be included —
         // concatenated in document order, which is already south-to-north (or
         // equivalent) in each trail's build script.
+        // A feature tagged "alt_of" (e.g. AZT's 11e, 33) is a physically
+        // separate alternate route, not a continuation of the spine — folding
+        // its coords into the same concatenation would make mile values stop
+        // mapping monotonically to array position. Keep it in its own branch.
         _trailCoords = [];
         for (const layer of _trailLayer.getLayers()) {
           const latlngs = layer.getLatLngs();
           // MultiLineString → latlngs is an array of parts; chain together
           // whichever parts form one continuous line and drop the rest.
           const part = Array.isArray(latlngs[0]) ? _chainParts(latlngs) : latlngs;
-          for (const pt of part) _trailCoords.push(pt);
+          const altOf = layer.feature?.properties?.alt_of;
+          if (altOf) {
+            const passageId = layer.feature.properties.passage;
+            _altBranches[passageId] = { altOf, coords: part };
+          } else {
+            for (const pt of part) _trailCoords.push(pt);
+          }
         }
 
         _map.fitBounds(_trailLayer.getBounds(), { padding: [20, 20] });
