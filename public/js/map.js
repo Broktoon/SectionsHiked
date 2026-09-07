@@ -237,9 +237,10 @@ async function loadTrail(trail, segments) {
             // folding them into either the spine or an alt branch.
             continue;
           } else if (altOf) {
-            // alt_id is the general key; passage is AZT's own numbering,
-            // which already served this role before alt_id existed.
-            const altId = layer.feature.properties.alt_id ?? layer.feature.properties.passage;
+            // route_id is the canonical branch key; passage is AZT's own
+            // numbering, kept as a fallback for any geojson that predates
+            // route_id.
+            const altId = routeId ?? layer.feature.properties.passage;
             _altBranches[altId] = { altOf, coords: part };
           } else {
             for (const pt of part) _trailCoords.push(pt);
