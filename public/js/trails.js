@@ -55,7 +55,7 @@ const TRAILS = [
     id: 'natchez-trace-trail',
     name: 'Natchez Trace Trail',
     color: '#4a7c59',
-    totalMiles: 444,
+    totalMiles: 68.9, // real hikeable trail only, across 5 disconnected sections — see CLAUDE.md
     image: 'natchez_trace_logo.jpg',
     states: ['MS','AL','TN'],
     termini: ['Natchez, MS', 'Nashville, TN'],

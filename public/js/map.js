@@ -208,7 +208,9 @@ async function loadTrail(trail, segments) {
       if (resp.ok) {
         const geojson = await resp.json();
         _trailLayer = L.geoJSON(geojson, {
-          style: { color: '#e06060', weight: 3, opacity: 0.75 },
+          style: (feature) => feature?.properties?.route_id === 'roadwalk'
+            ? { color: '#8a7f6a', weight: 2.5, opacity: 0.7, dashArray: '2 8' }
+            : { color: '#e06060', weight: 3, opacity: 0.75 },
         }).addTo(_map);
 
         // Cache trail coords so segments can reuse the exact same geometry.
@@ -227,9 +229,18 @@ async function loadTrail(trail, segments) {
           // whichever parts form one continuous line and drop the rest.
           const part = Array.isArray(latlngs[0]) ? _chainParts(latlngs) : latlngs;
           const altOf = layer.feature?.properties?.alt_of;
-          if (altOf) {
-            const passageId = layer.feature.properties.passage;
-            _altBranches[passageId] = { altOf, coords: part };
+          const routeId = layer.feature?.properties?.route_id;
+          if (routeId === 'roadwalk') {
+            // Roadwalk connectors (e.g. Natchez Trace's parkway gaps) are
+            // rendered for map continuity but carry no points.json entries,
+            // so they're never hikeable — skip them entirely rather than
+            // folding them into either the spine or an alt branch.
+            continue;
+          } else if (altOf) {
+            // alt_id is the general key; passage is AZT's own numbering,
+            // which already served this role before alt_id existed.
+            const altId = layer.feature.properties.alt_id ?? layer.feature.properties.passage;
+            _altBranches[altId] = { altOf, coords: part };
           } else {
             for (const pt of part) _trailCoords.push(pt);
           }
