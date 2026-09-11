@@ -7,7 +7,10 @@
  *
  * points.json changes:
  *   - axis_mile (the true cumulative trail mile) is promoted to `mile`
- *   - the old section-local `mile` becomes `sec_mile`
+ *   - the old section-local `mile` becomes `sec_mile`, which means the same
+ *     thing on every trail: distance from the start of THIS section. The East
+ *     Alternate's alt_mile is cumulative across the whole alternate, so its
+ *     section's alt_mile_start is subtracted to make it section-local too.
  *   - section/region ids gain display names from iat_meta.json
  *   - route_id is added ("main-spine", or "east-alt" + alt_of for the alternate)
  *   - points that fall off the certified tread are tagged route_type "roadwalk"
@@ -122,14 +125,18 @@ for (const p of points) {
         id:           p.id,
         lat:          p.lat,
         lon:          p.lon,
+        // The alternate is interpolated onto the 23.3mi branch-to-rejoin span,
+        // compressing its 0.5mi point spacing to ~0.13 mile-units. Keep more decimals
+        // than the spine so lookups that map back through this interpolation land on
+        // the same point rather than jittering to a neighbour.
         mile:         isAlt
-            ? round1(BRANCH_MI + (p.alt_mile / ALT_LENGTH) * (REJOIN_MI - BRANCH_MI))
+            ? round3(BRANCH_MI + (p.alt_mile / ALT_LENGTH) * (REJOIN_MI - BRANCH_MI))
             : p.axis_mile,
         region_id:    p.region,
         region_name:  regionName.get(p.region),
         section_id:   p.section,
         section_name: sec.name,
-        sec_mile:     isAlt ? p.alt_mile : p.mile,
+        sec_mile:     isAlt ? round1(p.alt_mile - (sec.alt_mile_start ?? 0)) : p.mile,
         route_id:     isAlt ? 'east-alt' : 'main-spine',
     };
     if (isAlt) out.alt_of = 'main-spine';
@@ -143,9 +150,10 @@ for (const p of points) {
 }
 
 mainPoints.sort((a, b) => a.mile - b.mile);
-altPoints.sort((a, b) => a.sec_mile - b.sec_mile);
+altPoints.sort((a, b) => a.mile - b.mile);
 
 function round1(n) { return Math.round(n * 10) / 10; }
+function round3(n) { return Math.round(n * 1000) / 1000; }
 
 // Resolve the tread/roadwalk split from each certified LineString's own ends
 // rather than per-point proximity. A section's tread is a single continuous
@@ -179,13 +187,20 @@ function classifyByTreadSpan(routePoints, featureFor, mileOf) {
         const b = mileNearest(coords[coords.length - 1]);
         if (a == null || b == null) continue;
         const from = Math.min(a, b), to = Math.max(a, b);
+        const tread = [];
         for (const p of sp) {
-            if (mileOf(p) >= from && mileOf(p) <= to) delete p.route_type;
+            if (mileOf(p) >= from && mileOf(p) <= to) { delete p.route_type; tread.push(p); }
             else p.route_type = 'roadwalk';
         }
+        // Measure the warning in real miles via sec_mile. The ordering axis can be
+        // the alternate's interpolated `mile`, which is compressed onto the 23.3mi
+        // branch-to-rejoin span and would make every alt section look far too short.
         const meta = sectionMeta.get(id) || altMeta.get(id);
-        if (meta && Math.abs((to - from) - meta.certified_miles) > 1.5) {
-            treadSpanWarnings.push(`${id}: tread span ${(to - from).toFixed(1)}mi vs certified_miles ${meta.certified_miles}`);
+        if (meta && tread.length) {
+            const span = Math.max(...tread.map(t => t.sec_mile)) - Math.min(...tread.map(t => t.sec_mile));
+            if (Math.abs(span - meta.certified_miles) > 1.5) {
+                treadSpanWarnings.push(`${id}: tread span ${span.toFixed(1)}mi vs certified_miles ${meta.certified_miles}`);
+            }
         }
     }
 }
@@ -196,9 +211,10 @@ for (const f of trail.features) {
 }
 
 classifyByTreadSpan(mainPoints, id => treadFeature.get(id), p => p.mile);
-// The alternate is measured on its own sec_mile axis, and only ~13 of its 87
-// miles have mapped tread — the rest is connecting route.
-classifyByTreadSpan(altPoints, id => altFeature.get(id), p => p.sec_mile);
+// Only ~13 of the alternate's 87 miles have mapped tread; the rest is
+// connecting route. Ordered by the interpolated `mile`, since sec_mile now
+// restarts at each alt section.
+classifyByTreadSpan(altPoints, id => altFeature.get(id), p => p.mile);
 
 // ------------------------------------------------------------- trail.geojson
 // Points give a clean mile-ordered path, so use them to (a) orient each
@@ -297,7 +313,7 @@ const features = outFeatures.map(x => x.feature);
 
 // The alternate gets the same treatment on its own axis. map.js keys alt
 // branches off route_id and concatenates them in document order, so these are
-// emitted sorted by the alternate's own sec_mile.
+// emitted sorted by the interpolated `mile`.
 const altOut = [];
 for (const f of trail.features) {
     if (!f.properties.alt_id) continue;
@@ -305,17 +321,17 @@ for (const f of trail.features) {
     if (!sec) throw new Error(`No iat_meta.json entry for alt feature "${f.properties.section}"`);
 
     const sp = altPoints.filter(p => p.section_id === sec.id && !p.route_type);
-    const nearestSecMile = (co) => {
+    const nearestAltMile = (co) => {
         let best = Infinity, mile = null;
         for (const p of sp) {
             const d = haversine(co[1], co[0], p.lat, p.lon);
-            if (d < best) { best = d; mile = p.sec_mile; }
+            if (d < best) { best = d; mile = p.mile; }
         }
         return mile;
     };
     let coords = f.geometry.coordinates;
-    const head = nearestSecMile(coords[0]);
-    const tail = nearestSecMile(coords[coords.length - 1]);
+    const head = nearestAltMile(coords[0]);
+    const tail = nearestAltMile(coords[coords.length - 1]);
     if (head != null && tail != null && head > tail) coords = coords.slice().reverse();
 
     altOut.push({
@@ -334,7 +350,7 @@ for (const f of trail.features) {
         },
     });
 }
-const altRuns = addRoadwalkRuns(altPoints, p => p.sec_mile,
+const altRuns = addRoadwalkRuns(altPoints, p => p.mile,
     { route_id: 'east-alt', alt_of: 'main-spine' }, altOut);
 
 altOut.sort((a, b) => a.sortMile - b.sortMile);
