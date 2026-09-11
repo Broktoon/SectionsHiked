@@ -9,4 +9,5 @@ node_modules/
 
 # Unused reference/backup geojson — kept locally, not deployed
 public/trails/appalachian-trail/data/trail_backup.geojson
+public/trails/ice-age-trail/data/trail_backup.geojson
 public/trails/pacific-crest-trail/data/Full_PCT_Simplified.geojson

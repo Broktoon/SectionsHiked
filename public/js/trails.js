@@ -46,7 +46,7 @@ const TRAILS = [
     id: 'ice-age-trail',
     name: 'Ice Age Trail',
     color: '#4a7c59',
-    totalMiles: 1200,
+    totalMiles: 1315.6, // certified segments + connecting routes, both hikeable — see CLAUDE.md
     image: 'ice_age_trail_logo.jpg',
     states: ['WI'],
     termini: ['Potawatomi SP, WI', 'Interstate SP, WI'],

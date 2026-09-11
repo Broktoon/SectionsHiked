@@ -67,7 +67,7 @@ public/                          ← everything served to users
       trails.geojson             ← NOTE: plural "trails", not "trail"
     ice-age-trail/data/
       trail.geojson
-      trail_roadwalk.geojson     ← roadwalk connectors (dotted line display)
+      iat_meta.json              ← section/region names, certified_miles, alt-route branch
     natchez-trace-trail/data/
     new-england-trail/data/
     north-country-trail/data/
@@ -164,7 +164,7 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 | Arizona | `points.json` only | **trail.geojson missing** — original 56MB, needs simplified version |
 | Continental Divide | `trail.geojson`, `points.json` | OK (8MB GeoJSON) |
 | Florida | `trails.geojson`, `points.json` | Note: plural filename |
-| Ice Age | `trail.geojson`, `trail_roadwalk.geojson`, `points.json` | Roadwalk is display-only |
+| Ice Age | `trail.geojson`, `points.json`, `iat_meta.json` | Roadwalk (connecting routes) is hikeable and counts toward mileage — tagged `route_type: "roadwalk"`, rendered dashed. Opposite of Natchez |
 | Natchez Trace | `trail.geojson`, `points.json` | 5 disconnected sections |
 | New England | `trail.geojson`, `points.json` | OK |
 | North Country | `trail.geojson`, `points.json` | OK (19MB GeoJSON, largest) |

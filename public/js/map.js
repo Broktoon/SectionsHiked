@@ -48,6 +48,10 @@ async function _loadPoints(trail) {
   }
 }
 
+// How close the windowed guess has to land before we trust it. Beyond this the
+// window was simply in the wrong place and we re-scan properly.
+const _WINDOW_ACCEPT_MI = 0.25;
+
 // Find the index in _trailCoords nearest to (lat, lng).
 // approxMile lets us start the search at the right part of the trail
 // instead of scanning all 312K coords. Window covers ±10% of trail length.
@@ -66,6 +70,19 @@ function _nearestTrailIndex(lat, lng, approxMile) {
   for (let i = lo; i <= hi; i++) {
     const d = haversine(lat, lng, _trailCoords[i].lat, _trailCoords[i].lng);
     if (d < bestDist) { bestDist = d; bestIdx = i; }
+  }
+
+  // The window above assumes array position tracks mileage, which only holds
+  // when vertices are spread evenly. Where a trail mixes densely surveyed tread
+  // with sparse connecting-route lines (Ice Age runs ~286 vertices/mi against
+  // ~2), the guess can land tens of miles off. Falling back to a full scan only
+  // when the windowed result is visibly bad keeps the fast path for every trail
+  // it already suits.
+  if (bestDist > _WINDOW_ACCEPT_MI) {
+    for (let i = 0; i < n; i++) {
+      const d = haversine(lat, lng, _trailCoords[i].lat, _trailCoords[i].lng);
+      if (d < bestDist) { bestDist = d; bestIdx = i; }
+    }
   }
   return bestIdx;
 }
@@ -208,7 +225,13 @@ async function loadTrail(trail, segments) {
       if (resp.ok) {
         const geojson = await resp.json();
         _trailLayer = L.geoJSON(geojson, {
-          style: (feature) => feature?.properties?.route_id === 'roadwalk'
+          // Two kinds of roadwalk share this dashed style but not their
+          // mileage treatment: route_id "roadwalk" is a non-hikeable gap
+          // connector (Natchez's parkway), while route_type "roadwalk" is
+          // designated trail that hikers really walk (Ice Age's connecting
+          // routes) and stays part of the spine below.
+          style: (feature) => (feature?.properties?.route_id === 'roadwalk' ||
+                               feature?.properties?.route_type === 'roadwalk')
             ? { color: '#8a7f6a', weight: 2.5, opacity: 0.7, dashArray: '2 8' }
             : { color: '#e06060', weight: 3, opacity: 0.75 },
         }).addTo(_map);
@@ -240,8 +263,12 @@ async function loadTrail(trail, segments) {
             // route_id is the canonical branch key; passage is AZT's own
             // numbering, kept as a fallback for any geojson that predates
             // route_id.
+            // A branch can span several features (Ice Age's East Alternate is
+            // five tread segments plus its connecting roadwalk), so append
+            // rather than replace — the geojson emits them in branch order.
             const altId = routeId ?? layer.feature.properties.passage;
-            _altBranches[altId] = { altOf, coords: part };
+            if (!_altBranches[altId]) _altBranches[altId] = { altOf, coords: [] };
+            for (const pt of part) _altBranches[altId].coords.push(pt);
           } else {
             for (const pt of part) _trailCoords.push(pt);
           }
