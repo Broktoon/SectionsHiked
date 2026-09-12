@@ -164,7 +164,7 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 | Arizona | `points.json` only | **trail.geojson missing** — original 56MB, needs simplified version |
 | Continental Divide | `trail.geojson`, `points.json` | OK (8MB GeoJSON) |
 | Florida | `trails.geojson`, `points.json` | Note: plural filename |
-| Ice Age | `trail.geojson`, `points.json`, `iat_meta.json` | Roadwalk (connecting routes) is hikeable and counts toward mileage — tagged `route_type: "roadwalk"`, rendered dashed. Opposite of Natchez |
+| Ice Age | `trail.geojson`, `points.json`, `iat_meta.json` | Rebuilt 2026-09 from IATA's official `IAT_Segments_CR` layer. **1153.1mi** (701.6 certified + 451.4 connecting), 126 sections. Main spine follows the **east bifurcation**; Baraboo is the alternate (`route_id: "west-alt"`, 80.6mi). Connecting routes are hikeable and count toward mileage — tagged `route_type: "roadwalk"`, rendered dashed. Opposite of Natchez. Full source and build notes in TrailTemps CLAUDE.md, "IAT Geometry Source" |
 | Natchez Trace | `trail.geojson`, `points.json` | 5 disconnected sections |
 | New England | `trail.geojson`, `points.json` | OK |
 | North Country | `trail.geojson`, `points.json` | OK (19MB GeoJSON, largest) |

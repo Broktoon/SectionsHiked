@@ -98,12 +98,38 @@ function _nearestIndexInArray(coords, lat, lng) {
   return { idx: bestIdx, dist: bestDist };
 }
 
+// Perpendicular distance from a point to the segment AB, in miles. Distance to
+// the nearest vertex is not a substitute: where a branch is digitised sparsely
+// (road walks can run 0.04mi between vertices) a point sitting exactly on the
+// line can still be 150ft from every vertex of it.
+function _distToSegmentMi(lat, lng, A, B) {
+  const kx = Math.cos(lat * Math.PI / 180);
+  const ax = (A.lng - lng) * kx, ay = A.lat - lat;
+  const bx = (B.lng - lng) * kx, by = B.lat - lat;
+  const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy;
+  let t = L2 ? ((-ax) * dx + (-ay) * dy) / L2 : 0;
+  t = Math.max(0, Math.min(1, t));
+  const cx = ax + t * dx, cy = ay + t * dy;
+  return Math.sqrt(cx * cx + cy * cy) * 69.0;
+}
+
+function _distToPathMi(coords, lat, lng) {
+  let best = Infinity;
+  for (let i = 1; i < coords.length; i++) {
+    const d = _distToSegmentMi(lat, lng, coords[i - 1], coords[i]);
+    if (d < best) { best = d; if (best < 1e-4) break; }
+  }
+  return best;
+}
+
 // Which branch a lat/lng belongs to: 'main' spine, or an alt-route passage id
 // (e.g. "11e"). Alt routes run physically separate from the main spine, so a
-// point genuinely on one lands within _CHAIN_TOLERANCE_MI of its own coords.
+// point genuinely on one lands within _CHAIN_TOLERANCE_MI of its own line.
+// Measured against the line, not its vertices, so sparsely drawn branches
+// (IAT's road walks) classify the same as densely drawn ones.
 function _branchAt(lat, lng) {
   for (const [passageId, branch] of Object.entries(_altBranches)) {
-    if (_nearestIndexInArray(branch.coords, lat, lng).dist <= _CHAIN_TOLERANCE_MI) {
+    if (_distToPathMi(branch.coords, lat, lng) <= _CHAIN_TOLERANCE_MI) {
       return passageId;
     }
   }

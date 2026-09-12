@@ -46,7 +46,7 @@ const TRAILS = [
     id: 'ice-age-trail',
     name: 'Ice Age Trail',
     color: '#4a7c59',
-    totalMiles: 1315.6, // certified segments + connecting routes, both hikeable — see CLAUDE.md
+    totalMiles: 1153.1, // certified segments + connecting routes, both hikeable — see CLAUDE.md
     image: 'ice_age_trail_logo.jpg',
     states: ['WI'],
     termini: ['Potawatomi SP, WI', 'Interstate SP, WI'],
@@ -64,7 +64,7 @@ const TRAILS = [
     id: 'new-england-trail',
     name: 'New England Trail',
     color: '#4a7c59',
-    totalMiles: 215,
+    totalMiles: 235, // official NPS/newenglandtrail.org figure; our own geometry (208.3mi via mile markers, ~184mi via raw geometry) predates trail extensions and undersamples the MA segment — see CLAUDE.md
     image: 'new_england_trail-logo.png',
     states: ['CT','MA'],
     termini: ['Long Island Sound, CT', 'NH border, MA'],
