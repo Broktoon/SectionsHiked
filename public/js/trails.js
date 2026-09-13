@@ -27,7 +27,7 @@ const TRAILS = [
     id: 'continental-divide-trail',
     name: 'Continental Divide Trail',
     color: '#4a7c59',
-    totalMiles: 3100,
+    totalMiles: 3040.0, // CDTC 2026 half-mile markers, Crazy Cook to Waterton Lake
     image: 'ContinentalDivideTrailLogo.png',
     states: ['NM','CO','WY','ID','MT'],
     termini: ['Mexico border, NM', 'Canada border, MT'],

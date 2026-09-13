@@ -26,3 +26,13 @@ public/trails/pacific-crest-trail/data/trail_backup.geojson
 # have to redownload these.
 scripts/cache/pcta_letter_sections.geojson
 scripts/cache/pcta_regions.geojson
+public/trails/continental-divide-trail/data/points_backup.json
+public/trails/continental-divide-trail/data/trail_backup.geojson
+# ^ pre-rebuild CDT data; the originals are also in git history at 086d6a3
+#   (the commit before the CDTC rebuild)
+
+# CDTC source layers: 64MB each, fetched on demand by scripts/build-cdt-data.js.
+# The small inputs it also needs (half-mile markers, the OSM alternate relations,
+# Census state boundaries) ARE committed, so only these two need refetching.
+scripts/cache/cdtc_sections.geojson
+scripts/cache/cdtc_centerline.geojson
