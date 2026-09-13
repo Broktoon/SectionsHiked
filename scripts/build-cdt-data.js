@@ -286,21 +286,54 @@ function nearestFeature(idx, la, lo) {
   return { fi: best, dist: bd };
 }
 
+// Perpendicular distance in miles from a point to the nearest segment of a
+// polyline, using a local planar approximation (exact enough well under a mile).
+//
+// This exists because nearest-*vertex* distance badly overstates how far a point
+// sits from a line whenever the line is sparsely sampled, and it produced two
+// false alarms while this trail was being built:
+//
+//   * section 018's mile markers read up to 1.003 mi from their own section
+//     line. Perpendicular: 0.000 mi. The line is a dead-straight New Mexico
+//     roadwalk carrying a vertex only every 2 miles.
+//   * the Spotted Bear route's rejoin endpoint read 1.21 mi from the spine even
+//     after its real 1.21 mi gap was closed, because the spine is sampled every
+//     0.5 mi so anything can read a quarter mile out. Perpendicular: 0.007 mi.
+//
+// Endpoint offsets are therefore reported this way. Branch and rejoin MILES
+// still come from the nearest sampled point, which is what puts them on the
+// axis; only the distance is measured against the line.
+function distToLine(lat, lon, line) {
+  const t = Math.PI / 180;
+  const kx = 69.17 * Math.cos(lat * t), ky = 69.17;
+  let best = Infinity;
+  for (let i = 1; i < line.length; i++) {
+    const a = line[i - 1], b = line[i];
+    // Cheap bounding-box reject before the segment maths.
+    if (Math.abs(a[1] - lat) > 0.2 && Math.abs(b[1] - lat) > 0.2) continue;
+    if (Math.abs(a[0] - lon) > 0.2 && Math.abs(b[0] - lon) > 0.2) continue;
+    const px = (lon - a[0]) * kx, py = (lat - a[1]) * ky;
+    const bx = (b[0] - a[0]) * kx, by = (b[1] - a[1]) * ky;
+    const L2 = bx * bx + by * by;
+    const u = L2 === 0 ? 0 : Math.max(0, Math.min(1, (px * bx + py * by) / L2));
+    const dx = px - u * bx, dy = py - u * by;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d < best) best = d;
+  }
+  return best;
+}
+
 // Borrow the stretch of a neighbouring OSM way that closes the gap between a
 // relation's loose end and the spine. Only the portion between where the way
 // meets the chain and where it comes nearest the spine is kept; the rest of the
 // way carries on elsewhere and is discarded.
-function connectorSlice(way, chainEnd, spine) {
+function connectorSlice(way, chainEnd, spineLine) {
   const g = way.geometry.map(n => [n.lon, n.lat]);
   let ti = 0, td = Infinity, si = 0, sd = Infinity;
   g.forEach((c, i) => {
     const dt = haversine(chainEnd[1], chainEnd[0], c[1], c[0]);
     if (dt < td) { td = dt; ti = i; }
-    let ds = Infinity;
-    for (const p of spine) {
-      const d = haversine(p.lat, p.lon, c[1], c[0]);
-      if (d < ds) ds = d;
-    }
+    const ds = distToLine(c[1], c[0], spineLine);
     if (ds < sd) { sd = ds; si = i; }
   });
   const [lo, hi] = ti <= si ? [ti, si] : [si, ti];
@@ -594,6 +627,18 @@ async function main() {
   // ── Stage 3: alternates ────────────────────────────────────────────────────
   console.log('\n=== Stage 3: alternates ===');
 
+  // The CDTC centerline, chained into one line. Needed here so endpoint offsets
+  // can be measured against the real trail rather than the 0.5-mile sample, and
+  // reused for trail.geojson in stage 7.
+  const centerParts = [];
+  for (const f of centerFC.features.filter(f => f.properties.Label === LABEL_MAIN)) {
+    const g = f.geometry;
+    centerParts.push(...(g.type === 'LineString' ? [g.coordinates] : g.coordinates));
+  }
+  const spineLine = chainPaths(centerParts, 5.0);
+  console.log('  centerline chained: ' + spineLine.length + ' verts, '
+    + r1(pathLen(spineLine)) + ' mi');
+
   // Nearest spine mile to an arbitrary coordinate — used to find where an
   // alternate leaves and rejoins the spine. Called ten times, so a linear scan
   // over the 6,079 spine points is cheaper than indexing them.
@@ -603,7 +648,9 @@ async function main() {
       const d = haversine(lat, lon, spine[i].lat, spine[i].lon);
       if (d < bd) { bd = d; best = i; }
     }
-    return { mile: spine[best].mile, dist: bd };
+    // The mile comes from the sampled point; the offset is measured against the
+    // centerline, which is the only fair reading of "how far off the trail".
+    return { mile: spine[best].mile, dist: distToLine(lat, lon, spineLine) };
   }
 
   const altDefs = [];
@@ -642,8 +689,8 @@ async function main() {
       if (!fs.existsSync(wf)) throw new Error('missing connector way cache: ' + wf);
       const way = JSON.parse(fs.readFileSync(wf, 'utf8'))[0];
       // Try both ends of the chain; the connector attaches to whichever it meets.
-      const head = connectorSlice(way, chain[0], spine);
-      const tail = connectorSlice(way, chain[chain.length - 1], spine);
+      const head = connectorSlice(way, chain[0], spineLine);
+      const tail = connectorSlice(way, chain[chain.length - 1], spineLine);
       const at = head.joinDist <= tail.joinDist ? head : tail;
       if (at.joinDist > 0.05) {
         throw new Error('connector way ' + wayId + ' for ' + a.id
@@ -656,7 +703,7 @@ async function main() {
       console.log('  ' + a.id + ': +' + r1(added) + ' mi from OSM way ' + wayId
         + ' (' + (way.tags?.name || 'unnamed') + (way.tags?.ref ? ' #' + way.tags.ref : '')
         + '), closing its loose end to '
-        + at.spineDist.toFixed(2) + ' mi from the spine');
+        + at.spineDist.toFixed(3) + ' mi from the spine');
     }
 
     if (chainPaths.stranded) {
@@ -772,8 +819,8 @@ async function main() {
       + 'branch ' + r1(branchMile)
       + (isSpur ? ' -> own terminus' : ' rejoin ' + r1(rejoinMile))
       + ', ' + r1(altLen) + ' mi, ' + pts.length + ' pts'
-      + ' (branch snap ' + (m1.mile <= m2.mile ? m1.dist : m2.dist).toFixed(2) + ' mi'
-      + (isSpur ? '' : ', rejoin snap ' + (m1.mile <= m2.mile ? m2.dist : m1.dist).toFixed(2) + ' mi') + ')');
+      + ' (branch offset ' + (m1.mile <= m2.mile ? m1.dist : m2.dist).toFixed(3) + ' mi'
+      + (isSpur ? '' : ', rejoin offset ' + (m1.mile <= m2.mile ? m2.dist : m1.dist).toFixed(3) + ' mi') + ')');
   }
 
   // ── Stage 4: state by polygon test ─────────────────────────────────────────
@@ -859,16 +906,7 @@ async function main() {
   // region. The centerline arrives as four state features that already run
   // south to north; chain them so any vertex-level gap at a state line is
   // closed the same way the alternates are.
-  const mainCenter = centerFC.features.filter(f => f.properties.Label === LABEL_MAIN);
-  const centerParts = [];
-  for (const f of mainCenter) {
-    const g = f.geometry;
-    const parts = g.type === 'LineString' ? [g.coordinates] : g.coordinates;
-    centerParts.push(...parts);
-  }
-  const spineLine = chainPaths(centerParts, 5.0);
   const spineLineLen = pathLen(spineLine);
-  console.log('  centerline chained: ' + spineLine.length + ' verts, ' + r1(spineLineLen) + ' mi');
 
   const thinned = thinCoords(spineLine, 20);
   const thinnedLen = pathLen(thinned);

@@ -211,12 +211,31 @@ hole in OSM, found by querying paths around that endpoint:
   (Flathead NF #155, OSM way 891724062), and the relation simply does not
   include the rest of that trail.
 - Big River continues 1.210mi to the Bowl Creek / Strawberry Creek junction at
-  48.00095,-113.05296, which is **0.184mi from CDT mile 2877** — that is where
-  the CDT actually crosses.
+  48.00095,-113.05296, which sits **37 feet off the CDT centerline** — that is
+  where the CDT actually crosses. Bowl Creek and Strawberry Creek essentially
+  *are* the CDT through there.
 
 The builder now borrows that stretch via `connectorWays` in `OSM_ALTS`, taking
 only the portion between where the way meets the chain and where it comes
-nearest the spine. The endpoint lands at 0.18mi, in line with everything else.
+nearest the spine. Both endpoints land within 0.001mi of the centerline.
+
+### Measure offsets perpendicular to the line, not to the nearest point
+
+Two false alarms on this trail came from the same mistake, so the builder now
+reports every endpoint offset as perpendicular distance to the centerline
+(`distToLine`) rather than distance to the nearest sampled point:
+
+| reading | nearest point | perpendicular |
+|---|---|---|
+| section 018's mile markers | 1.003mi | **0.000mi** |
+| Spotted Bear rejoin, after the gap was closed | 0.184mi | **0.001mi** |
+| Anaconda branch | 4.20mi (pre-fix chain) | **0.018mi** |
+
+The spine is sampled every 0.5mi, so a point sitting exactly on the trail can
+read a quarter mile out; a sparsely digitised section line is worse. Branch and
+rejoin **miles** still come from the nearest sampled point — that is what puts
+them on the axis — but only the distance is measured against the line. With
+that change all five alternates report offsets under 0.02mi at both ends.
 
 The route is **27.8mi against the 43.5mi of spine it replaces — a real 15.7mi
 saving**, not the "+20.5mi scenic detour" the old files claimed. Both old
