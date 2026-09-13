@@ -169,7 +169,7 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 |-------|------|-------|
 | Appalachian | `trail.geojson`, `points.json` | OK |
 | Arizona | `points.json` only | **trail.geojson missing** — original 56MB, needs simplified version |
-| Continental Divide | `trail.geojson`, `points.json`, `cdt_meta.json` | Rebuilt 2026-09 from CDTC's official GIS via `scripts/build-cdt-data.js`. **3039.98mi**, 6523 points at **0.5mi**, 5 regions, 126 sections. Mile axis is CDTC's *Half_Mile_Markers* layer; sections and regions come from its *2026_CDT_Trail_Sections_view*. Replaces a 2019 USFS snapshot whose only structure was four latitude bands — those put **260mi of Idaho/Montana border ridge under `state: "WY"`** and never emitted `ID` at all. The old build also inverted **RMNP**: its layer had only the western bypass connector, so the axis ran along the bypass and the real route through the park was a 40mi "alternate". CDTC's Primary Route goes through the park; the 4.4mi **Tonahutu Creek Route** is the alternate. 5 alternates, 2 official (`tonahutu`, `chief-mtn`) and 3 from OSM (`gila`, `anaconda`, `spotted-bear`, tagged `official: false`) — see the Spotted Bear caveat below |
+| Continental Divide | `trail.geojson`, `points.json`, `cdt_meta.json` | Rebuilt 2026-09 from CDTC's official GIS via `scripts/build-cdt-data.js`. **3039.98mi**, 6523 points at **0.5mi**, 5 regions, 126 sections. Mile axis is CDTC's *Half_Mile_Markers* layer; sections and regions come from its *2026_CDT_Trail_Sections_view*. Replaces a 2019 USFS snapshot whose only structure was four latitude bands — those put **260mi of Idaho/Montana border ridge under `state: "WY"`** and never emitted `ID` at all. The old build also inverted **RMNP**: its layer had only the western bypass connector, so the axis ran along the bypass and the real route through the park was a 40mi "alternate". CDTC's Primary Route goes through the park; the 4.4mi **Tonahutu Creek Route** is the alternate. 5 alternates, 2 official (`tonahutu`, `chief-mtn`) and 3 from OSM (`gila`, `anaconda`, `spotted-bear`, tagged `official: false`) — see the alternates section below |
 | Florida | `trails.geojson`, `points.json` | Note: plural filename |
 | Ice Age | `trail.geojson`, `points.json`, `iat_meta.json` | Rebuilt 2026-09 from IATA's official `IAT_Segments_CR` layer. **1153.1mi** (701.6 certified + 451.4 connecting), 126 sections. Main spine follows the **east bifurcation**; Baraboo is the alternate (`route_id: "west-alt"`, 80.6mi). Connecting routes are hikeable and count toward mileage — tagged `route_type: "roadwalk"`, rendered dashed. Opposite of Natchez. Full source and build notes in TrailTemps CLAUDE.md, "IAT Geometry Source" |
 | Natchez Trace | `trail.geojson`, `points.json` | 5 disconnected sections |
@@ -179,13 +179,12 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 | Pacific Northwest | `trail.geojson`, `points.json` | Includes ferry crossing segment |
 | Potomac Heritage | `trail.geojson`, `points.json` | OK |
 
-### CDT alternates — the three OSM ones are not verified
+### CDT alternates — the three OSM ones, and how Spotted Bear was resolved
 
 CDTC publishes only two alternates: the Tonahutu Creek Route (its section 068)
 and the Chief Mountain Border Crossing (its section 128). The Gila River,
-Anaconda Cutoff and Spotted Bear routes are carried forward from the previous
-build's cached OpenStreetMap relations and are tagged `official: false` in
-`cdt_meta.json`.
+Anaconda Cutoff and Spotted Bear routes come from OpenStreetMap relations and
+are tagged `official: false` in `cdt_meta.json`.
 
 Their lengths moved when `scripts/build-cdt-data.js` fixed the chainer. The old
 one only ever appended to the tail of the growing chain, so whichever OSM way
@@ -198,16 +197,38 @@ now yields one continuous chain per route with no step over 0.9mi.
 |---|---|---|---|
 | Gila River | 104.9mi | 106.7mi | 8 of 61 ways still unstitched (5.1mi of side paths); reported at build time |
 | Anaconda Cutoff | 57.6mi | 53.1mi | 4.5mi of the old figure was the phantom straight line |
-| Spotted Bear | 35.5mi | 26.6mi | 8.9mi was phantom |
+| Spotted Bear | 35.5mi | 27.8mi | 8.9mi was phantom; 1.2mi added back, see below |
 
-**Spotted Bear is the one to distrust.** It now computes as 16.9mi *shorter*
-than the spine stretch it replaces, but it is normally described as a longer,
-scenic detour through the Bob Marshall. Either OSM relation 8034122 covers only
-part of the route, or its branch point (spine mile 2833.5) is wrong — its rejoin
-end snaps 1.21mi from the spine, far looser than every other alternate's
-endpoints (all under 0.15mi). TrailTemps' page deliberately quotes no mileage
-delta for it. Resolve it against a real CDT guide or CDTC's reroute layer before
-relying on that number.
+**Spotted Bear: resolved, and the "too short" worry was unfounded.** The route
+looked wrong because its rejoin endpoint snapped 1.21mi from the spine while
+every other alternate's endpoints were under 0.15mi. The cause was a genuine
+hole in OSM, found by querying paths around that endpoint:
+
+- Relation 8034122 has exactly 5 member ways (verified against the OSM API —
+  the cache was never truncated). Its last member, `Clack Creek`, ends at
+  48.00220,-113.07510.
+- That point is a **T-junction into the middle of** the `Big River` trail
+  (Flathead NF #155, OSM way 891724062), and the relation simply does not
+  include the rest of that trail.
+- Big River continues 1.210mi to the Bowl Creek / Strawberry Creek junction at
+  48.00095,-113.05296, which is **0.184mi from CDT mile 2877** — that is where
+  the CDT actually crosses.
+
+The builder now borrows that stretch via `connectorWays` in `OSM_ALTS`, taking
+only the portion between where the way meets the chain and where it comes
+nearest the spine. The endpoint lands at 0.18mi, in line with everything else.
+
+The route is **27.8mi against the 43.5mi of spine it replaces — a real 15.7mi
+saving**, not the "+20.5mi scenic detour" the old files claimed. Both old
+numbers were artifacts: the 35.5mi included the phantom line, and the 15mi
+"main" span came from branch/rejoin points derived from that same broken chain,
+so there was never a trustworthy prior figure to contradict.
+
+A shorter alternate is not suspicious in itself. Through this stretch the CDT
+follows the divide while the alternate drops into the Spotted Bear River
+drainage and cuts across; straight-line distance between the two junctions is
+about 18mi, so 43.5mi of spine and 27.8mi of alternate are both plausible. What
+was suspicious was the loose endpoint, and that is now explained.
 
 Trail geometry was copied from the TrailTemps project. If higher-resolution data or corrections are needed, refer to the original TrailTemps data sources (see TrailTemps CLAUDE.md for source URLs and build scripts).
 

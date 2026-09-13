@@ -48,13 +48,15 @@
  *
  * Section and region boundaries are derived by snapping each mile marker to the
  * nearest section geometry, NOT by accumulating the section layer's own Mileage
- * field. (Snapping is to the nearest section *vertex*, so the reported max snap
- * distance overstates the true offset wherever the source is sparse: the worst
- * case, ~1.0 mi around mile 453 in section 018, is a dead-straight New Mexico
- * roadwalk whose line carries a vertex only every 2 miles. Those markers sit on
- * the section line to within 0.000 mi measured perpendicular.) Those sum to 3,042.96 against a 3,039.979 marker axis — a 0.1% drift
+ * field. Those sum to 3,042.96 against a 3,039.979 marker axis — a 0.1% drift
  * that would compound into a visible offset by Montana. Snapping keeps every
  * boundary on one axis. This is the same rule the PCT build follows.
+ *
+ * Snapping is to the nearest section *vertex*, so the reported max snap distance
+ * overstates the true offset wherever the source is sparse: the worst case,
+ * ~1.0 mi around mile 453 in section 018, is a dead-straight New Mexico roadwalk
+ * whose line carries a vertex only every 2 miles. Those markers sit on the
+ * section line to within 0.000 mi measured perpendicular.
  *
  * Regions are CDTC's five State_1 groups, in trail order: New Mexico,
  * Colorado, Wyoming, Montana/Idaho, Montana. "Montana/Idaho" is CDTC's own
@@ -76,7 +78,7 @@
  *   chief-mtn     27.2 mi  CDTC section 128  official, alternate northern terminus
  *   gila         106.7 mi  OSM relation 7917427
  *   anaconda      53.1 mi  OSM relation 8107272
- *   spotted-bear  26.6 mi  OSM relation 8034122
+ *   spotted-bear  27.8 mi  OSM relation 8034122 + way 891724062
  *
  * The Anaconda and Spotted Bear figures are 4.5 and 8.9 miles shorter than the
  * previous build reported. That build's chainer only ever appended to the tail
@@ -85,6 +87,23 @@
  * joined by a straight line across open country, and that straight line was
  * counted as tread. chainPaths here grows from both ends, after which all three
  * routes stitch into one continuous chain with no step over 0.9 mi.
+ *
+ * Spotted Bear needed one further fix. Relation 8034122 stops 1.21 mi short of
+ * the CDT at its north end: its Clack Creek member T-junctions into the middle
+ * of the Big River trail (Flathead NF #155, OSM way 891724062) and the relation
+ * does not include the rest of that trail up to the Bowl Creek / Strawberry
+ * Creek junction, where the CDT actually crosses. That stretch is borrowed via
+ * `connectorWays`, which lands the endpoint 0.18 mi from the spine instead of
+ * 1.21 mi — in line with every other alternate.
+ *
+ * Spotted Bear is therefore 27.8 mi against the 43.5 mi of spine it replaces,
+ * a genuine 15.7 mi saving rather than the "+20.5 mi scenic detour" the old
+ * files claimed. Both of the old numbers were artifacts: its 35.5 mi came from
+ * an 8.9 mi phantom straight line, and its 15 mi "main" span came from branch
+ * and rejoin points derived from the same broken chain. A shorter alternate is
+ * not itself suspicious here — the CDT follows the divide through this stretch
+ * while the alternate drops into the Spotted Bear River drainage and cuts
+ * across, and the straight-line distance between the two junctions is ~18 mi.
  *
  * The old build's fourth OSM alternate, relation 6747529 ("RMNP Loop"), is
  * deliberately dropped: under CDTC's routing that geometry is the main spine,
@@ -147,7 +166,15 @@ const STATE_ABBR = {
 const OSM_ALTS = [
   { id: 'gila',         name: 'Gila River Route',   relation: 7917427, maxGapMi: 1.0  },
   { id: 'anaconda',     name: 'Anaconda Cutoff',    relation: 8107272, maxGapMi: 5.0  },
-  { id: 'spotted-bear', name: 'Spotted Bear Route', relation: 8034122, maxGapMi: 10.0 },
+  // Relation 8034122 stops 1.21mi short of the CDT at its north end: its last
+  // member, the Clack Creek way, T-junctions into the middle of the Big River
+  // trail (Flathead NF #155, OSM way 891724062) and the relation simply does not
+  // include the rest of that trail up to the Bowl Creek / Strawberry Creek
+  // junction, which is where the CDT actually crosses. Borrowing that stretch
+  // closes the route: the north endpoint then lands 0.18mi from the spine
+  // instead of 1.21mi, in line with every other alternate. See connectorWays.
+  { id: 'spotted-bear', name: 'Spotted Bear Route', relation: 8034122, maxGapMi: 10.0,
+    connectorWays: [891724062] },
 ];
 
 // Any step longer than this in a stitched OSM chain would be a hole in OSM's
@@ -257,6 +284,30 @@ function nearestFeature(idx, la, lo) {
     if (best !== null && bd < r * CELL * 60) break;
   }
   return { fi: best, dist: bd };
+}
+
+// Borrow the stretch of a neighbouring OSM way that closes the gap between a
+// relation's loose end and the spine. Only the portion between where the way
+// meets the chain and where it comes nearest the spine is kept; the rest of the
+// way carries on elsewhere and is discarded.
+function connectorSlice(way, chainEnd, spine) {
+  const g = way.geometry.map(n => [n.lon, n.lat]);
+  let ti = 0, td = Infinity, si = 0, sd = Infinity;
+  g.forEach((c, i) => {
+    const dt = haversine(chainEnd[1], chainEnd[0], c[1], c[0]);
+    if (dt < td) { td = dt; ti = i; }
+    let ds = Infinity;
+    for (const p of spine) {
+      const d = haversine(p.lat, p.lon, c[1], c[0]);
+      if (d < ds) ds = d;
+    }
+    if (ds < sd) { sd = ds; si = i; }
+  });
+  const [lo, hi] = ti <= si ? [ti, si] : [si, ti];
+  const slice = g.slice(lo, hi + 1);
+  // Run it outward from the chain, so it appends in the right direction.
+  if (ti > si) slice.reverse();
+  return { slice, joinDist: td, spineDist: sd };
 }
 
 // ── OSM chaining (ported from the previous builder, parameters unchanged) ─────
@@ -584,7 +635,30 @@ async function main() {
     const ways = JSON.parse(fs.readFileSync(file, 'utf8'));
     const paths = ways.filter(w => w.geometry && w.geometry.length >= 2)
       .map(w => w.geometry.map(n => [n.lon, n.lat]));
-    const chain = chainPaths(paths, a.maxGapMi);
+    let chain = chainPaths(paths, a.maxGapMi);
+
+    for (const wayId of (a.connectorWays || [])) {
+      const wf = path.join(CACHE, 'cdt_osm_connector_' + wayId + '.json');
+      if (!fs.existsSync(wf)) throw new Error('missing connector way cache: ' + wf);
+      const way = JSON.parse(fs.readFileSync(wf, 'utf8'))[0];
+      // Try both ends of the chain; the connector attaches to whichever it meets.
+      const head = connectorSlice(way, chain[0], spine);
+      const tail = connectorSlice(way, chain[chain.length - 1], spine);
+      const at = head.joinDist <= tail.joinDist ? head : tail;
+      if (at.joinDist > 0.05) {
+        throw new Error('connector way ' + wayId + ' for ' + a.id
+          + ' does not meet the chain (nearest ' + at.joinDist.toFixed(3) + ' mi)');
+      }
+      const added = pathLen(at.slice);
+      chain = at === head
+        ? at.slice.slice().reverse().concat(chain)
+        : chain.concat(at.slice);
+      console.log('  ' + a.id + ': +' + r1(added) + ' mi from OSM way ' + wayId
+        + ' (' + (way.tags?.name || 'unnamed') + (way.tags?.ref ? ' #' + way.tags.ref : '')
+        + '), closing its loose end to '
+        + at.spineDist.toFixed(2) + ' mi from the spine');
+    }
+
     if (chainPaths.stranded) {
       console.log('  ' + a.id + ': ' + chainPaths.stranded + ' of ' + paths.length
         + ' OSM ways left unstitched (' + r1(chainPaths.strandedMi) + ' mi) — '
@@ -601,7 +675,10 @@ async function main() {
       section_id: 'alt-' + a.id,
       section_name: a.name,
       official: false,
-      source: 'OSM relation ' + a.relation,
+      source: 'OSM relation ' + a.relation
+        + ((a.connectorWays || []).length
+            ? ' + way ' + a.connectorWays.join(', way ') + ' (connector)'
+            : ''),
       segments: segs,
     });
   }
