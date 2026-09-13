@@ -15,3 +15,14 @@ public/trails/new-england-trail/data/points_backup.json
 # ^ pre-rebuild NET data; the originals are also in git history at 218ac86
 #   (the commit before the NPS centerline rebuild)
 public/trails/pacific-crest-trail/data/Full_PCT_Simplified.geojson
+public/trails/pacific-crest-trail/data/points_backup.json
+public/trails/pacific-crest-trail/data/trail_backup.geojson
+# ^ pre-rebuild PCT data; the originals are also in git history at e3078c0
+#   (the commit before the PCTA rebuild)
+
+# PCTA section/region source layers: 36MB each, fetched on demand by
+# scripts/build-pct-data.js. The small derived product it actually needs,
+# scripts/cache/pcta_assignment.json, IS committed, so a rebuild does not
+# have to redownload these.
+scripts/cache/pcta_letter_sections.geojson
+scripts/cache/pcta_regions.geojson

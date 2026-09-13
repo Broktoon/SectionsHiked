@@ -1,0 +1,379 @@
+{
+  "trail": {
+    "name": "Pacific Crest Trail",
+    "total_miles": 2655.66,
+    "source": "Pacific Crest Trail Association — PCT Mile Markers 2026, PCT Letter Sections, PCTA Centerline Regions",
+    "source_org": "https://services5.arcgis.com/ZldHa25efPFpMmfB/arcgis/rest/services",
+    "built": "2026-09-13",
+    "termini": {
+      "south": "Campo, CA (Mexican border)",
+      "north": "Monument 78, WA (Canadian border)"
+    }
+  },
+  "regions": [
+    {
+      "region_id": "socal",
+      "region_name": "Southern California",
+      "mile_start": 0,
+      "mile_end": 519.5,
+      "miles": 519.5
+    },
+    {
+      "region_id": "southern-sierra",
+      "region_name": "Southern Sierra",
+      "mile_start": 520,
+      "mile_end": 1000,
+      "miles": 480
+    },
+    {
+      "region_id": "northern-sierra",
+      "region_name": "Northern Sierra",
+      "mile_start": 1000.5,
+      "mile_end": 1419,
+      "miles": 418.5
+    },
+    {
+      "region_id": "norcal-soor",
+      "region_name": "Northern California / Southern Oregon",
+      "mile_start": 1419.5,
+      "mile_end": 1879.5,
+      "miles": 460
+    },
+    {
+      "region_id": "central-cascades",
+      "region_name": "Central Cascades",
+      "mile_start": 1880,
+      "mile_end": 2253,
+      "miles": 373
+    },
+    {
+      "region_id": "north-cascades",
+      "region_name": "North Cascades",
+      "mile_start": 2253.5,
+      "mile_end": 2655.66,
+      "miles": 402.16
+    }
+  ],
+  "sections": [
+    {
+      "section_id": "ca-a",
+      "section_name": "California Section A",
+      "region_id": "socal",
+      "mile_start": 0,
+      "mile_end": 109,
+      "miles": 109,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-b",
+      "section_name": "California Section B",
+      "region_id": "socal",
+      "mile_start": 109.5,
+      "mile_end": 209.5,
+      "miles": 100,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-c",
+      "section_name": "California Section C",
+      "region_id": "socal",
+      "mile_start": 210,
+      "mile_end": 341.5,
+      "miles": 131.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-d",
+      "section_name": "California Section D",
+      "region_id": "socal",
+      "mile_start": 342,
+      "mile_end": 454,
+      "miles": 112,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-e",
+      "section_name": "California Section E",
+      "region_id": "socal",
+      "mile_start": 454.5,
+      "mile_end": 566,
+      "miles": 111.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-f",
+      "section_name": "California Section F",
+      "region_id": "southern-sierra",
+      "mile_start": 566.5,
+      "mile_end": 653,
+      "miles": 86.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-g",
+      "section_name": "California Section G",
+      "region_id": "southern-sierra",
+      "mile_start": 653.5,
+      "mile_end": 768,
+      "miles": 114.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-h",
+      "section_name": "California Section H",
+      "region_id": "southern-sierra",
+      "mile_start": 768.5,
+      "mile_end": 943.5,
+      "miles": 175,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-i",
+      "section_name": "California Section I",
+      "region_id": "southern-sierra",
+      "mile_start": 944,
+      "mile_end": 1017.5,
+      "miles": 73.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-j",
+      "section_name": "California Section J",
+      "region_id": "northern-sierra",
+      "mile_start": 1018,
+      "mile_end": 1093.5,
+      "miles": 75.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-k",
+      "section_name": "California Section K",
+      "region_id": "northern-sierra",
+      "mile_start": 1094,
+      "mile_end": 1158,
+      "miles": 64,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-l",
+      "section_name": "California Section L",
+      "region_id": "northern-sierra",
+      "mile_start": 1158.5,
+      "mile_end": 1196.5,
+      "miles": 38,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-m",
+      "section_name": "California Section M",
+      "region_id": "northern-sierra",
+      "mile_start": 1197,
+      "mile_end": 1288.5,
+      "miles": 91.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-n",
+      "section_name": "California Section N",
+      "region_id": "northern-sierra",
+      "mile_start": 1289,
+      "mile_end": 1419.5,
+      "miles": 130.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-o",
+      "section_name": "California Section O",
+      "region_id": "norcal-soor",
+      "mile_start": 1420,
+      "mile_end": 1502.5,
+      "miles": 82.5,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-p",
+      "section_name": "California Section P",
+      "region_id": "norcal-soor",
+      "mile_start": 1503,
+      "mile_end": 1601,
+      "miles": 98,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-q",
+      "section_name": "California Section Q",
+      "region_id": "norcal-soor",
+      "mile_start": 1601.5,
+      "mile_end": 1657.5,
+      "miles": 56,
+      "states": [
+        "CA"
+      ]
+    },
+    {
+      "section_id": "ca-r",
+      "section_name": "California Section R",
+      "region_id": "norcal-soor",
+      "mile_start": 1658,
+      "mile_end": 1720,
+      "miles": 62,
+      "states": [
+        "CA",
+        "OR"
+      ]
+    },
+    {
+      "section_id": "or-b",
+      "section_name": "Oregon Section B",
+      "region_id": "norcal-soor",
+      "mile_start": 1720.5,
+      "mile_end": 1774.5,
+      "miles": 54,
+      "states": [
+        "OR"
+      ]
+    },
+    {
+      "section_id": "or-c",
+      "section_name": "Oregon Section C",
+      "region_id": "norcal-soor",
+      "mile_start": 1775,
+      "mile_end": 1849,
+      "miles": 74,
+      "states": [
+        "OR"
+      ]
+    },
+    {
+      "section_id": "or-d",
+      "section_name": "Oregon Section D",
+      "region_id": "norcal-soor",
+      "mile_start": 1849.5,
+      "mile_end": 1909,
+      "miles": 59.5,
+      "states": [
+        "OR"
+      ]
+    },
+    {
+      "section_id": "or-e",
+      "section_name": "Oregon Section E",
+      "region_id": "central-cascades",
+      "mile_start": 1909.5,
+      "mile_end": 1985,
+      "miles": 75.5,
+      "states": [
+        "OR"
+      ]
+    },
+    {
+      "section_id": "or-f",
+      "section_name": "Oregon Section F",
+      "region_id": "central-cascades",
+      "mile_start": 1985.5,
+      "mile_end": 2094.5,
+      "miles": 109,
+      "states": [
+        "OR"
+      ]
+    },
+    {
+      "section_id": "or-g",
+      "section_name": "Oregon Section G",
+      "region_id": "central-cascades",
+      "mile_start": 2095,
+      "mile_end": 2150,
+      "miles": 55,
+      "states": [
+        "OR"
+      ]
+    },
+    {
+      "section_id": "wa-h",
+      "section_name": "Washington Section H",
+      "region_id": "central-cascades",
+      "mile_start": 2150.5,
+      "mile_end": 2298,
+      "miles": 147.5,
+      "states": [
+        "WA"
+      ]
+    },
+    {
+      "section_id": "wa-i",
+      "section_name": "Washington Section I",
+      "region_id": "north-cascades",
+      "mile_start": 2298.5,
+      "mile_end": 2396,
+      "miles": 97.5,
+      "states": [
+        "WA"
+      ]
+    },
+    {
+      "section_id": "wa-j",
+      "section_name": "Washington Section J",
+      "region_id": "north-cascades",
+      "mile_start": 2396.5,
+      "mile_end": 2467,
+      "miles": 70.5,
+      "states": [
+        "WA"
+      ]
+    },
+    {
+      "section_id": "wa-k",
+      "section_name": "Washington Section K",
+      "region_id": "north-cascades",
+      "mile_start": 2467.5,
+      "mile_end": 2594,
+      "miles": 126.5,
+      "states": [
+        "WA"
+      ]
+    },
+    {
+      "section_id": "wa-l",
+      "section_name": "Washington Section L",
+      "region_id": "north-cascades",
+      "mile_start": 2594.5,
+      "mile_end": 2655.66,
+      "miles": 61.16,
+      "states": [
+        "WA"
+      ]
+    }
+  ]
+}

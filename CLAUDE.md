@@ -73,7 +73,11 @@ public/                          ← everything served to users
     north-country-trail/data/
     pacific-crest-trail/data/
       trail.geojson
-      Full_PCT_Simplified.geojson  ← extra simplified version, keep for reference
+      points.json
+      pct_meta.json                ← 6 PCTA regions + 29 letter sections
+      Full_PCT_Simplified.geojson  ← PCTA shapefile export; gitignored, not deployed.
+                                   ← Still the source of trail.geojson geometry and
+                                   ← both terminus coordinates, so keep it locally.
     pacific-northwest-trail/data/
     potomac-heritage-trail/data/
 
@@ -168,7 +172,7 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 | Natchez Trace | `trail.geojson`, `points.json` | 5 disconnected sections |
 | New England | `trail.geojson`, `points.json`, `net_meta.json` | Rebuilt 2026-09 from the NPS `NEEN_BND_NationalScenicTrailCenterline_ln` layer (CFPA + AMC survey data) via `scripts/build-net-data.js`. **235.65mi** = 200.68 spine + 34.97 spur; the official 235 total includes the spur. Middletown spur is a dead-end alternate southern terminus (`route_id: "middletown-spur"`, `alt_of: "main-spine"`) joining the spine at mile 16.41 — its mile axis is **appended** (200.68→235.65), not projected, because it substitutes for no stretch of spine (unlike IAT's bifurcation). Two real gaps, excluded from mileage and never drawn across: 2.98mi after mile 16.41, and 1.49mi after mile 127.07 at the Connecticut River, which cannot be crossed on foot |
 | North Country | `trail.geojson`, `points.json` | OK (19MB GeoJSON, largest) |
-| Pacific Crest | `trail.geojson`, `points.json` | Extra `Full_PCT_Simplified.geojson` present |
+| Pacific Crest | `trail.geojson`, `points.json`, `pct_meta.json` | Rebuilt 2026-09 from PCTA's own GIS via `scripts/build-pct-data.js`. **2655.66mi**, 5313 points at **0.5mi**, 6 regions, 29 letter sections. Mile axis is PCTA's *PCT Mile Markers 2026* layer — the old axis was a simplified line rescaled to an assumed 2653.0 and drifted up to 7mi (worst miles 250–750). **PCTA's letter sections do not follow state lines**: CA Section R runs ~27mi into Oregon, so `state` is computed independently, never from the section prefix. One spine, no alternates, no gaps |
 | Pacific Northwest | `trail.geojson`, `points.json` | Includes ferry crossing segment |
 | Potomac Heritage | `trail.geojson`, `points.json` | OK |
 

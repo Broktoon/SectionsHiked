@@ -82,7 +82,7 @@ const TRAILS = [
     id: 'pacific-crest-trail',
     name: 'Pacific Crest Trail',
     color: '#4a7c59',
-    totalMiles: 2650,
+    totalMiles: 2655.7, // PCTA 2026 mile markers, Campo to the Canadian border
     image: 'Pct-logo.svg.png',
     states: ['CA','OR','WA'],
     termini: ['Mexico border, CA', 'Canada border, WA'],
