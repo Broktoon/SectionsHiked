@@ -60,6 +60,31 @@ const JUMP_MAX_MI = 15;   // furthest gap the spine router will consider bridgin
 const GAP_MI    = 100 / 5280; // a jump longer than ~100ft is a break, not a join
 const GAP_REPORT_MI = 0.25;   // ...but only breaks this long are real trail gaps
 const CT_MA_BORDER_LAT = 42.0500;
+const GAP_MATCH_MI = 1.0;     // how close a detected gap's ends must sit to a known one
+
+// Breaks in the centerline we have an authoritative account of. Anchored to the
+// endpoint coordinates rather than a part index, so if the NPS layer is
+// republished with different geometry this simply stops matching instead of
+// silently labelling the wrong break.
+//
+// `connector: true` draws a dashed line across the gap tagged route_id
+// "roadwalk" — the non-hikeable sense of that tag (Natchez's parkway), meaning
+// rendered for continuity, carries no mileage, no points.json entries. That is
+// the honest reading here: per newenglandtrail.org/thru-hiking there is no
+// pedestrian crossing of the Connecticut River at all, so it is not trail and
+// not walkable, it just needs to be visible as a break rather than a blank.
+const KNOWN_GAPS = [{
+    id: 'connecticut-river',
+    name: 'Connecticut River crossing',
+    ends: [[42.2830, -72.6263], [42.2909, -72.5999]], // Easthampton side / Skinner State Park side
+    connector: true,
+    passable_on_foot: false,
+    note: 'No pedestrian crossing exists. Northbound the trail resumes on Old Mountain Road ' +
+          'near Skinner State Park; southbound at 2-98 Underwood Ave, Easthampton MA. Hikers ' +
+          'arrange a boat or car ride across; the road detour via US-5N and MA-47N is 10.2mi ' +
+          'and not recommended (high traffic).',
+    source: 'https://newenglandtrail.org/thru-hiking/',
+}];
 
 const args      = process.argv.slice(2);
 const REFRESH   = args.includes('--refresh');
@@ -191,6 +216,11 @@ function routeSpine(parts, startKey, goalKey) {
     const { walk, totalGap } = routeSpine(parts, south.key, north.key);
 
     // Replay the route: traversals build the ordered spine, jumps record gaps.
+    const endpointOf = key => {
+        const [i, e] = key.split(':');
+        const c = parts[+i].coords;
+        return e === 'A' ? c[0] : c[c.length - 1];
+    };
     const spineParts = [], gaps = [];
     let curKey = south.key;
     for (const step of walk) {
@@ -199,9 +229,22 @@ function routeSpine(parts, startKey, goalKey) {
             const enteredAt = curKey.split(':')[1];
             spineParts.push({ i, coords: enteredAt === 'A' ? parts[i].coords : parts[i].coords.slice().reverse() });
         } else if (step.via.cost > GAP_MI) {
-            gaps.push({ afterPart: +curKey.split(':')[0], miles: step.via.cost });
+            gaps.push({
+                afterPart: +curKey.split(':')[0],
+                miles: step.via.cost,
+                from: endpointOf(curKey),
+                to: endpointOf(step.node),
+            });
         }
         curKey = step.node;
+    }
+    // Match each break against the known-gap table by where its ends sit.
+    for (const g of gaps) {
+        g.known = KNOWN_GAPS.find(k => {
+            const [a, b] = k.ends;
+            const near = (c, t) => hav(c[1], c[0], t[0], t[1]) <= GAP_MATCH_MI;
+            return (near(g.from, a) && near(g.to, b)) || (near(g.from, b) && near(g.to, a));
+        });
     }
     const spineIdx = new Set(spineParts.map(s => s.i));
     const spurPartIdx = parts.map((_, i) => i).filter(i => !spineIdx.has(i));
@@ -311,6 +354,8 @@ function routeSpine(parts, startKey, goalKey) {
     }
 
     // ------------------------------------------------------ trail.geojson
+    const lastMileOfPart = new Map();
+    for (const v of spine) lastMileOfPart.set(v.partI, v.mile);
     // Break features at gaps and at the state line, so no line is ever drawn
     // across a gap and every feature carries one honest section.
     const features = [];
@@ -349,6 +394,31 @@ function routeSpine(parts, startKey, goalKey) {
         },
         geometry: { type: 'LineString', coordinates: spurCoords.map(c => [r6(c[0]), r6(c[1])]) },
     });
+
+    // Dashed connectors across documented gaps. route_id "roadwalk" is the
+    // non-hikeable sense: map.js styles it dashed and skips it when building the
+    // hikeable spine, so this makes the break visible without adding mileage or
+    // becoming something a segment can be logged against.
+    let connectorCount = 0;
+    for (const g of gaps) {
+        if (!g.known?.connector) continue;
+        const sec = secForMile(lastMileOfPart.get(g.afterPart) ?? 0);
+        features.push({
+            type: 'Feature',
+            properties: {
+                section_id: sec.id, section_name: sec.name,
+                region_id: sec.region_id, region_name: sec.region_name,
+                route_id: 'roadwalk',
+                gap_id: g.known.id,
+                gap_name: g.known.name,
+                passable_on_foot: g.known.passable_on_foot,
+            },
+            geometry: { type: 'LineString', coordinates: [
+                [r6(g.from[0]), r6(g.from[1])], [r6(g.to[0]), r6(g.to[1])],
+            ] },
+        });
+        connectorCount++;
+    }
     const trailGeojson = { type: 'FeatureCollection', features };
 
     // ----------------------------------------------------- net_meta.json
@@ -356,11 +426,24 @@ function routeSpine(parts, startKey, goalKey) {
     // ever drawn across one. Only the substantial breaks are reported as gaps
     // though — a sub-quarter-mile join is a seam between the Connecticut and
     // Massachusetts source datasets, not a hole in the trail.
-    const lastMileOfPart = new Map();
-    for (const v of spine) lastMileOfPart.set(v.partI, v.mile);
     const gapDetail = gaps
         .filter(g => g.miles >= GAP_REPORT_MI)
-        .map(g => ({ after_mile: r2(lastMileOfPart.get(g.afterPart)), miles: r2(g.miles) }));
+        .map(g => {
+            const after_mile = r2(lastMileOfPart.get(g.afterPart));
+            const base = { after_mile, miles: r2(g.miles),
+                           from: [r6(g.from[1]), r6(g.from[0])], to: [r6(g.to[1]), r6(g.to[0])] };
+            if (g.known) {
+                return { id: g.known.id, name: g.known.name, ...base,
+                         passable_on_foot: g.known.passable_on_foot,
+                         note: g.known.note, source: g.known.source };
+            }
+            // Unmatched breaks are reported but not characterised. This one sits
+            // between the Menunkatuck and the Mattabesett, which reporting says
+            // were connected in 2013 — so it reads more like a hole in the source
+            // layer than a gap on the ground. Not asserting either way here.
+            return { id: null, name: null, ...base, passable_on_foot: null,
+                     note: 'Break in the NPS centerline; cause not established. Not drawn as a connector.' };
+        });
     // Starting from Middletown replaces only the spine below the junction, so the
     // alt route is the spur plus everything north of it. With the junction at
     // mile 16.41 that makes the alt LONGER than the main route, not shorter.
@@ -515,6 +598,8 @@ function routeSpine(parts, startKey, goalKey) {
     console.log(`CT/MA border : spine mile ${r2(boundaryMile)}`);
     console.log(`gaps         : ${gapDetail.length} real (${gapDetail.map(g => `${g.miles}mi after mile ${g.after_mile}`).join('; ')})`);
     console.log(`               ${gaps.length - gapDetail.length} sub-${GAP_REPORT_MI}mi dataset seams also break features but aren't reported as gaps`);
+    console.log(`connectors   : ${connectorCount} dashed non-hikeable (` +
+                `${gapDetail.filter(g => g.id).map(g => g.name).join(', ') || 'none'})`);
     console.log(`route gap sum: ${r2(totalGap)}mi — excluded from mileage`);
     console.log(`geojson      : ${features.length} features, ${features.reduce((s, f) => s + f.geometry.coordinates.length, 0)} vertices`);
     console.log(`points       : ${points.length} total @ ${STEP_MI}mi spacing`);
