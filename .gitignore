@@ -10,4 +10,8 @@ node_modules/
 # Unused reference/backup geojson — kept locally, not deployed
 public/trails/appalachian-trail/data/trail_backup.geojson
 public/trails/ice-age-trail/data/trail_backup.geojson
+public/trails/new-england-trail/data/trail_backup.geojson
+public/trails/new-england-trail/data/points_backup.json
+# ^ pre-rebuild NET data; the originals are also in git history at 218ac86
+#   (the commit before the NPS centerline rebuild)
 public/trails/pacific-crest-trail/data/Full_PCT_Simplified.geojson
