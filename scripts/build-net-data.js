@@ -174,6 +174,43 @@ function routeSpine(parts, startKey, goalKey) {
     return { walk, totalGap: dist.get(goalKey) };
 }
 
+// Not every junction in the source is end-to-end. The Menunkatuck's north end
+// lands 17ft into the *middle* of the 34.97mi Mattabesett line, 6.13mi along it.
+// Left unsplit, that whole line reads as a single route, so the 6.13mi carrying
+// the NET main route between the Menunkatuck and the spine gets classed as spur
+// — which opens a phantom 2.98mi "gap" exactly where the Menunkatuck joins.
+// Splitting at T-junctions first lets the router see the real topology.
+function splitAtTJunctions(parts) {
+    const TOUCH_MI   = 0.02; // an endpoint this close is touching, not merely near
+    const MIN_END_MI = 0.05; // never split this close to a part's own ends
+    let splits = 0, changed = true, guard = 0;
+    while (changed && guard++ < 20) {
+        changed = false;
+        const endpoints = [];
+        parts.forEach((p, i) => endpoints.push(
+            { i, c: p.coords[0] }, { i, c: p.coords[p.coords.length - 1] }));
+        for (let pi = 0; pi < parts.length && !changed; pi++) {
+            const coords = parts[pi].coords;
+            const cums = [0];
+            for (let k = 1; k < coords.length; k++) cums.push(cums[k - 1] + dEnd(coords[k - 1], coords[k]));
+            const total = cums[cums.length - 1];
+            for (const e of endpoints) {
+                if (e.i === pi) continue;
+                let best = { d: Infinity, idx: -1 };
+                coords.forEach((c, k) => { const d = dEnd(c, e.c); if (d < best.d) best = { d, idx: k }; });
+                if (best.d > TOUCH_MI) continue;
+                if (cums[best.idx] < MIN_END_MI || total - cums[best.idx] < MIN_END_MI) continue;
+                const a = coords.slice(0, best.idx + 1), b = coords.slice(best.idx);
+                parts.splice(pi, 1, { coords: a, len: partLength(a) }, { coords: b, len: partLength(b) });
+                splits++;
+                changed = true;
+                break;
+            }
+        }
+    }
+    return splits;
+}
+
 (async function main() {
     const src = await loadSource();
     const feat = src.features[0];
@@ -188,7 +225,9 @@ function routeSpine(parts, startKey, goalKey) {
         if (L < SLIVER_MI) { sliverCount++; sliverMi += L; continue; }
         parts.push({ coords: c, len: L });
     }
-    console.log(`parts: ${parts.length} substantive (dropped ${sliverCount} slivers totalling ${sliverMi.toFixed(3)}mi)`);
+    const tSplits = splitAtTJunctions(parts);
+    console.log(`parts: ${parts.length} substantive (dropped ${sliverCount} slivers totalling ${sliverMi.toFixed(3)}mi` +
+                `; split ${tSplits} T-junction${tSplits === 1 ? '' : 's'})`);
     console.log(`source total: ${(parts.reduce((s, p) => s + p.len, 0) + sliverMi).toFixed(2)}mi`);
 
     // Termini: endpoints far from every other part's endpoints.
