@@ -305,6 +305,22 @@ attribute, McClusky Canal Big Cut (ND), county road H58 (MI), Sheyenne State
 Forest fragments (ND). The build prints the full list every run, so it can be
 re-checked whenever NCTA republishes.
 
+**The axis total is fully accounted for**, and the build prints every term:
+
+```
+  4876.03   all source tread (NCTA centerline + NCTA SHT layer)
+ -  43.42   off-spine side material, 275 features, none over 5.0mi
+ = 4832.61   spine tread
+ +   0.91   bridge connector (the one at Silver Bay)
+ +   1.56   node-merge slack: 4,012 feature joins at 2.1 ft each
+ = 4834.95   axis
+```
+
+That last term is why two printed numbers differ. Consecutive features meet at
+endpoints merged within `NODE_TOL` rather than being identical, and the walk
+steps across each one, so the assembled line is slightly longer than the sum of
+the feature lengths composing it. 2.1 ft per join is the real gap in the source.
+
 **Sparse rural roadwalks are real, not gaps.** The spine contains steps up to
 6.9mi (47.573,-98.969, ND, New Rockford to Lake Ashtabula) where the source
 digitises a dead-straight county road with a vertex every few miles. No step

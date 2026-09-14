@@ -548,6 +548,24 @@ async function main() {
     const oriented = (line === main.coords) ? flags : flags.slice().reverse();
     for (let i = 0; i < roadwalkAt.length; i++) roadwalkAt[i] = oriented[i] || false;
   }
+  // The assembled line is slightly longer than the sum of the feature lengths
+  // it is made of: consecutive features meet at endpoints that were merged
+  // within NODE_TOL rather than being identical, and the walk steps across
+  // each of those. Report it so the axis total is fully accounted for.
+  let nodeSlack = 0, joins = 0;
+  {
+    let cur = main.a;
+    let prevEnd = null;
+    for (const i of main.path) {
+      const f = feats[i];
+      const seg = f.u === cur ? f.coords : f.coords.slice().reverse();
+      cur = f.u === cur ? f.v : f.u;
+      if (prevEnd) { nodeSlack += dist(prevEnd, seg[0]); joins++; }
+      prevEnd = seg[seg.length - 1];
+    }
+  }
+  console.log('  node-merge slack ' + nodeSlack.toFixed(2) + ' mi across ' + joins
+    + ' feature joins (' + (nodeSlack * 5280 / joins).toFixed(1) + ' ft each on average)');
   const axisEnd = r2(pathLen(line));
   console.log('  axis 0 - ' + axisEnd + ' mi over ' + line.length + ' vertices');
 
