@@ -73,10 +73,13 @@ const TRAILS = [
     id: 'north-country-trail',
     name: 'North Country Trail',
     color: '#4a7c59',
-    totalMiles: 4800,
+    // Measured from NCTA's own GIS by scripts/build-nct-data.js; NCTA publishes
+    // no trail-wide mile axis, only per-state half-mile markers, and those agree
+    // with this axis to within 0.7% in every state — see CLAUDE.md
+    totalMiles: 4834.95,
     image: 'north_country_trail_logo.jpg',
-    states: ['NY','PA','OH','MI','WI','MN','ND'],
-    termini: ['Crown Point, NY', 'Lake Sakakawea, ND'],
+    states: ['VT','NY','PA','OH','MI','WI','MN','ND'],
+    termini: ['Maine Junction, VT', 'Lake Sakakawea, ND'],
   },
   {
     id: 'pacific-crest-trail',

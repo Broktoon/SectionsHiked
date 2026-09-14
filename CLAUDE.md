@@ -74,6 +74,9 @@ public/                          ← everything served to users
     natchez-trace-trail/data/
     new-england-trail/data/
     north-country-trail/data/
+      trail.geojson
+      points.json
+      nct_meta.json              ← 8 regions (states); sections[] is empty by design
     pacific-crest-trail/data/
       trail.geojson
       points.json
@@ -174,7 +177,7 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 | Ice Age | `trail.geojson`, `points.json`, `iat_meta.json` | Rebuilt 2026-09 from IATA's official `IAT_Segments_CR` layer. **1153.1mi** (701.6 certified + 451.4 connecting), 126 sections. Main spine follows the **east bifurcation**; Baraboo is the alternate (`route_id: "west-alt"`, 80.6mi). Connecting routes are hikeable and count toward mileage — tagged `route_type: "roadwalk"`, rendered dashed. Opposite of Natchez. Full source and build notes in TrailTemps CLAUDE.md, "IAT Geometry Source" |
 | Natchez Trace | `trail.geojson`, `points.json` | 5 disconnected sections |
 | New England | `trail.geojson`, `points.json`, `net_meta.json` | Rebuilt 2026-09 from the NPS `NEEN_BND_NationalScenicTrailCenterline_ln` layer (CFPA + AMC survey data) via `scripts/build-net-data.js`. **235.65mi** = 206.81 spine + 28.84 spur; the official 235 total includes the spur. Middletown spur is a dead-end alternate southern terminus (`route_id: "middletown-spur"`, `alt_of: "main-spine"`) joining the spine at mile 16.41, where the Menunkatuck meets the Mattabesett — its mile axis is **appended** (206.81→235.65), not projected, because it substitutes for no stretch of spine (unlike IAT's bifurcation). **The build must split parts at T-junctions before routing**: the Menunkatuck's north end lands 17ft into the *middle* of the 34.97mi Mattabesett line, 6.13mi along it. Without that split the whole line reads as spur, which strands the 6.13mi carrying the main route and opens a phantom 2.98mi "gap" — that bug shipped once. One real gap: **Connecticut River (1.49mi after mile 133.2, Easthampton/South Hadley)**, no pedestrian crossing at all per newenglandtrail.org/thru-hiking — drawn as a dashed connector tagged `route_id: "roadwalk"` (the non-hikeable sense: rendered for continuity, no mileage, no points.json entries) |
-| North Country | `trail.geojson`, `points.json` | OK (19MB GeoJSON, largest) |
+| North Country | `trail.geojson`, `points.json`, `nct_meta.json` | Rebuilt 2026-09 from NCTA's own GIS via `scripts/build-nct-data.js`. **4834.95mi**, 9671 points at **0.5mi**, 8 regions (the states), **0 sections**. Geometry is NCTA `nct_public/2` plus NCTA's own `agol_sht_public/1` for the Superior Hiking Trail, which the centerline omits entirely — that replaces the old build's OSM Overpass injection. Replaces a build whose greedy chainer stranded orphan runs mid-axis: the old geojson had 29 document-order joins over 2mi (worst 360mi), so **a 40mi segment drew as 713mi and a 30mi segment as 904mi**. Roadwalk is ~31% of the trail, hikeable and counted — `route_type: "roadwalk"`, dashed. GeoJSON dropped 19MB → 4.6MB. See "NCT has no sections" and "NCT mile axis" below |
 | Pacific Crest | `trail.geojson`, `points.json`, `pct_meta.json` | Rebuilt 2026-09 from PCTA's own GIS via `scripts/build-pct-data.js`. **2655.66mi**, 5313 points at **0.5mi**, 6 regions, 29 letter sections. Mile axis is PCTA's *PCT Mile Markers 2026* layer — the old axis was a simplified line rescaled to an assumed 2653.0 and drifted up to 7mi (worst miles 250–750). **PCTA's letter sections do not follow state lines**: CA Section R runs ~27mi into Oregon, so `state` is computed independently, never from the section prefix. One spine, no alternates, no gaps |
 | Pacific Northwest | `trail.geojson`, `points.json` | Includes ferry crossing segment |
 | Potomac Heritage | `trail.geojson`, `points.json` | OK |
@@ -249,7 +252,66 @@ drainage and cuts across; straight-line distance between the two junctions is
 about 18mi, so 43.5mi of spine and 27.8mi of alternate are both plausible. What
 was suspicious was the loose endpoint, and that is now explained.
 
-Trail geometry was copied from the TrailTemps project. If higher-resolution data or corrections are needed, refer to the original TrailTemps data sources (see TrailTemps CLAUDE.md for source URLs and build scripts).
+### NCT has no sections — this is deliberate, do not fill them in
+
+Every NCT point carries `section_id: null` and `section_name: null`. The fields
+are present so a future official scheme drops in without a second migration.
+`sec_mile` is **state-local** — which is what both apps' segment-entry UI already
+asks the user for, and what NCTA's half-mile markers actually measure.
+
+The search that settled it (2026-09-13), so it does not get redone:
+
+| candidate | why not |
+|---|---|
+| `agol_retail_maps` | The only endpoint-to-endpoint names — "MI-13 – Alberta to Cascade Falls", "OH-101 – Pennsylvania/Ohio State Line to Minerva" — but covering ~700 of 4,835mi. The rest of the layer is numbered page sheets ("Wisconsin Map Series - WI-017", ninety `MI_###`) |
+| `chapter` on the centerline | 44 affiliate codes, not sections. BTA alone spans 930mi of Ohio, FLTC 390mi. Values are dirty: `Central NY` vs `CNY`, one 60-char free-text value, a 0.1mi `GTR` |
+| `seg_name` | Names the host property (`Manistee National Forest`, `Buckeye Trail (on-road)`), 610 distinct, 958mi blank, 202 under 0.5mi |
+| northcountrytrail.org maps page | NCTA subdivides **by state only**, splitting MI into UP/LP and OH into NW/East. Ten map regions, not hiking sections — and exactly how the half-mile layers are cut |
+
+Also ruled out while looking: `trls_other` layers 1 and 2 are nearby trails and
+campsite spurs, not spine — **NCT has no NET-style spur to model**. And
+`Old_Route_of_NCT` is 21 attribute-less historical features, not an alternate.
+One spine, no alternates, no spurs, `route_id: "main"` throughout.
+
+### NCT mile axis — measured, then validated against NCTA's markers
+
+Unlike PCT and CDT there is no official axis to adopt. NCTA publishes half-mile
+markers only as a patchwork of per-state layers, each restarting at its own zero,
+with holes (Ohio's 1,071mi carries ~136mi of markers). So the axis is measured
+from the geometry, and stage 8 of the build cross-checks it: every marker is
+snapped to the axis and the axis span that layer covers is compared with the run
+its own marker count implies. **All 13 layers agree within 0.7%, most within
+0.3%** — VT −0.6%, NY −0.1/+0.7/+0.2%, PA +0.3/−0.1%, OH −0.2/−0.3%, MI
+−0.1/−0.2%, WI +0.6%, MN −0.2%, ND −0.2%. That is an independent check on every
+state, Ohio included.
+
+**Do not sum the centerline's `len_miles`.** Split features keep the parent's
+full length, so 31 features overstate by up to 5.9mi each and the naive total
+(4,627.22) overshoots measured geometry (4,576.11) by ~51mi. Per feature the
+ratio is otherwise 0.999 — the geometry is excellent, only the attribute
+double-counts.
+
+**Region is a trail-order construct; `state` is a geographic fact.** Below Jay
+Cooke State Park the state line *is* the St. Louis River and the trail weaves
+across it, so the polygon test yields WI…MN…WI…MN over about three miles. The
+build absorbs any excursion under 5mi into the surrounding region — so the 8
+regions tile the axis exactly and each starts at `sec_mile` 0 — while `state`
+keeps reporting the ground truth (4 points read `MN` inside region `wi`). Same
+split the CDT build makes on the Montana/Idaho divide.
+
+**43.4mi in 275 features is left off the spine**, none longer than 5.0mi: Powers
+Vista Trail (MI), the Grand Rapids MN roadwalk fragments that carry no state
+attribute, McClusky Canal Big Cut (ND), county road H58 (MI), Sheyenne State
+Forest fragments (ND). The build prints the full list every run, so it can be
+re-checked whenever NCTA republishes.
+
+**Sparse rural roadwalks are real, not gaps.** The spine contains steps up to
+6.9mi (47.573,-98.969, ND, New Rockford to Lake Ashtabula) where the source
+digitises a dead-straight county road with a vertex every few miles. No step
+filter is applied — the graph walk cannot teleport, so there is nothing to
+filter.
+
+Trail geometry for the trails not yet rebuilt was copied from the TrailTemps project. If higher-resolution data or corrections are needed, refer to the original TrailTemps data sources (see TrailTemps CLAUDE.md for source URLs and build scripts).
 
 ---
 
