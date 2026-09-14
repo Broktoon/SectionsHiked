@@ -94,7 +94,7 @@ const TRAILS = [
     id: 'pacific-northwest-trail',
     name: 'Pacific Northwest Trail',
     color: '#4a7c59',
-    totalMiles: 1200,
+    totalMiles: 1210.95, // measured off the USFS 2016 congressional route; excludes the 5.79mi Puget Sound ferry — see CLAUDE.md
     image: 'pacific_northwest_trail_logo.webp',
     states: ['MT','ID','WA'],
     termini: ['Glacier NP, MT', 'Olympic NP, WA'],

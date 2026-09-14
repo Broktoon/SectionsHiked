@@ -52,3 +52,15 @@ public/trails/north-country-trail/data/trail_backup.geojson
 scripts/cache/nct_centerline.json
 scripts/cache/nct_sht.json
 scripts/cache/census_states_nct.geojson
+
+public/trails/pacific-northwest-trail/data/points_backup.json
+public/trails/pacific-northwest-trail/data/trail_backup.geojson
+# ^ pre-rebuild PNT data; the originals are also in git history at ab9565c
+#   (the commit before the USFS rebuild)
+
+# The PNT build's two inputs ARE committed, unlike the NCT's and CDT's. The USFS
+# layer is only 1.7MB, it is the sole source, and its ArcGIS item is a 2016
+# snapshot that USFS has already retired the web app for - so it is worth having
+# pinned to exactly what the build was validated against rather than refetchable
+# in principle. census_states_pnt.geojson is committed for the same reason the
+# CDT's is: it makes the build reproducible with no network at all.

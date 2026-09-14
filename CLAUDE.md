@@ -85,6 +85,9 @@ public/                          ← everything served to users
                                    ← Still the source of trail.geojson geometry and
                                    ← both terminus coordinates, so keep it locally.
     pacific-northwest-trail/data/
+      trail.geojson
+      points.json
+      pnt_meta.json              ← 5 regions; sections[] is empty by design
     potomac-heritage-trail/data/
 
 supabase/                        ← never served; database config and migrations
@@ -179,7 +182,7 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 | New England | `trail.geojson`, `points.json`, `net_meta.json` | Rebuilt 2026-09 from the NPS `NEEN_BND_NationalScenicTrailCenterline_ln` layer (CFPA + AMC survey data) via `scripts/build-net-data.js`. **235.65mi** = 206.81 spine + 28.84 spur; the official 235 total includes the spur. Middletown spur is a dead-end alternate southern terminus (`route_id: "middletown-spur"`, `alt_of: "main-spine"`) joining the spine at mile 16.41, where the Menunkatuck meets the Mattabesett — its mile axis is **appended** (206.81→235.65), not projected, because it substitutes for no stretch of spine (unlike IAT's bifurcation). **The build must split parts at T-junctions before routing**: the Menunkatuck's north end lands 17ft into the *middle* of the 34.97mi Mattabesett line, 6.13mi along it. Without that split the whole line reads as spur, which strands the 6.13mi carrying the main route and opens a phantom 2.98mi "gap" — that bug shipped once. One real gap: **Connecticut River (1.49mi after mile 133.2, Easthampton/South Hadley)**, no pedestrian crossing at all per newenglandtrail.org/thru-hiking — drawn as a dashed connector tagged `route_id: "roadwalk"` (the non-hikeable sense: rendered for continuity, no mileage, no points.json entries) |
 | North Country | `trail.geojson`, `points.json`, `nct_meta.json` | Rebuilt 2026-09 from NCTA's own GIS via `scripts/build-nct-data.js`. **4834.95mi**, 9671 points at **0.5mi**, 8 regions (the states), **0 sections**. Geometry is NCTA `nct_public/2` plus NCTA's own `agol_sht_public/1` for the Superior Hiking Trail, which the centerline omits entirely — that replaces the old build's OSM Overpass injection. Replaces a build whose greedy chainer stranded orphan runs mid-axis: the old geojson had 29 document-order joins over 2mi (worst 360mi), so **a 40mi segment drew as 713mi and a 30mi segment as 904mi**. Roadwalk is ~31% of the trail, hikeable and counted — `route_type: "roadwalk"`, dashed. GeoJSON dropped 19MB → 4.6MB. See "NCT has no sections" and "NCT mile axis" below |
 | Pacific Crest | `trail.geojson`, `points.json`, `pct_meta.json` | Rebuilt 2026-09 from PCTA's own GIS via `scripts/build-pct-data.js`. **2655.66mi**, 5313 points at **0.5mi**, 6 regions, 29 letter sections. Mile axis is PCTA's *PCT Mile Markers 2026* layer — the old axis was a simplified line rescaled to an assumed 2653.0 and drifted up to 7mi (worst miles 250–750). **PCTA's letter sections do not follow state lines**: CA Section R runs ~27mi into Oregon, so `state` is computed independently, never from the section prefix. One spine, no alternates, no gaps |
-| Pacific Northwest | `trail.geojson`, `points.json` | Includes ferry crossing segment |
+| Pacific Northwest | `trail.geojson`, `points.json`, `pnt_meta.json` | Rebuilt 2026-09 from the USFS Region 6 centerline via `scripts/build-pnt-data.js`. **1210.95mi**, 2423 points at **0.5mi**, 5 regions, **0 sections**. The old axis was the one inherited axis that was *not* wrong — measured, never rescaled, and cleared to within 0.012mi. It was rebuilt because **the Puget Sound ferry was counted as hiking miles**: the old splitter cut the line at its largest coordinate jump, mid-channel, so 4.87mi was drawn as ferry and **0.93mi of open water stayed solid trail**, both on the axis. The ferry now comes from the source attribute, is drawn dashed with `route_id: "roadwalk"` (non-hikeable sense), and carries no mileage. Roadwalk is ~38% of the trail, hikeable and counted — `route_type: "roadwalk"`, dashed. 17.7mi of `route_type: "cross-country"`. GeoJSON 3.7MB → 0.8MB. See "PNT has no placeable sections" and "The PNT ferry" below |
 | Potomac Heritage | `trail.geojson`, `points.json` | OK |
 
 ### CDT alternates — the three OSM ones, and how Spotted Bear was resolved
@@ -326,6 +329,151 @@ the feature lengths composing it. 2.1 ft per join is the real gap in the source.
 digitises a dead-straight county road with a vertex every few miles. No step
 filter is applied — the graph walk cannot teleport, so there is nothing to
 filter.
+
+### The PNT ferry — drawn, not counted, and taken from the attribute
+
+The Puget Sound crossing (Keystone/Fort Casey to Port Townsend) is the only
+saltwater ferry on any National Scenic Trail. **It was counted as hiking miles,
+and by more than was visible.**
+
+The source carries it as its own feature — FID 322, `RTE_NAME`
+"Port Townsend/Keystone Ferry", `COMMENT` "Ferry", **5.792mi**. The old
+`fix-ferry-geometry.js` ignored that and split the Puget Sound line at its
+*largest coordinate jump*, which lands mid-channel. So only 4.866mi became the
+dashed ferry feature and **0.926mi of open water stayed a solid trail line** —
+and both halves sat on the mile axis, shifting every Olympic Peninsula mile by
++5.79. `pnt_meta.json` claimed "no hiking miles added" and TrailTemps' constant
+was commented "ferry not counted". Both were false.
+
+The rebuild takes the ferry from the attribute, never from a jump heuristic.
+Modelled on the NET's Connecticut River crossing:
+
+- `route_id: "roadwalk"` — the **non-hikeable** sense of that tag. `map.js`
+  draws it dashed *and* drops it from `_trailCoords`, so it carries no mileage.
+- `segment_type: "ferry"` is kept as well, because it is not a road and because
+  TrailTemps' PNT `app.js` styles on exactly that value.
+- No `points.json` entries. The axis is continuous across it: the points at
+  mile 993.5 and 994 are **5.51mi apart on the ground, 0.5mi apart on the
+  axis**. That is the only consecutive-point gap on the trail over 0.5mi.
+
+The ferry is in the spine *graph*, so the walk crosses it and both land masses
+come out in one ordered line; it is the cumulative-distance pass that gives it
+zero length. 5.902mi is excluded in total — the 5.792mi ferry part plus 0.110mi
+for the two steps joining it to land.
+
+**Consequence to know:** because `map.js` drops `route_id: "roadwalk"` from
+`_trailCoords`, that array has a 5.4mi straight-line jump across the water. A
+logged segment spanning the ferry therefore draws its overlay straight across
+rather than along the ferry's own track. The two differ by 0.4mi over a nearly
+straight crossing, so this is left alone rather than special-casing shared
+`map.js` for one trail.
+
+### PNT has no placeable sections — deliberate, and not for the NCT's reason
+
+Every PNT point carries `section_id: null` and `section_name: null`, and
+`sec_mile` is **region-local**. But unlike the NCT, where no official scheme
+exists at all, **PNTA does publish 10 named sections with lengths**:
+
+| # | section | mi | # | section | mi |
+|---|---|---|---|---|---|
+| 1 | Rocky Mountain | 151 | 6 | Pasayten Wilderness | 119 |
+| 2 | Purcell Mountains | 99 | 7 | North Cascades | 196 |
+| 3 | Selkirk Mountains | 152 | 8 | Puget Sound | 70 |
+| 4 | Kettle River Range | 128 | 9 | Olympic Mountains | 170 |
+| 5 | Okanogan Highlands | 99 | 10 | Wilderness Coast | 64 |
+
+They are omitted because they **cannot be placed on this axis honestly**, not
+because they do not exist:
+
+- PNTA publishes no boundary coordinates and no open GIS — its downloads sit
+  behind a form, and there is no mile-marker layer anywhere. ArcGIS Online was
+  searched thoroughly (2026-09-13): USFSRegion06 publishes only the centerline,
+  `r06_PNT_RoadType` and `r6_pnnst_Ownership`.
+- PNTA's sections total **1248mi against our 1210.95**, because the USFS layer
+  is the **congressional route as of 5/5/2016** (the item says so outright) and
+  the hiking route has moved since. So absolute mileage cannot place a boundary.
+- Placing them proportionally and checking against independent evidence — the
+  source's `COMMENT` field, which names the land manager (Glacier NP, Kootenai
+  NF, Idaho Panhandle NF, Okanogan-Wenatchee NF, North Cascades NP, Olympic NP)
+  — **agrees for three boundaries and contradicts others by 30 to 65mi**:
+
+  | boundary | proportional | land-manager evidence | |
+  |---|---|---|---|
+  | Pasayten / North Cascades | 727 | 718.6 (NP boundary) | agrees |
+  | Puget Sound / Olympic | 985 | 994.7 (the ferry) | agrees |
+  | Olympic / Wilderness Coast | 1150 | 1143.9 (NP interior ends) | agrees |
+  | Purcell / Selkirk | 243 | 210.2 (Idaho Panhandle NF) | **off 33** |
+  | N Cascades / Puget Sound | 917 | 852.1 (Mt Baker-Snoqualmie ends) | **off 65** |
+
+- `COMMENT` is **blank for ~400mi through miles 323–622**, which is exactly
+  where the Kettle River Range and Okanogan Highlands boundaries fall. There is
+  no evidence there at all.
+
+Inventing the other seven is the mistake the NCT note warns against. The fields
+are held open so an official georeferenced scheme drops in without a second
+migration, and `pnt_meta.json` records PNTA's list verbatim in
+`notes.pnta_sections`.
+
+**Also ruled out as section schemes while looking:** `RTE_NAME` names the host
+trail or road (343 distinct, 57 under 0.5mi — "TR 533", "Bayview Edison Rd"),
+the same shape as the NCT's `seg_name`. `SEGMENT` is populated on only 43 of
+456 features. `ROUTE_ID` is the constant "PNT". `COMMENT` is the land manager.
+
+### PNT: what the source carries that the old build never fetched
+
+The old build requested only `FID,PNT_Sectio,State,MILES,RTE_NAME`. Two fields
+it skipped matter:
+
+- **`Layer`** is an official surface classification: `PNT_TRAIL` 738.44mi,
+  `PNT_ROAD` 461.11mi (**37.9%**, against the NCT's ~31%), `PNT_XC` 17.73mi.
+  `PNT_ROAD` becomes `route_type: "roadwalk"` — hikeable and counted, dashed.
+  `PNT_XC` becomes `route_type: "cross-country"`: designated route with no
+  constructed tread, mostly the Olympic wilderness beach and two Selkirk
+  traverses. Nothing reads that value yet, so it renders as ordinary trail.
+- **`SEGMENT`** labels two stretches `"Hurricane Alt"` (12.54mi) and
+  `"S Olympics Alt"` (6.09mi). **These are not modelled as alternates, because
+  they are the only geometry there** — each occupies a contiguous axis span
+  exactly equal to its own length. The axis runs through routes USFS itself
+  labels alternates. Nothing to fix without better data; one spine, no
+  alternates, no spurs, `route_id: "main"` throughout.
+
+`MILES` is ignored: populated for only ~764 of 1217 miles.
+
+**Regions are the 5 geographic areas** — boundaries from `PNT_Sectio`, names
+from PNTA. The two disagree on one: USFS calls area 2 "Northeast Washington"
+and PNTA calls it **"Okanogan Highlands"**. The name previously shipped,
+"Columbia Mountains", came from neither, and the id changed accordingly.
+
+**`state` is a polygon test, not the source attribute.** That attribute put the
+Montana/Idaho switch at mile 220 when the axis crosses the border before mile
+215 — same class of error as the CDT's, at ~5mi rather than 260mi. Now MT
+0–213, ID 213.5–310, WA 310.5–1210.95.
+
+**The axis total is fully accounted for**, and the build prints every term:
+
+```
+  1217.28   all source geometry, 456 features
+ -   0.87   off-spine side material, 7 parts (largest 0.31mi, SR 21)
+ -   5.90   ferry crossing, drawn but not counted (5.79 ferry + 0.11 junction)
+ +   0.45   bridge connectors
+ +   0.01   node-merge slack, 462 part joins at 0.1 ft each
+ = 1210.96   axis   (measured 1210.95)
+```
+
+Node-merge slack is **0.1 ft per join against the NCT's 2.1 ft** — this source's
+parts very nearly share exact endpoints. Consequently `NODE_TOL` barely matters:
+stage 3 re-runs the whole assembly across 0.005–0.040 every build and the result
+stays within 0.07mi, converging to one component at every value.
+
+**What was checked and found clean, so it is not redone:** the old axis was
+measured off the geometry, never rescaled — it reproduced the old points to
+within 0.012mi at mile 1217, a drift growing linearly from zero, which is
+haversine-radius rounding rather than a scale factor. No orphan runs, no
+doubling back (zero self-revisit pairs), no T-junction exposure. The new files
+pass the same tests, plus: every point sits within **59 ft perpendicular** of
+the drawn line (that is the 20m GeoJSON thinning), and the nearest-vertex index
+into `_trailCoords` is **strictly monotonic in mile**, so slicing between any
+two miles yields the right span.
 
 Trail geometry for the trails not yet rebuilt was copied from the TrailTemps project. If higher-resolution data or corrections are needed, refer to the original TrailTemps data sources (see TrailTemps CLAUDE.md for source URLs and build scripts).
 
