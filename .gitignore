@@ -37,6 +37,11 @@ public/trails/continental-divide-trail/data/trail_backup.geojson
 scripts/cache/cdtc_sections.geojson
 scripts/cache/cdtc_centerline.geojson
 
+public/trails/north-country-trail/data/points_backup.json
+public/trails/north-country-trail/data/trail_backup.geojson
+# ^ pre-rebuild NCT data; the originals are also in git history at 79dfaf2
+#   (the commit before the NCTA rebuild)
+
 # NCTA source layers fetched on demand by scripts/build-nct-data.js: the
 # centerline (18.7MB), NCTA's Superior Hiking Trail layer (8.1MB) and the Census
 # state polygons (5.8MB). All three come from stable public endpoints and the
@@ -44,9 +49,6 @@ scripts/cache/cdtc_centerline.geojson
 # scripts/cache/nct_halfmile_markers.json, IS committed — that is the axis
 # cross-check, and it is the file worth having pinned to what the build was
 # validated against.
-#
-# There are no nct points_backup/trail_backup files: the pre-rebuild NCT data is
-# in git history at 79dfaf2 (the commit before the NCTA rebuild).
 scripts/cache/nct_centerline.json
 scripts/cache/nct_sht.json
 scripts/cache/census_states_nct.geojson
