@@ -40,6 +40,23 @@ function segmentMiles(seg) {
   return haversine(seg.start_lat, seg.start_lng, seg.end_lat, seg.end_lng);
 }
 
+// Progress counts SPINE mileage only, against the trail's spine-length
+// totalMiles. A side route is additional to the spine and an alternate
+// substitutes for part of it, so neither belongs in that fraction — a Mount
+// Vernon Trail hike would otherwise advance a Potomac Heritage thru-hike.
+//
+// Those miles are still recorded, and the two completion badges (spine
+// complete; spine plus every alternate and side route) read route_kind
+// directly. Rows written before the column existed default to 'spine', which
+// is right: no trail offered a loggable off-spine route until Potomac Heritage.
+function isSpineSegment(seg) {
+  return (seg.route_kind ?? 'spine') === 'spine';
+}
+
+function spineMiles(segments) {
+  return segments.filter(isSpineSegment).reduce((sum, s) => sum + segmentMiles(s), 0);
+}
+
 function formatDate(dateStr) {
   // dateStr is 'YYYY-MM-DD'
   const [y, m, d] = dateStr.split('-');
@@ -50,9 +67,7 @@ function formatDate(dateStr) {
 function renderDashboard() {
   const grid = document.getElementById('trail-grid');
   grid.innerHTML = TRAILS.map(trail => {
-    const miles = _allSegments
-      .filter(s => s.trail_id === trail.id)
-      .reduce((sum, s) => sum + segmentMiles(s), 0);
+    const miles = spineMiles(_allSegments.filter(s => s.trail_id === trail.id));
     const pct = Math.min(100, (miles / trail.totalMiles) * 100);
     const statsText = miles > 0
       ? `${miles.toFixed(1)} of ${trail.totalMiles.toLocaleString()} mi &mdash; ${pct < 0.1 ? '<0.1' : pct.toFixed(1)}%`
@@ -89,7 +104,7 @@ function renderTrailInfo(trail, segments) {
   document.getElementById('info-end').textContent = trail.termini[1];
 
   // Progress facts
-  const miles = segments.reduce((sum, s) => sum + segmentMiles(s), 0);
+  const miles = spineMiles(segments);
   const pct = Math.min(100, (miles / trail.totalMiles) * 100);
 
   document.getElementById('info-hiked').textContent =

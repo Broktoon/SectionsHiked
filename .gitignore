@@ -64,3 +64,18 @@ public/trails/pacific-northwest-trail/data/trail_backup.geojson
 # pinned to exactly what the build was validated against rather than refetchable
 # in principle. census_states_pnt.geojson is committed for the same reason the
 # CDT's is: it makes the build reproducible with no network at all.
+
+public/trails/potomac-heritage-trail/data/points_backup.json
+public/trails/potomac-heritage-trail/data/trail_backup.geojson
+# ^ pre-rebuild PHT data; the originals are also in git history at ebcd2c6
+#   (the commit before the NPS POHE rebuild)
+
+# PHT build inputs, fetched on demand by scripts/build-pht-data.js, which
+# refetches either if missing. Not committed: they are 7MB together and the
+# repo does not need to carry them. Note the consequence — the NPS layer is
+# actively republished (it lost 14 features and gained a region between April
+# and October 2026, moving Southern Maryland by 18 miles), so a rebuild after
+# an upstream change will not reproduce the 529.14mi this was validated at.
+# The accounting block the build prints every run is the record of that.
+scripts/cache/pht_nps.json
+scripts/cache/census_states_pht.geojson

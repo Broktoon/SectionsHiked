@@ -1,5 +1,7 @@
 // Leaflet map setup and trail rendering.
-// Requires Leaflet 1.9.4 (CDN) and trails.js to be loaded first.
+// Requires Leaflet 1.9.4 (CDN) and trails.js to be loaded first, and the global
+// `haversine` from app.js — this file calls it in _nearestTrailIndex,
+// _latLngClose and _distToSegmentMi but does not define it.
 
 let _map = null;
 let _trailLayer = null;
@@ -256,6 +258,11 @@ async function loadTrail(trail, segments) {
           // connector (Natchez's parkway), while route_type "roadwalk" is
           // designated trail that hikers really walk (Ice Age's connecting
           // routes) and stays part of the spine below.
+          // `route_kind` deliberately does NOT affect styling: spine,
+          // alternate and side all draw the same, so the whole trail reads as
+          // one network. The distinction lives in the data and in what counts
+          // toward progress, not in the rendering. (A side-route style was
+          // tried and removed — revisit only if the map becomes hard to read.)
           style: (feature) => (feature?.properties?.route_id === 'roadwalk' ||
                                feature?.properties?.route_type === 'roadwalk')
             ? { color: '#8a7f6a', weight: 2.5, opacity: 0.7, dashArray: '2 8' }
@@ -293,8 +300,23 @@ async function loadTrail(trail, segments) {
             // five tread segments plus its connecting roadwalk), so append
             // rather than replace — the geojson emits them in branch order.
             const altId = routeId ?? layer.feature.properties.passage;
-            if (!_altBranches[altId]) _altBranches[altId] = { altOf, coords: [] };
+            if (!_altBranches[altId]) {
+              _altBranches[altId] = { altOf, kind: 'alternate', coords: [] };
+            }
             for (const pt of part) _altBranches[altId].coords.push(pt);
+          } else if (layer.feature?.properties?.route_kind === 'side') {
+            // Side routes are hikeable and loggable but substitute for no part
+            // of the spine, so they must not join _trailCoords — doing so is
+            // what made Potomac Heritage's 300 miles of Virginia corrupt the
+            // mile axis. They ride the same storage as an alternate because
+            // _branchAt and _sliceTrailCoords then work on them unchanged;
+            // `kind` is what tells a substitute from an addition, which is the
+            // distinction the two completion badges turn on.
+            const sideId = routeId ?? 'side';
+            if (!_altBranches[sideId]) {
+              _altBranches[sideId] = { altOf: null, kind: 'side', coords: [] };
+            }
+            for (const pt of part) _altBranches[sideId].coords.push(pt);
           } else {
             for (const pt of part) _trailCoords.push(pt);
           }

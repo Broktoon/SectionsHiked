@@ -1,0 +1,1668 @@
+{
+  "trail": {
+    "name": "Potomac Heritage National Scenic Trail",
+    "spine_miles": 529.14,
+    "off_spine_miles": 306.98,
+    "point_spacing_miles": 0.1,
+    "map_center": [
+      39.22,
+      -77.91
+    ],
+    "map_zoom": 7,
+    "termini": {
+      "west": "Laurel Ridge, PA",
+      "east": "Point Lookout, MD"
+    },
+    "source": "NPS POHE Trail Centerline FTDS view, layer 0",
+    "built": "2026-10-18"
+  },
+  "regions": [
+    {
+      "id": "laurel-highlands",
+      "name": "Laurel Highlands",
+      "state": "PA",
+      "on_spine": true,
+      "mile_start": 0,
+      "mile_end": 67.3,
+      "miles": 67.3,
+      "sections": 0
+    },
+    {
+      "id": "great-allegheny-passage",
+      "name": "Great Allegheny Passage",
+      "state": "PA/MD",
+      "on_spine": true,
+      "mile_start": 67.4,
+      "mile_end": 139.3,
+      "miles": 71.9,
+      "sections": 0
+    },
+    {
+      "id": "co-canal-nhp",
+      "name": "Chesapeake and Ohio Canal",
+      "state": "MD/DC",
+      "on_spine": true,
+      "mile_start": 139.4,
+      "mile_end": 322.7,
+      "miles": 183.3,
+      "sections": 0
+    },
+    {
+      "id": "washington-dc",
+      "name": "Washington D.C.",
+      "state": "DC",
+      "on_spine": true,
+      "mile_start": 322.8,
+      "mile_end": 356.5,
+      "miles": 33.7,
+      "sections": 0
+    },
+    {
+      "id": "southern-maryland",
+      "name": "Southern Maryland",
+      "state": "DC/MD",
+      "on_spine": true,
+      "mile_start": 356.6,
+      "mile_end": 529.1,
+      "miles": 172.5,
+      "sections": 0
+    },
+    {
+      "id": "northern-virginia",
+      "name": "Northern Virginia",
+      "state": "VA/MD/DC",
+      "on_spine": false,
+      "mile_start": null,
+      "mile_end": null,
+      "miles": 128.47,
+      "sections": 0
+    },
+    {
+      "id": "northern-neck-virginia",
+      "name": "Northern Neck of Virginia",
+      "state": "VA",
+      "on_spine": false,
+      "mile_start": null,
+      "mile_end": null,
+      "miles": 65.63,
+      "sections": 0
+    },
+    {
+      "id": "greater-fredericksburg",
+      "name": "Greater Fredericksburg Area",
+      "state": "VA",
+      "on_spine": false,
+      "mile_start": null,
+      "mile_end": null,
+      "miles": 41.24,
+      "sections": 0
+    },
+    {
+      "id": "eastern-continental-divide",
+      "name": "Eastern Continental Divide",
+      "state": "MD",
+      "on_spine": false,
+      "mile_start": null,
+      "mile_end": null,
+      "miles": 41.27,
+      "sections": 0
+    }
+  ],
+  "sections": [],
+  "routes": [
+    {
+      "id": "side-unnamed",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.6,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-2",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.14,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-3",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.02,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-4",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 11.1,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-5",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.01,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-6",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 1.9,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-8",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.01,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-9",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 12.98,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-10",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.98,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-12",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 1.26,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-mount-vernon-trail",
+      "kind": "side",
+      "name": "Mount Vernon Trail",
+      "region_id": "northern-virginia",
+      "miles": 17.44,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-mount-vernon-trail-2",
+      "kind": "side",
+      "name": "Mount Vernon Trail",
+      "region_id": "northern-virginia",
+      "miles": 0.63,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-mount-vernon-trail-4",
+      "kind": "side",
+      "name": "Mount Vernon Trail",
+      "region_id": "northern-virginia",
+      "miles": 0.03,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-parking-lot-connector-trail",
+      "kind": "side",
+      "name": "Parking Lot Connector Trail",
+      "region_id": "northern-virginia",
+      "miles": 0.5,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ent-to-scotts-run-nature-preserve",
+      "kind": "side",
+      "name": "Ent to Scotts Run Nature Preserve",
+      "region_id": "northern-virginia",
+      "miles": 0.1,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-dodlyt-rd",
+      "kind": "side",
+      "name": "Dodlyt Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 5.16,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ridge-rd",
+      "kind": "side",
+      "name": "Ridge Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 4.64,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-neenah-rd",
+      "kind": "side",
+      "name": "Neenah Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 4.16,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-hacks-neck-rd",
+      "kind": "side",
+      "name": "Hacks Neck Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 4.01,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-nomini-hall-rd",
+      "kind": "side",
+      "name": "Nomini Hall Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 3.19,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ebeneezer-church-rd",
+      "kind": "side",
+      "name": "Ebeneezer Church Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 3.15,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-gibeon-rd",
+      "kind": "side",
+      "name": "Gibeon Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 2.66,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-font-hill-rd",
+      "kind": "side",
+      "name": "Font Hill Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 2.28,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-sydnors-millpond-rd",
+      "kind": "side",
+      "name": "Sydnors Millpond Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 2,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-spring-rd",
+      "kind": "side",
+      "name": "Spring Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.83,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-nomini-grove-rd",
+      "kind": "side",
+      "name": "Nomini Grove Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.71,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ferry-rd",
+      "kind": "side",
+      "name": "Ferry Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.6,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-folly-rd",
+      "kind": "side",
+      "name": "Folly Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.2,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-newmans-neck-rd",
+      "kind": "side",
+      "name": "Newmans Neck Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.16,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-betts-bottom-rd",
+      "kind": "side",
+      "name": "Betts Bottom Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.08,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-coan-wharf-rd",
+      "kind": "side",
+      "name": "Coan Wharf Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.85,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-northumberland-hwy",
+      "kind": "side",
+      "name": "Northumberland Hwy",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.67,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-richmond-rd",
+      "kind": "side",
+      "name": "Richmond Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.57,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-walnut-point-rd",
+      "kind": "side",
+      "name": "Walnut Point Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.53,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-hull-neck-rd",
+      "kind": "side",
+      "name": "Hull Neck Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.25,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-cople-hwy",
+      "kind": "side",
+      "name": "Cople Hwy",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.14,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-dahlgren-railroad-heritage-trail",
+      "kind": "side",
+      "name": "Dahlgren Railroad Heritage Trail",
+      "region_id": "greater-fredericksburg",
+      "miles": 16.59,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-james-monroe-hwy",
+      "kind": "side",
+      "name": "James Monroe Hwy",
+      "region_id": "northern-neck-virginia",
+      "miles": 5.43,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-windsor-dr",
+      "kind": "side",
+      "name": "Windsor Dr",
+      "region_id": "greater-fredericksburg",
+      "miles": 4.66,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ridge-rd-2",
+      "kind": "side",
+      "name": "Ridge Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 3.57,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-mckinney-blvd",
+      "kind": "side",
+      "name": "McKinney Blvd",
+      "region_id": "northern-neck-virginia",
+      "miles": 2.05,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-tetotum-rd",
+      "kind": "side",
+      "name": "Tetotum Rd",
+      "region_id": "greater-fredericksburg",
+      "miles": 1.6,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-birchwood-creek-rd",
+      "kind": "side",
+      "name": "Birchwood Creek Rd",
+      "region_id": "greater-fredericksburg",
+      "miles": 1.52,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-owens-dr",
+      "kind": "side",
+      "name": "Owens Dr",
+      "region_id": "greater-fredericksburg",
+      "miles": 1.39,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-bloomsbury-rd",
+      "kind": "side",
+      "name": "Bloomsbury Rd",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.1,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-13",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 12.71,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-14",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.16,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-15",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.61,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-16",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.01,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-river-trail",
+      "kind": "side",
+      "name": "River Trail",
+      "region_id": "northern-virginia",
+      "miles": 1.32,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-patowmack-canal-trail",
+      "kind": "side",
+      "name": "Patowmack Canal Trail",
+      "region_id": "northern-virginia",
+      "miles": 1.29,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-difficult-run-trail",
+      "kind": "side",
+      "name": "Difficult Run Trail",
+      "region_id": "northern-virginia",
+      "miles": 0.74,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ridge-trail",
+      "kind": "side",
+      "name": "Ridge Trail",
+      "region_id": "northern-virginia",
+      "miles": 0.56,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-north-river-trail",
+      "kind": "side",
+      "name": "North River Trail",
+      "region_id": "northern-virginia",
+      "miles": 0.25,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-big-savage-trail",
+      "kind": "side",
+      "name": "Big Savage Trail",
+      "region_id": "eastern-continental-divide",
+      "miles": 15.94,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-savage-river-rd",
+      "kind": "side",
+      "name": "Savage River Rd",
+      "region_id": "eastern-continental-divide",
+      "miles": 1.11,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-17",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 9.73,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-mason-neck-heritage-trail",
+      "kind": "side",
+      "name": "Mason Neck Heritage Trail",
+      "region_id": "northern-virginia",
+      "miles": 3.06,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-high-point-trail",
+      "kind": "side",
+      "name": "High Point Trail",
+      "region_id": "northern-virginia",
+      "miles": 1.56,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-north-valley-trail",
+      "kind": "side",
+      "name": "North Valley Trail",
+      "region_id": "northern-virginia",
+      "miles": 4.56,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-scenic-dr",
+      "kind": "side",
+      "name": "Scenic Dr",
+      "region_id": "northern-virginia",
+      "miles": 3.84,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-burma-rd",
+      "kind": "side",
+      "name": "Burma Rd",
+      "region_id": "northern-virginia",
+      "miles": 0.55,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-park-entrance-rd",
+      "kind": "side",
+      "name": "Park Entrance Rd",
+      "region_id": "northern-virginia",
+      "miles": 0.5,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-hoyes-run-rd",
+      "kind": "side",
+      "name": "Hoyes Run Rd",
+      "region_id": "eastern-continental-divide",
+      "miles": 3.31,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-garrett-hwy",
+      "kind": "side",
+      "name": "Garrett Hwy",
+      "region_id": "eastern-continental-divide",
+      "miles": 2.66,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-deep-creek-dr",
+      "kind": "side",
+      "name": "Deep Creek Dr",
+      "region_id": "eastern-continental-divide",
+      "miles": 2.54,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-sang-run-rd",
+      "kind": "side",
+      "name": "Sang Run Rd",
+      "region_id": "eastern-continental-divide",
+      "miles": 0.54,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-hoyes-run-trail",
+      "kind": "side",
+      "name": "Hoyes Run Trail",
+      "region_id": "eastern-continental-divide",
+      "miles": 0.12,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-oakland-sang-run-rd",
+      "kind": "side",
+      "name": "Oakland Sang Run Rd",
+      "region_id": "eastern-continental-divide",
+      "miles": 0.12,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-18",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 7.07,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-riverside-pkwy",
+      "kind": "side",
+      "name": "Riverside Pkwy",
+      "region_id": "northern-virginia",
+      "miles": 0.8,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-river-creek-pkwy",
+      "kind": "side",
+      "name": "River Creek Pkwy",
+      "region_id": "northern-virginia",
+      "miles": 0.63,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "alt-potomac-river-trail",
+      "kind": "alternate",
+      "name": "Potomac River Trail",
+      "region_id": "washington-dc",
+      "miles": 7.24,
+      "junction_mile": 322.7,
+      "alt_of": "main"
+    },
+    {
+      "id": "side-chesapeake-and-ohio-canal-towpath-2",
+      "kind": "side",
+      "name": "Chesapeake and Ohio Canal Towpath",
+      "region_id": "co-canal-nhp",
+      "miles": 0.62,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-banneker-park-path",
+      "kind": "side",
+      "name": "Banneker Park Path",
+      "region_id": "washington-dc",
+      "miles": 0.05,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-banneker-park-path-2",
+      "kind": "side",
+      "name": "Banneker Park Path",
+      "region_id": "washington-dc",
+      "miles": 0.05,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-banneker-park-path-3",
+      "kind": "side",
+      "name": "Banneker Park Path",
+      "region_id": "washington-dc",
+      "miles": 0.04,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-tunnel-under-canal-rd-nw",
+      "kind": "side",
+      "name": "Tunnel under Canal Rd Nw",
+      "region_id": "washington-dc",
+      "miles": 0.02,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-19",
+      "kind": "side",
+      "name": null,
+      "region_id": "washington-dc",
+      "miles": 0.02,
+      "junction_mile": 322.7,
+      "alt_of": null
+    },
+    {
+      "id": "side-half-st-sw",
+      "kind": "side",
+      "name": "Half St SW",
+      "region_id": "washington-dc",
+      "miles": 0.01,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-20",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.95,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-21",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.93,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-22",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.83,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-23",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 1.52,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-24",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.3,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-taylor-point-rd",
+      "kind": "side",
+      "name": "Taylor Point Rd",
+      "region_id": "northern-virginia",
+      "miles": 0.88,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-featherstone-rd",
+      "kind": "side",
+      "name": "Featherstone Rd",
+      "region_id": "northern-virginia",
+      "miles": 0.79,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-belmont-bay-dr",
+      "kind": "side",
+      "name": "Belmont Bay Dr",
+      "region_id": "northern-virginia",
+      "miles": 0.53,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-express-dr",
+      "kind": "side",
+      "name": "Express Dr",
+      "region_id": "northern-virginia",
+      "miles": 0.22,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-meadow-mountain-trail",
+      "kind": "side",
+      "name": "Meadow Mountain Trail",
+      "region_id": "eastern-continental-divide",
+      "miles": 6.67,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-wild-sally-rd",
+      "kind": "side",
+      "name": "Wild Sally Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 2.08,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-panorama-rd",
+      "kind": "side",
+      "name": "Panorama Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.99,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-stratford-hall-rd",
+      "kind": "side",
+      "name": "Stratford Hall Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.81,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-polk-st",
+      "kind": "side",
+      "name": "Polk St",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.25,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-court-sq",
+      "kind": "side",
+      "name": "Court Sq",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.05,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-belmont-ferry-farm-trail",
+      "kind": "side",
+      "name": "Belmont Ferry Farm Trail",
+      "region_id": "greater-fredericksburg",
+      "miles": 2.72,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-belmont-ferry-farm-trail-3",
+      "kind": "side",
+      "name": "Belmont Ferry Farm Trail",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.11,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-rappahannock-river-heritage-trail",
+      "kind": "side",
+      "name": "Rappahannock River Heritage Trail",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.8,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-washington-ave",
+      "kind": "side",
+      "name": "Washington Ave",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.8,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-belmont-ferry-farm-trail-to-rappahannock-riv",
+      "kind": "side",
+      "name": "Belmont Ferry Farm Trail to Rappahannock River Heritage Trail Connector",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.3,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-belmont-ferry-farm-trail-to-rappahannock-riv-2",
+      "kind": "side",
+      "name": "Belmont Ferry Farm Trail to Rappahannock River Heritage Trail Connector",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.21,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-wiliam-st",
+      "kind": "side",
+      "name": "Wiliam St",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.47,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-canal-path-trail",
+      "kind": "side",
+      "name": "Canal Path Trail",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.42,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-east-coast-greenway",
+      "kind": "side",
+      "name": "East Coast Greenway",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.17,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-hanson-ave",
+      "kind": "side",
+      "name": "Hanson Ave",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.07,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-woodford-st",
+      "kind": "side",
+      "name": "Woodford St",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.06,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-lewis-st",
+      "kind": "side",
+      "name": "Lewis St",
+      "region_id": "greater-fredericksburg",
+      "miles": 0.03,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-25",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.48,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-26",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 2.1,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-27",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.03,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-28",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.19,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-rippon-blvd",
+      "kind": "side",
+      "name": "Rippon Blvd",
+      "region_id": "northern-virginia",
+      "miles": 1.55,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-neabsco-creek-boardwalk",
+      "kind": "side",
+      "name": "Neabsco Creek Boardwalk",
+      "region_id": "northern-virginia",
+      "miles": 1.32,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-farm-creek-dr",
+      "kind": "side",
+      "name": "Farm Creek Dr",
+      "region_id": "northern-virginia",
+      "miles": 0.16,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-brooke-rd",
+      "kind": "side",
+      "name": "Brooke Rd",
+      "region_id": "greater-fredericksburg",
+      "miles": 5.78,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-washington-and-old-dominion-trail",
+      "kind": "side",
+      "name": "Washington and Old Dominion Trail",
+      "region_id": "northern-virginia",
+      "miles": 5.48,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-piney-point-rd",
+      "kind": "side",
+      "name": "Piney Point Rd",
+      "region_id": "southern-maryland",
+      "miles": 4.03,
+      "junction_mile": 505.5,
+      "alt_of": null
+    },
+    {
+      "id": "side-lighthouse-rd",
+      "kind": "side",
+      "name": "Lighthouse Rd",
+      "region_id": "southern-maryland",
+      "miles": 1.34,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-monroe-trail",
+      "kind": "side",
+      "name": "Monroe Trail",
+      "region_id": "eastern-continental-divide",
+      "miles": 4.39,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-big-run-rd",
+      "kind": "side",
+      "name": "Big Run Rd",
+      "region_id": "eastern-continental-divide",
+      "miles": 0.57,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-sunnybank-rd",
+      "kind": "side",
+      "name": "Sunnybank Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.59,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-blackberry-rd",
+      "kind": "side",
+      "name": "Blackberry Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.43,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-main-st",
+      "kind": "side",
+      "name": "Main St",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.46,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-gaskins-beach-rd",
+      "kind": "side",
+      "name": "Gaskins Beach Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.27,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-fleeton-rd",
+      "kind": "side",
+      "name": "Fleeton Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 0.08,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-generals-walk-foot-trail",
+      "kind": "side",
+      "name": "Generals Walk Foot Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.99,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-generals-walk-foot-trail-2",
+      "kind": "side",
+      "name": "Generals Walk Foot Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.41,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-sweden-point-rd",
+      "kind": "side",
+      "name": "Sweden Point Rd",
+      "region_id": "southern-maryland",
+      "miles": 0.74,
+      "junction_mile": 395.3,
+      "alt_of": null
+    },
+    {
+      "id": "side-sweden-point-rd-2",
+      "kind": "side",
+      "name": "Sweden Point Rd",
+      "region_id": "southern-maryland",
+      "miles": 0.09,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-sweden-point-rd-3",
+      "kind": "side",
+      "name": "Sweden Point Rd",
+      "region_id": "southern-maryland",
+      "miles": 0.1,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-bird-watchers-trail",
+      "kind": "side",
+      "name": "Bird Watchers Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.48,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-29",
+      "kind": "side",
+      "name": null,
+      "region_id": "southern-maryland",
+      "miles": 0.39,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-smallwood-retreat-rd",
+      "kind": "side",
+      "name": "Smallwood Retreat Rd",
+      "region_id": "southern-maryland",
+      "miles": 0.13,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-indian-turnip-trail",
+      "kind": "side",
+      "name": "Indian Turnip Trail ",
+      "region_id": "eastern-continental-divide",
+      "miles": 1.75,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-thayer-trace-trail",
+      "kind": "side",
+      "name": "Thayer Trace Trail",
+      "region_id": "eastern-continental-divide",
+      "miles": 1.31,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-meadow-mountain-trail-2",
+      "kind": "side",
+      "name": "Meadow Mountain Trail",
+      "region_id": "eastern-continental-divide",
+      "miles": 0.23,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-woodrow-wilson-memorial-trail",
+      "kind": "side",
+      "name": "Woodrow Wilson Memorial Trail",
+      "region_id": "southern-maryland",
+      "miles": 2.38,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-woodrow-wilson-memorial-trail-2",
+      "kind": "side",
+      "name": "Woodrow Wilson Memorial Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.81,
+      "junction_mile": 358.9,
+      "alt_of": null
+    },
+    {
+      "id": "side-woodrow-wilson-memorial-trail-3",
+      "kind": "side",
+      "name": "Woodrow Wilson Memorial Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.07,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-bryan-point-rd",
+      "kind": "side",
+      "name": "Bryan Point Rd",
+      "region_id": "southern-maryland",
+      "miles": 3.12,
+      "junction_mile": 379.2,
+      "alt_of": null
+    },
+    {
+      "id": "side-colton-point-rd",
+      "kind": "side",
+      "name": "Colton Point Rd",
+      "region_id": "southern-maryland",
+      "miles": 3.06,
+      "junction_mile": 481.3,
+      "alt_of": null
+    },
+    {
+      "id": "side-youngs-cliff-rd",
+      "kind": "side",
+      "name": "Youngs Cliff Rd",
+      "region_id": "northern-virginia",
+      "miles": 2.87,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-30",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 2.8,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-31",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 2.51,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-east-coast-greenway-2",
+      "kind": "side",
+      "name": "East Coast Greenway",
+      "region_id": "greater-fredericksburg",
+      "miles": 2.41,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-cal-posey-trail",
+      "kind": "side",
+      "name": "Cal Posey Trail",
+      "region_id": "southern-maryland",
+      "miles": 1.05,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-blue-banks-beach-trail",
+      "kind": "side",
+      "name": "Blue Banks Beach Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.54,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-blue-banks-beach-trail-2",
+      "kind": "side",
+      "name": "Blue Banks Beach Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.05,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-chiles-homesite-trail",
+      "kind": "side",
+      "name": "Chiles Homesite Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.33,
+      "junction_mile": 405.8,
+      "alt_of": null
+    },
+    {
+      "id": "side-chiles-homesite-trail-2",
+      "kind": "side",
+      "name": "Chiles Homesite Trail",
+      "region_id": "southern-maryland",
+      "miles": 0.04,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-popes-creek-rd",
+      "kind": "side",
+      "name": "Popes Creek Rd",
+      "region_id": "northern-neck-virginia",
+      "miles": 1.75,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-marshall-hall-rd",
+      "kind": "side",
+      "name": "Marshall Hall Rd",
+      "region_id": "southern-maryland",
+      "miles": 1.72,
+      "junction_mile": 383.4,
+      "alt_of": null
+    },
+    {
+      "id": "side-marshall-hall-rd-2",
+      "kind": "side",
+      "name": "Marshall Hall Rd",
+      "region_id": "southern-maryland",
+      "miles": 0.01,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-high-point-trail-2",
+      "kind": "side",
+      "name": "High Point Trail",
+      "region_id": "northern-virginia",
+      "miles": 1.42,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-white-trail",
+      "kind": "side",
+      "name": "White Trail",
+      "region_id": "northern-virginia",
+      "miles": 1.29,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ent-to-red-rock-wilderness-overlook-regional",
+      "kind": "side",
+      "name": "Ent to Red Rock Wilderness Overlook Regional Park",
+      "region_id": "northern-virginia",
+      "miles": 0.04,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-ent-to-red-rock-wilderness-overlook-regional-2",
+      "kind": "side",
+      "name": "Ent to Red Rock Wilderness Overlook Regional Park",
+      "region_id": "northern-virginia",
+      "miles": 0.01,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-32",
+      "kind": "side",
+      "name": null,
+      "region_id": "greater-fredericksburg",
+      "miles": 1.04,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-33",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.83,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-34",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.63,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-35",
+      "kind": "side",
+      "name": null,
+      "region_id": "northern-virginia",
+      "miles": 0.18,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-anacostia-riverwalk-trail",
+      "kind": "side",
+      "name": "Anacostia Riverwalk Trail",
+      "region_id": "washington-dc",
+      "miles": 0.08,
+      "junction_mile": 341.2,
+      "alt_of": null
+    },
+    {
+      "id": "side-benning-st-bridge",
+      "kind": "side",
+      "name": "Benning St Bridge",
+      "region_id": "washington-dc",
+      "miles": 0.04,
+      "junction_mile": 341.2,
+      "alt_of": null
+    },
+    {
+      "id": "side-chesapeake-and-ohio-canal-towpath-3",
+      "kind": "side",
+      "name": "Chesapeake and Ohio Canal Towpath",
+      "region_id": "co-canal-nhp",
+      "miles": 0.08,
+      "junction_mile": 282,
+      "alt_of": null
+    },
+    {
+      "id": "side-georgia-ave-nw",
+      "kind": "side",
+      "name": "Georgia Ave NW",
+      "region_id": "washington-dc",
+      "miles": 0.05,
+      "junction_mile": 330.5,
+      "alt_of": null
+    },
+    {
+      "id": "side-ent-to-battleground-national-cemetery",
+      "kind": "side",
+      "name": "Ent to Battleground National Cemetery",
+      "region_id": "washington-dc",
+      "miles": 0.02,
+      "junction_mile": null,
+      "alt_of": null
+    },
+    {
+      "id": "side-great-allegheny-passage",
+      "kind": "side",
+      "name": "Great Allegheny Passage",
+      "region_id": "great-allegheny-passage",
+      "miles": 0.06,
+      "junction_mile": 78,
+      "alt_of": null
+    },
+    {
+      "id": "side-unnamed-36",
+      "kind": "side",
+      "name": null,
+      "region_id": "washington-dc",
+      "miles": 0.05,
+      "junction_mile": 322.8,
+      "alt_of": null
+    },
+    {
+      "id": "side-fort-circle-hiker-biker-trail",
+      "kind": "side",
+      "name": "Fort Circle Hiker-Biker Trail",
+      "region_id": "washington-dc",
+      "miles": 0.04,
+      "junction_mile": 349.7,
+      "alt_of": null
+    },
+    {
+      "id": "side-blaine-st-ne-entrance-to-fort-circle-hiker-b",
+      "kind": "side",
+      "name": "Blaine St NE Entrance to Fort Circle Hiker-Biker Trail",
+      "region_id": "washington-dc",
+      "miles": 0.01,
+      "junction_mile": 344.2,
+      "alt_of": null
+    },
+    {
+      "id": "side-8th-st-nw",
+      "kind": "side",
+      "name": "8th St NW",
+      "region_id": "washington-dc",
+      "miles": 0.01,
+      "junction_mile": 331.4,
+      "alt_of": null
+    },
+    {
+      "id": "side-montana-ave-ne",
+      "kind": "side",
+      "name": "Montana Ave NE",
+      "region_id": "washington-dc",
+      "miles": 0.01,
+      "junction_mile": 338.4,
+      "alt_of": null
+    }
+  ],
+  "notes": {
+    "sections": "Deliberately empty. TRNAME names the host road, not a hiking section - the pattern rejected for the NCT and PNT. The candidate for later is NPS's four named legs (Point Lookout-Leonardtown, Colton's Point-Port Tobacco, Port Tobacco-Smallwood, Smallwood-Oxon Cove), which cover only ~190 of the spine's miles. sec_mile is region-local.",
+    "out_and_back": "Piney Point Rd, Lighthouse Rd and Colton Point Rd are walked twice and kept on the axis, because NPS's published Point Lookout to Leonardtown mileage includes the trip out to the lighthouse and back. That tread therefore carries two mile values.",
+    "side_route_mile": "For route_kind \"side\", mile is LOCAL to the route and starts at 0 - disconnected trail has no position on the trail axis. junction_mile gives the spine mile where the route meets the trail.",
+    "paddle": "The Youghiogheny River paddle route (TRTYPE \"Water Trail\", TRUSE \"Paddle|Kayak\", TRSURFACE \"Water\") is drawn for corridor completeness but carries no mileage and no points.json entries - route_id \"roadwalk\", the non-hikeable sense, exactly as the PNT treats its Puget Sound ferry. It has no route_kind, because that vocabulary describes hikeable route and a paddle route is outside it."
+  }
+}

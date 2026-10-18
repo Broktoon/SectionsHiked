@@ -103,9 +103,14 @@ const TRAILS = [
     id: 'potomac-heritage-trail',
     name: 'Potomac Heritage Trail',
     color: '#4a7c59',
-    totalMiles: 830,
+    // Spine only, measured off the NPS POHE centerline by scripts/build-pht-data.js.
+    // Excludes 299.81mi of side routes and the 7.24mi DC River Trail alternate —
+    // progress is spine mileage, and the badges carry their own denominators.
+    // The old 830 was a guess, and its termini named neither actual end.
+    totalMiles: 529.14,
     image: 'potomac_trail_logo.png',
-    states: ['VA','DC','MD','PA'],
-    termini: ['Mt. Vernon, VA', 'Allegheny Highlands, PA'],
+    // VA stays listed: no spine mile is in Virginia, but ~190mi of side routes are.
+    states: ['PA','MD','DC','VA'],
+    termini: ['Laurel Ridge, PA', 'Point Lookout, MD'],
   },
 ];

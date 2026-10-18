@@ -143,6 +143,98 @@ badges (
 
 ---
 
+## Canonical Trail Data Schema
+
+SectionsHiked and TrailTemps keep this schema deliberately **similar**, and each
+repo documents it in full — neither should have to read the other's docs to
+understand its own data.
+
+**Where the independence line sits:** served data files and executing code are
+independent — each project owns its own `points.json`, `trail.geojson`,
+`*_meta.json` and app code, and never loads the other's. **Build-time tooling may
+be shared** — several trails' geometry is produced by `scripts/build-*-data.js`
+here and copied into TrailTemps, which is fine.
+
+Land schema changes here first, then port them to TrailTemps as a separate pass,
+updating that repo's own copy of this section.
+
+### `points.json` record
+
+```
+required:  id, lat, lon, mile, region_id, region_name,
+           section_id, section_name, sec_mile, route_id
+optional:  state, trail_elev, legacy_id, alt_of, route_type,
+           route_kind, junction_mile
+```
+
+- **`mile`** — cumulative distance along the WHOLE trail. Monotonic across the
+  main spine. Click-snapping, slicing and progress all key off this.
+- **`sec_mile`** — distance from the start of THIS section. Restarts at ~0 for
+  every section, **including alternate sections**. Never a cumulative value.
+- `section_id` / `section_name` may be `null` where no honest scheme exists
+  (NCT, PNT) — the fields stay present so a future scheme drops in without a
+  second migration. Do not invent sections to fill them.
+
+### `route_kind` — spine / alternate / side
+
+Added 2026-10-15. The test is **substitution, not topology**:
+
+| value | meaning | examples |
+|---|---|---|
+| `spine` | the through-route | every trail's main line |
+| `alternate` | may be walked *instead of* part of the spine, **including an alternate start or finish** | CDT Gila/Anaconda/Spotted Bear/Tonahutu, IAT Baraboo, NET Middletown, FT Blackwater and both corridor groups, PHT's DC River Trail leg |
+| `side` | *additional to* the spine, never a substitute; hiking it replaces no spine mileage | PHT's Virginia network, Mount Vernon Trail, Eastern Continental Divide loop |
+
+**"Leaves and rejoins the spine" is the wrong definition of `alternate`** — an
+alternate *terminus* never rejoins. Despite "spur" in their names, NET's
+Middletown and FT's Blackwater are alternates, not side routes.
+
+There is deliberately **no separate `spur` kind**. Whether a route "attaches" to
+the spine depends entirely on snap tolerance, so the category is unstable — on
+PHT, 54mi reads as attached and 298mi detached at 53ft, and a piece 60ft away
+flips. Nothing downstream distinguishes them either. The one real difference, a
+junction on the spine, is a **property**: optional `junction_mile`, which also
+feeds the mixed-route auto-split described below.
+
+**Why it exists:** SectionsHiked issues two accomplishments — main spine fully
+hiked, and spine plus every alternate and side route hiked. Badges are predicates
+over `route_kind`. The main progress bar counts **spine mileage only**.
+
+### `route_id` vs `route_type` — two different roadwalks
+
+- **`route_id: "roadwalk"`** → **not hikeable**. A gap connector rendered for map
+  continuity only: no mileage, no `points.json` entries. Natchez's parkway, the
+  NET's Connecticut River crossing, the PNT's Puget Sound ferry.
+- **`route_type: "roadwalk"`** → **hikeable and counted**, merely styled dashed.
+  IAT's connecting routes, Florida's roadwalks, NCT (~31%), PNT (~38%).
+
+`route_type` also carries surface values such as `"cross-country"` (PNT, 17.7mi).
+
+### Migration status
+
+On the canonical schema: AT, AZT, Natchez, IAT, NET, PCT, CDT, NCT, PNT.
+**Legacy, still to migrate: Florida** (uses `axis_mile`, no `route_id`) and
+**Potomac Heritage** (uses `on_spine`/`section_mile`/`alt_id`, and 34% of its
+points carry no `mile` at all).
+
+`route_kind` is populated on **PHT only** so far. FT, NET and the other
+alternate-bearing trails need a later pass to adopt it; their existing
+`route_id`/`alt_of` tagging stays valid in the meantime.
+
+### Planned `hike_segments` additions
+
+Agreed, not yet migrated: a `route_kind` column (so a logged hike records which
+route it was on, even though the progress bar ignores non-spine mileage) and a
+nullable group id (so the mixed-route auto-split can stamp rows it creates
+together, and a future `hikes` parent table needs no backfill).
+
+**A hike crossing between routes must become one row per continuous span on one
+route** — the app splits at the junction. One row spanning two routes makes
+`end_mile - start_mile` meaningless and makes `_sliceTrailCoords` fall back to a
+straight line. This is broken today on every alternate-bearing trail.
+
+---
+
 ## Key Design Decisions
 
 ### Auth
@@ -183,7 +275,155 @@ Use `#4a7c59` (forest green) as the primary trail color — distinct from TrailT
 | North Country | `trail.geojson`, `points.json`, `nct_meta.json` | Rebuilt 2026-09 from NCTA's own GIS via `scripts/build-nct-data.js`. **4834.95mi**, 9671 points at **0.5mi**, 8 regions (the states), **0 sections**. Geometry is NCTA `nct_public/2` plus NCTA's own `agol_sht_public/1` for the Superior Hiking Trail, which the centerline omits entirely — that replaces the old build's OSM Overpass injection. Replaces a build whose greedy chainer stranded orphan runs mid-axis: the old geojson had 29 document-order joins over 2mi (worst 360mi), so **a 40mi segment drew as 713mi and a 30mi segment as 904mi**. Roadwalk is ~31% of the trail, hikeable and counted — `route_type: "roadwalk"`, dashed. GeoJSON dropped 19MB → 4.6MB. See "NCT has no sections" and "NCT mile axis" below |
 | Pacific Crest | `trail.geojson`, `points.json`, `pct_meta.json` | Rebuilt 2026-09 from PCTA's own GIS via `scripts/build-pct-data.js`. **2655.66mi**, 5313 points at **0.5mi**, 6 regions, 29 letter sections. Mile axis is PCTA's *PCT Mile Markers 2026* layer — the old axis was a simplified line rescaled to an assumed 2653.0 and drifted up to 7mi (worst miles 250–750). **PCTA's letter sections do not follow state lines**: CA Section R runs ~27mi into Oregon, so `state` is computed independently, never from the section prefix. One spine, no alternates, no gaps |
 | Pacific Northwest | `trail.geojson`, `points.json`, `pnt_meta.json` | Rebuilt 2026-09 from the USFS Region 6 centerline via `scripts/build-pnt-data.js`. **1210.95mi**, 2423 points at **0.5mi**, 5 regions, **0 sections**. The old axis was the one inherited axis that was *not* wrong — measured, never rescaled, and cleared to within 0.012mi. It was rebuilt because **the Puget Sound ferry was counted as hiking miles**: the old splitter cut the line at its largest coordinate jump, mid-channel, so 4.87mi was drawn as ferry and **0.93mi of open water stayed solid trail**, both on the axis. The ferry now comes from the source attribute, is drawn dashed with `route_id: "roadwalk"` (non-hikeable sense), and carries no mileage. Roadwalk is ~38% of the trail, hikeable and counted — `route_type: "roadwalk"`, dashed. 17.7mi of `route_type: "cross-country"`. GeoJSON 3.7MB → 0.8MB. See "PNT has no placeable sections" and "The PNT ferry" below |
-| Potomac Heritage | `trail.geojson`, `points.json` | OK |
+| Potomac Heritage | `trail.geojson`, `points.json`, `pht_meta.json` | Rebuilt 2026-10 from the NPS POHE Trail Centerline via `scripts/build-pht-data.js`. **529.14mi** spine, 8486 points at **0.1mi**, 9 regions (5 on the spine), **0 sections**, 1 alternate, 202 side routes. Spine runs Laurel Ridge PA -> GAP -> C&O Canal -> Washington DC by the **City Park route** (Civil War Defenses / Fort Circle, a change from what TrailTemps shipped) -> Southern Maryland -> Point Lookout MD. First trail to carry **`route_kind`** - 299.81mi of disconnected Virginia network is `side`, the 7.24mi DC River Trail is `alternate`. Replaces a legacy pair whose axis was unusable: **34% of its points had no `mile` at all** (`on_spine: false`), Southern Maryland doubled back on itself (mile 23.5 and 210.5 were the same ground) and then jumped **54.3mi** in a straight line to reach DC, and both DC branches were tagged as alternates so the main axis had a 12.3mi hole. Point spacing is finer than every other rebuild **on purpose** - see the build header. Roadwalk is ~31% of the spine, hikeable and counted. The Youghiogheny paddle route (18.55mi) is drawn but carries no mileage, like the PNT ferry. See the PHT sections below |
+
+### PHT: the spine is routed through NPS's waypoints, not by shortest path
+
+Shortest path takes the wrong leg in Southern Maryland, so the build routes
+through places NPS itself publishes: Point Lookout SP, **Drayden**, Leonardtown
+Wharf, Port Tobacco, **Fort Circle DC**, Laurel Ridge PA.
+
+Two of those exist only to stop the router going somewhere wrong:
+
+- **Drayden** pins the St Mary's peninsula loop. NPS's cue sheet names the roads
+  — "Route 5; Flat Iron, St. George's and Drayton roads; Route 249/Piney Point
+  Road; Route 244; and Route 5 into Leonardtown" — and every one appears as a
+  `TRNAME` on the leg shortest path discarded. Without this the spine skips the
+  peninsula entirely.
+- **Fort Circle DC** pins the City Park route. Once the DC River Trail is joined
+  (below) it is routable at 7.24mi against City Park's 29.5mi, so shortest path
+  would silently switch the spine to the riverside.
+
+**Piney Point Lighthouse and the St Clement's Island Museum are NOT waypoints.**
+Both are the ends of spurs, and using them as waypoints forced the spine out to
+each tip and back, doubling 5.55mi and 3.06mi of tread onto the axis. Colton
+Point Rd dead-ends at the museum with Maddox Rd and Oakley Rd carrying the route
+past it; Piney Point Rd + Lighthouse Rd dead-end at the lighthouse off a loop
+closed by Blake Creek Rd and Medleys Neck Rd. Both are side routes. Point
+Lookout SP remains the eastern terminus.
+
+**Do not treat NPS's "approximately 45 miles" for Point Lookout → Leonardtown as
+a gate.** That page says "with a stop at Piney Point Lighthouse" — it is a day
+ride that detours and returns. An earlier build routed the spine out to the tip
+because 46.94 sat closest to 45 and called that confirmation; it was not. The
+three readings are printed every run (through-route 36.21, + spur one way 41.76,
++ spur both ways 47.31) so the discrepancy stays visible.
+
+Likewise **do not chase NPS's 38 miles for Colton's Point → Port Tobacco.** The
+build routes 50.88 and that is right: 19 of 22 features traverse whole, only two
+nodes on the leg offer a choice, and the extra miles are the corridor detouring
+inland to pick up the **Three Notch Trail** rail-trail.
+
+### PHT: the DC River Trail, and why length is the wrong test for a fragment
+
+The riverside route through Washington is 7.24mi and the source carries all of
+it, but in four pieces. Three declared joins totalling **571 ft** make it one
+alternate touching the spine at mile 322.7 and mile 352.2:
+
+| join | ft |
+|---|---|
+| OID 1604 ↔ Buckeye Dr SW Sidewalk | 69 |
+| Francis Case Memorial Bridge ↔ L'Enfant Prom SW | 267 |
+| L'Enfant Prom SW ↔ Maine Ave SW | 235 |
+
+Three things about this were learned the hard way:
+
+1. **A short route is dropped only when it is isolated, never by length alone.**
+   An earlier build discarded every route under 0.1mi as a fragment — 73 of
+   them, 1.8mi. One was **OID 1421, "Key Bridge Connection To Capital Crescent
+   Trail", 231 ft**, which carries the river trail up onto the towpath. The
+   shortest pieces on this trail are the ones holding the network together.
+2. **A join names the two pieces it connects** (by `TRNAME`, or by `OBJECTID`
+   where the source leaves a piece unnamed). Choosing "the two nearest part ends
+   to a coordinate" does not work: splitting at junctions leaves several ends
+   within a few feet of each other, so proximity kept joining a piece to its own
+   neighbour and the measured length looked right while nothing connected.
+3. **`CONNECTORS` and `JOINS` are different mechanisms.** A connector bridges two
+   separate components (Cumberland). The DC groups were already in one component
+   — each reaches the spine, and the way between them runs along the spine — so a
+   component test finds nothing to do. `JOINS` are added as real tread before the
+   node graph is built.
+
+The spine's own C&O towpath ends at mile 322.7, and the 1.18mi continuing east
+through Georgetown from 34th St NW is a spur, not spine.
+
+### PHT: the source is actively republished — check before trusting any figure
+
+Between April and October 2026 the NPS layer went from 614 features / 879.04mi
+to **600 / 857.63mi**: 17 features removed, 3 added, and a new region,
+**Greater Fredericksburg Area** (41.24mi), carved out of Northern Virginia and
+Northern Neck. Southern Maryland alone moved by 18mi, and every removed feature
+was in the Piney Point / Colton's Point road network — NPS deleted the duplicate
+loop legs an earlier analysis had spent a session resolving. GAP, Laurel
+Highlands and the C&O were untouched.
+
+Consequences worth knowing:
+
+- **Dedupe at PART level, not feature level.** OID 343 was deleted upstream, so
+  OID 302's first part is now the only copy of the Budds Creek Rd stretch;
+  feature-level dedupe would delete 3.5mi of real trail.
+- **Fields the old build never fetched.** `TRSURFACE`, `TRUSE` and `TRTYPE` are
+  read now. `TRUSE` marks 126 features **Bicycle** with no Hiker/Pedestrian —
+  kept, because they are ordinary county roads with no parkway, freeway or
+  bridge among them and no documentation that walking is barred. `TRTYPE` is
+  what identifies the one paddle route.
+- Dead ends, so do not look again: `NHTCERTSTATUS` is "Not Certified" on all
+  600; `NHTHIGHPOTENTIALSEGMENT`, `NHTPUBLICUSESEGMENT` and `TRNUMBER` are
+  entirely null; `ADMINORG` is 413 POHE and no section scheme.
+
+### PHT has no sections — deliberate, and deferred
+
+Every point carries `section_id: null` and `section_name: null`; `sec_mile` is
+**region-local**, as on the NCT and PNT. `TRNAME` is not a section scheme — it
+names the host road (Piney Point Rd, Flat Iron Rd), the same pattern rejected
+for the NCT's `seg_name` and the PNT's `RTE_NAME`.
+
+The one real candidate for later is **NPS's four named legs**, whose boundaries
+this build already knows because it routes through them: Point Lookout →
+Leonardtown, Colton's Point → Port Tobacco, Port Tobacco → Smallwood SP,
+Smallwood SP → Oxon Cove. They cover only ~190 of the spine's 529mi, and the C&O
+(184mi), GAP (72mi) and Laurel Highlands (67mi) each have separate schemes from
+NPS, the Allegheny Trail Alliance and PA DCNR. Mixing them would be inconsistent.
+
+### PHT: route decomposition cuts at name changes
+
+Virginia's largest group is 400+ connected parts — a web, not a line. It is
+decomposed into routes by taking the longest path through what remains, but
+**alternates are extracted first** (by substitution, regardless of name) and
+everything else is **cut where the `TRNAME` changes**, so each side route is one
+named trail.
+
+Cutting by geometry alone produced a **43.98mi route named "Mount Vernon Trail"**
+that was mostly other trails; name-aware cutting gives 17.44mi, against the real
+trail's ~18. Dahlgren Railroad Heritage Trail went from 35.53 to 16.59 the same
+way. The cost is more, shorter routes (202 rather than 59) and many
+`side-unnamed-N`, which is unavoidable: 31% of Virginia carries no name in any
+source field.
+
+**Route boundaries and route names are the same decision**, and a route is also
+what a user will "complete" for a badge — so this is worth revisiting when the
+badges are built.
+
+### PHT accounting
+
+```
+  857.63   all source geometry, 600 features
+ - 18.55   paddle route, drawn but not counted
+ -  3.17   duplicate geometry
+ =835.91   usable tread
+ +  0.11   declared joins (DC river chain, 571 ft)
+ =836.02   total tread modelled
+
+  528.98   spine tread (distinct)
+ +  0.00   out-and-back, walked twice
+ +  0.11   declared connectors (Cumberland, 600 ft)
+ +  0.06   node-merge slack over 271 joins
+ =529.14   SPINE AXIS
+
+    7.24   alternate (1)
+  299.81   side routes (202)
+    0.00   unaccounted
+```
 
 ### CDT alternates — the three OSM ones, and how Spotted Bear was resolved
 

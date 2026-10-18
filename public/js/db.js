@@ -3,7 +3,12 @@
 
 async function getAllSegments(userId) {
   const { data, error } = await sb.from('hike_segments')
-    .select('id, trail_id, start_lat, start_lng, end_lat, end_lng, start_mile, end_mile, states, date_begun')
+    // route_kind is selected because progress counts SPINE mileage only — a
+    // Mount Vernon Trail hike must not land in the same total as a C&O mile.
+    // This list is explicit, so a new column has to be added here or it never
+    // reaches the caller.
+    .select('id, trail_id, start_lat, start_lng, end_lat, end_lng, start_mile, end_mile, '
+      + 'states, date_begun, route_kind, route_id, hike_group_id')
     .eq('user_id', userId);
   if (error) throw error;
   return data ?? [];
