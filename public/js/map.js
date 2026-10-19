@@ -10,6 +10,7 @@ let _trailTotalMiles = null; // trail.totalMiles for the currently loaded trail
 let _altBranches = {};     // passage id (e.g. "11e") -> { altOf, coords: LatLng[] }; alt-route passages only
 let _segmentLayers = [];
 let _trailFitBounds = null;  // bounds of the current trail's spine, for refitTrail()
+let _fitObserver = null;     // waits for the map container to actually get a size
 
 // Select mode state
 let _points = null;        // points.json — used only for snapping and state lookup
@@ -131,12 +132,19 @@ function _distToPathMi(coords, lat, lng) {
 // Measured against the line, not its vertices, so sparsely drawn branches
 // (IAT's road walks) classify the same as densely drawn ones.
 function _branchAt(lat, lng) {
+  // NEAREST branch, not the first one within tolerance. Returning the first
+  // match was fine while a trail had two to five branches, but Potomac Heritage
+  // has 172 side routes, many of them adjacent or crossing in Virginia — so the
+  // two ends of one route could each match a different neighbour, _sliceTrail-
+  // Coords would see two different branches, give up, and the segment drew as a
+  // straight line instead of following the trail.
+  let bestId = 'main';
+  let bestDist = _CHAIN_TOLERANCE_MI;
   for (const [passageId, branch] of Object.entries(_altBranches)) {
-    if (_distToPathMi(branch.coords, lat, lng) <= _CHAIN_TOLERANCE_MI) {
-      return passageId;
-    }
+    const d = _distToPathMi(branch.coords, lat, lng);
+    if (d <= bestDist) { bestDist = d; bestId = passageId; }
   }
-  return 'main';
+  return bestId;
 }
 
 function _sliceArrayByIndex(arr, si, ei) {
@@ -233,23 +241,42 @@ function _chainParts(parts) {
   return chain;
 }
 
-// Frame the trail. Kept separate from loadTrail because the first fit happens
-// while Leaflet may still believe the container is its old size — the map div
-// is hidden until a trail is opened — and fitBounds then picks a zoom for the
-// wrong dimensions. invalidateSize() alone does not help: it corrects the size
-// but preserves zoom and centre, so the bad zoom survives and the trail ends up
-// a thread in an oversized view. app.js calls this again once the layout has
-// settled, which recomputes the zoom against the real size.
-function _fitTrail() {
+// Frame the trail, and do not do it until the container has a real size.
+//
+// #map-view is hidden until a trail is opened, so Leaflet is created against a
+// zero-size container. fitBounds then picks a near-minimum zoom — a world view —
+// and invalidateSize() afterwards does NOT rescue it: it corrects the size but
+// preserves zoom and centre, so the bad zoom survives and the trail shows as a
+// speck. A single requestAnimationFrame was not enough to beat the layout
+// either, which is why this waits on a ResizeObserver instead of a timing
+// guess: the fit happens the first time the element reports real dimensions.
+function _applyFit() {
   if (!_map || !_trailFitBounds) return;
+  _map.invalidateSize();
   _map.fitBounds(_trailFitBounds, { padding: [20, 20] });
   _map.setZoom(_map.getZoom() + 0.5);
 }
 
-// Called by app.js after the map view is shown and laid out.
+function _fitTrail() {
+  if (!_map || !_trailFitBounds) return;
+  const el = _map.getContainer();
+  if (el && el.clientWidth > 0 && el.clientHeight > 0) {
+    _applyFit();
+    return;
+  }
+  if (_fitObserver || typeof ResizeObserver === 'undefined') return;
+  _fitObserver = new ResizeObserver(() => {
+    const c = _map && _map.getContainer();
+    if (!c || !c.clientWidth || !c.clientHeight) return;
+    _fitObserver.disconnect();
+    _fitObserver = null;
+    _applyFit();
+  });
+  _fitObserver.observe(el);
+}
+
+// Called by app.js once the map view is shown. Safe to call more than once.
 function refitTrail() {
-  if (!_map) return;
-  _map.invalidateSize();
   _fitTrail();
 }
 
@@ -257,6 +284,7 @@ async function loadTrail(trail, segments) {
   initMap();
 
   if (_trailLayer) { _map.removeLayer(_trailLayer); _trailLayer = null; }
+  if (_fitObserver) { _fitObserver.disconnect(); _fitObserver = null; }
   _trailFitBounds = null;
   _trailCoords = null;
   _altBranches = {};

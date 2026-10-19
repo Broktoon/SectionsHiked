@@ -46,7 +46,12 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ```
 public/                          ← everything served to users
-  index.html                     ← main app (single page for now)
+  app.html                       ← THE APP. Map, trail selector, segment entry.
+                                 ← Loads auth.js, db.js, trails.js, map.js, app.js
+  auth.html                      ← sign in / sign up
+  index.html                     ← marketing landing page, NOT the app
+                                 ← (still carries a "map previews coming soon"
+                                 ← placeholder; it has no #map element)
   css/
     styles.css                   ← shared styles
   js/
