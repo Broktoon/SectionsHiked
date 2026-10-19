@@ -1312,12 +1312,15 @@ async function main() {
   const emitRoute = (chain, kind, span) => {
     const len = chain.reduce((s, c) => s + parts[c.part].len, 0);
     // Any node of the route may touch the spine, not just its ends.
-    let junctionMile = null;
+    let junctionMile = null, junctionNode = null;
     for (const c of chain) {
       for (const n of [c.from, c.to]) {
         if (nodeMile.has(n)) {
           const m = nodeMile.get(n);
-          if (junctionMile === null || m < junctionMile) junctionMile = m;
+          if (junctionMile === null || m < junctionMile) {
+            junctionMile = m;
+            junctionNode = n;
+          }
         }
       }
     }
@@ -1340,7 +1343,7 @@ async function main() {
     }
     const regionSrc = [...regTally].sort((a, b) => b[1] - a[1])[0][0];
 
-    routes.push({ id, kind, chain, len, junctionMile, span,
+    routes.push({ id, kind, chain, len, junctionMile, junctionNode, span,
       region: REGION_BY_SRC.get(regionSrc), name: topName ? topName[0] : null });
   };
 
@@ -1545,15 +1548,27 @@ async function main() {
   // app's mixed-route auto-split needs.
   for (const r of kept) {
     const line = [];
+    // Where the junction sits ALONG this route, in route-local miles. The
+    // spine mile alone is not enough to split a mixed hike: the junction is at
+    // route mile 0 on only 11 of the 19 routes that touch the spine, at the far
+    // end on 3, and mid-route on 5. Orientation comes from the longest-path
+    // walk, which has no reason to start at the junction.
+    let runLen = 0;
+    r.junctionSecMile = null;
     for (const c of r.chain) {
       const p = parts[c.part];
       const headFirst = dist(nodes[c.from], p.coords[0])
         <= dist(nodes[c.from], p.coords[p.coords.length - 1]);
       const seg = headFirst ? p.coords : p.coords.slice().reverse();
+      if (r.junctionNode !== null && c.from === r.junctionNode && r.junctionSecMile === null) {
+        r.junctionSecMile = runLen;
+      }
       for (const v of seg) {
         if (line.length && dist(line[line.length - 1], v) === 0) continue;
         line.push(v);
       }
+      runLen += p.len;
+      if (r.junctionNode !== null && c.to === r.junctionNode) r.junctionSecMile = runLen;
     }
     r.line = line;
     const lineLen = pathLen(line);
@@ -1585,6 +1600,7 @@ async function main() {
       };
       if (r.kind === 'alternate') rec.alt_of = 'main';
       if (r.junctionMile !== null) rec.junction_mile = r1(r.junctionMile);
+      if (r.junctionSecMile !== null) rec.junction_sec_mile = r1(r.junctionSecMile);
       if (rt) rec.route_type = rt;
       points.push(rec);
     };
@@ -1704,6 +1720,7 @@ async function main() {
     if (r.kind === 'alternate') props.alt_of = 'main';
     if (r.name) props.name = r.name;
     if (r.junctionMile !== null) props.junction_mile = r1(r.junctionMile);
+    if (r.junctionSecMile != null) props.junction_sec_mile = r1(r.junctionSecMile);
     if (surf) props.route_type = surf;
     features.push({ type: 'Feature', properties: props,
       geometry: { type: 'LineString', coordinates: coords.map(c => [r6(c[0]), r6(c[1])]) } });
@@ -1785,6 +1802,7 @@ async function main() {
       region_id: r.region.id,
       miles: r2(r.len),
       junction_mile: r.junctionMile === null ? null : r1(r.junctionMile),
+      junction_sec_mile: r.junctionSecMile == null ? null : r1(r.junctionSecMile),
       alt_of: r.kind === 'alternate' ? 'main' : null,
     })),
     notes: {

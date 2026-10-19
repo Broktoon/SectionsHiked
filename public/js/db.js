@@ -33,6 +33,17 @@ async function addSegment(seg) {
   return data;
 }
 
+// One hike that crosses between routes becomes several rows — one per
+// continuous span on one route — inserted together so a partial write cannot
+// leave half an outing recorded. They share a hike_group_id.
+async function addSegments(segs) {
+  const { data, error } = await sb.from('hike_segments')
+    .insert(segs)
+    .select();
+  if (error) throw error;
+  return data ?? [];
+}
+
 async function deleteSegment(id) {
   const { error } = await sb.from('hike_segments')
     .delete()

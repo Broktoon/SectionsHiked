@@ -105724,7 +105724,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000100",
@@ -105740,7 +105741,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000200",
@@ -105756,7 +105758,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000300",
@@ -105772,7 +105775,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000400",
@@ -105788,7 +105792,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000500",
@@ -105804,7 +105809,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000600",
@@ -105820,7 +105826,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000700",
@@ -105836,7 +105843,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000800",
@@ -105852,7 +105860,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0000900",
@@ -105868,7 +105877,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001000",
@@ -105884,7 +105894,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001100",
@@ -105900,7 +105911,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001200",
@@ -105916,7 +105928,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001300",
@@ -105932,7 +105945,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001400",
@@ -105948,7 +105962,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001500",
@@ -105964,7 +105979,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001600",
@@ -105980,7 +105996,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001700",
@@ -105996,7 +106013,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001800",
@@ -106012,7 +106030,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0001900",
@@ -106028,7 +106047,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002000",
@@ -106044,7 +106064,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002100",
@@ -106060,7 +106081,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002200",
@@ -106076,7 +106098,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002300",
@@ -106092,7 +106115,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002400",
@@ -106108,7 +106132,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002500",
@@ -106124,7 +106149,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002600",
@@ -106140,7 +106166,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002700",
@@ -106156,7 +106183,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002800",
@@ -106172,7 +106200,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0002900",
@@ -106188,7 +106217,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003000",
@@ -106204,7 +106234,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003100",
@@ -106220,7 +106251,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003200",
@@ -106236,7 +106268,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003300",
@@ -106252,7 +106285,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003400",
@@ -106268,7 +106302,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003500",
@@ -106284,7 +106319,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003600",
@@ -106300,7 +106336,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003700",
@@ -106316,7 +106353,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003800",
@@ -106332,7 +106370,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0003900",
@@ -106348,7 +106387,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004000",
@@ -106364,7 +106404,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004100",
@@ -106380,7 +106421,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004200",
@@ -106396,7 +106438,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004300",
@@ -106412,7 +106455,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004400",
@@ -106428,7 +106472,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004500",
@@ -106444,7 +106489,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004600",
@@ -106460,7 +106506,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004700",
@@ -106476,7 +106523,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004800",
@@ -106492,7 +106540,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0004900",
@@ -106508,7 +106557,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005000",
@@ -106524,7 +106574,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005100",
@@ -106540,7 +106591,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005200",
@@ -106556,7 +106608,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005300",
@@ -106572,7 +106625,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005400",
@@ -106588,7 +106642,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005500",
@@ -106604,7 +106659,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005600",
@@ -106620,7 +106676,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005700",
@@ -106636,7 +106693,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005800",
@@ -106652,7 +106710,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0005900",
@@ -106668,7 +106727,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006000",
@@ -106684,7 +106744,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006100",
@@ -106700,7 +106761,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006200",
@@ -106716,7 +106778,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006300",
@@ -106732,7 +106795,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006400",
@@ -106748,7 +106812,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006500",
@@ -106764,7 +106829,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006600",
@@ -106780,7 +106846,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006700",
@@ -106796,7 +106863,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006800",
@@ -106812,7 +106880,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0006900",
@@ -106828,7 +106897,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0007000",
@@ -106844,7 +106914,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0007100",
@@ -106860,7 +106931,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-alt-potomac-river-trail-mi0007200",
@@ -106876,7 +106948,8 @@
     "route_kind": "alternate",
     "state": "DC",
     "alt_of": "main",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-chesapeake-and-ohio-canal-towpath-2-mi0000000",
@@ -107045,7 +107118,8 @@
     "route_id": "side-unnamed-19",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 322.7
+    "junction_mile": 322.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-half-st-sw-mi0000000",
@@ -113559,6 +113633,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113575,6 +113650,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113591,6 +113667,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113607,6 +113684,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113623,6 +113701,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113639,6 +113718,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113655,6 +113735,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113671,6 +113752,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113687,6 +113769,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113703,6 +113786,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113719,6 +113803,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113735,6 +113820,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113751,6 +113837,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113767,6 +113854,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113783,6 +113871,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113799,6 +113888,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113815,6 +113905,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113831,6 +113922,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113847,6 +113939,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113863,6 +113956,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113879,6 +113973,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113895,6 +113990,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113911,6 +114007,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113927,6 +114024,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113943,6 +114041,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113959,6 +114058,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113975,6 +114075,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -113991,6 +114092,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114007,6 +114109,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114023,6 +114126,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114039,6 +114143,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114055,6 +114160,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114071,6 +114177,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114087,6 +114194,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114103,6 +114211,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114119,6 +114228,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114135,6 +114245,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114151,6 +114262,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114167,6 +114279,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114183,6 +114296,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -114199,6 +114313,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 505.5,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -115941,6 +116056,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -115957,6 +116073,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -115973,6 +116090,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -115989,6 +116107,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -116005,6 +116124,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -116021,6 +116141,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -116037,6 +116158,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -116053,6 +116175,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 395.3,
+    "junction_sec_mile": 0.7,
     "route_type": "roadwalk"
   },
   {
@@ -117095,7 +117218,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000100",
@@ -117110,7 +117234,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000200",
@@ -117125,7 +117250,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000300",
@@ -117140,7 +117266,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000400",
@@ -117155,7 +117282,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000500",
@@ -117170,7 +117298,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000600",
@@ -117185,7 +117314,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000700",
@@ -117200,7 +117330,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-2-mi0000800",
@@ -117215,7 +117346,8 @@
     "route_id": "side-woodrow-wilson-memorial-trail-2",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 358.9
+    "junction_mile": 358.9,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-woodrow-wilson-memorial-trail-3-mi0000000",
@@ -117245,6 +117377,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117261,6 +117394,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117277,6 +117411,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117293,6 +117428,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117309,6 +117445,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117325,6 +117462,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117341,6 +117479,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117357,6 +117496,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117373,6 +117513,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117389,6 +117530,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117405,6 +117547,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117421,6 +117564,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117437,6 +117581,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117453,6 +117598,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117469,6 +117615,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117485,6 +117632,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117501,6 +117649,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117517,6 +117666,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117533,6 +117683,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117549,6 +117700,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117565,6 +117717,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117581,6 +117734,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117597,6 +117751,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117613,6 +117768,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117629,6 +117785,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117645,6 +117802,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117661,6 +117819,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117677,6 +117836,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117693,6 +117853,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117709,6 +117870,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117725,6 +117887,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117741,6 +117904,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 379.2,
+    "junction_sec_mile": 3.1,
     "route_type": "roadwalk"
   },
   {
@@ -117757,6 +117921,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117773,6 +117938,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117789,6 +117955,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117805,6 +117972,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117821,6 +117989,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117837,6 +118006,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117853,6 +118023,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117869,6 +118040,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117885,6 +118057,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117901,6 +118074,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117917,6 +118091,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117933,6 +118108,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117949,6 +118125,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117965,6 +118142,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117981,6 +118159,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -117997,6 +118176,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118013,6 +118193,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118029,6 +118210,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118045,6 +118227,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118061,6 +118244,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118077,6 +118261,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118093,6 +118278,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118109,6 +118295,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118125,6 +118312,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118141,6 +118329,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118157,6 +118346,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118173,6 +118363,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118189,6 +118380,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118205,6 +118397,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118221,6 +118414,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -118237,6 +118431,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 481.3,
+    "junction_sec_mile": 0,
     "route_type": "roadwalk"
   },
   {
@@ -120070,7 +120265,8 @@
     "route_id": "side-chiles-homesite-trail",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 405.8
+    "junction_mile": 405.8,
+    "junction_sec_mile": 0.3
   },
   {
     "id": "pht-side-chiles-homesite-trail-mi0000100",
@@ -120085,7 +120281,8 @@
     "route_id": "side-chiles-homesite-trail",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 405.8
+    "junction_mile": 405.8,
+    "junction_sec_mile": 0.3
   },
   {
     "id": "pht-side-chiles-homesite-trail-mi0000200",
@@ -120100,7 +120297,8 @@
     "route_id": "side-chiles-homesite-trail",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 405.8
+    "junction_mile": 405.8,
+    "junction_sec_mile": 0.3
   },
   {
     "id": "pht-side-chiles-homesite-trail-mi0000300",
@@ -120115,7 +120313,8 @@
     "route_id": "side-chiles-homesite-trail",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 405.8
+    "junction_mile": 405.8,
+    "junction_sec_mile": 0.3
   },
   {
     "id": "pht-side-chiles-homesite-trail-2-mi0000000",
@@ -120415,6 +120614,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120431,6 +120631,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120447,6 +120648,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120463,6 +120665,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120479,6 +120682,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120495,6 +120699,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120511,6 +120716,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120527,6 +120733,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120543,6 +120750,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120559,6 +120767,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120575,6 +120784,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120591,6 +120801,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120607,6 +120818,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120623,6 +120835,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120639,6 +120852,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120655,6 +120869,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120671,6 +120886,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -120687,6 +120903,7 @@
     "route_kind": "side",
     "state": "MD",
     "junction_mile": 383.4,
+    "junction_sec_mile": 1.7,
     "route_type": "roadwalk"
   },
   {
@@ -121545,7 +121762,8 @@
     "route_id": "side-anacostia-riverwalk-trail",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 341.2
+    "junction_mile": 341.2,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-benning-st-bridge-mi0000000",
@@ -121560,7 +121778,8 @@
     "route_id": "side-benning-st-bridge",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 341.2
+    "junction_mile": 341.2,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-chesapeake-and-ohio-canal-towpath-3-mi0000000",
@@ -121575,7 +121794,8 @@
     "route_id": "side-chesapeake-and-ohio-canal-towpath-3",
     "route_kind": "side",
     "state": "MD",
-    "junction_mile": 282
+    "junction_mile": 282,
+    "junction_sec_mile": 0.1
   },
   {
     "id": "pht-side-georgia-ave-nw-mi0000000",
@@ -121590,7 +121810,8 @@
     "route_id": "side-georgia-ave-nw",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 330.5
+    "junction_mile": 330.5,
+    "junction_sec_mile": 0.1
   },
   {
     "id": "pht-side-ent-to-battleground-national-cemetery-mi0000000",
@@ -121619,7 +121840,8 @@
     "route_id": "side-great-allegheny-passage",
     "route_kind": "side",
     "state": "PA",
-    "junction_mile": 78
+    "junction_mile": 78,
+    "junction_sec_mile": 0.1
   },
   {
     "id": "pht-side-unnamed-36-mi0000000",
@@ -121634,7 +121856,8 @@
     "route_id": "side-unnamed-36",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 322.8
+    "junction_mile": 322.8,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-fort-circle-hiker-biker-trail-mi0000000",
@@ -121649,7 +121872,8 @@
     "route_id": "side-fort-circle-hiker-biker-trail",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 349.7
+    "junction_mile": 349.7,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-blaine-st-ne-entrance-to-fort-circle-hiker-b-mi0000000",
@@ -121664,7 +121888,8 @@
     "route_id": "side-blaine-st-ne-entrance-to-fort-circle-hiker-b",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 344.2
+    "junction_mile": 344.2,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-8th-st-nw-mi0000000",
@@ -121679,7 +121904,8 @@
     "route_id": "side-8th-st-nw",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 331.4
+    "junction_mile": 331.4,
+    "junction_sec_mile": 0
   },
   {
     "id": "pht-side-montana-ave-ne-mi0000000",
@@ -121694,6 +121920,7 @@
     "route_id": "side-montana-ave-ne",
     "route_kind": "side",
     "state": "DC",
-    "junction_mile": 338.4
+    "junction_mile": 338.4,
+    "junction_sec_mile": 0
   }
 ]

@@ -14,7 +14,7 @@
       "east": "Point Lookout, MD"
     },
     "source": "NPS POHE Trail Centerline FTDS view, layer 0",
-    "built": "2026-10-18"
+    "built": "2026-10-19"
   },
   "regions": [
     {
@@ -117,6 +117,7 @@
       "region_id": "northern-virginia",
       "miles": 0.6,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -126,6 +127,7 @@
       "region_id": "northern-virginia",
       "miles": 0.14,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -135,6 +137,7 @@
       "region_id": "northern-virginia",
       "miles": 0.02,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -144,6 +147,7 @@
       "region_id": "northern-virginia",
       "miles": 11.1,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -153,6 +157,7 @@
       "region_id": "northern-virginia",
       "miles": 0.01,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -162,6 +167,7 @@
       "region_id": "northern-virginia",
       "miles": 1.9,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -171,6 +177,7 @@
       "region_id": "northern-virginia",
       "miles": 0.01,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -180,6 +187,7 @@
       "region_id": "northern-virginia",
       "miles": 12.98,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -189,6 +197,7 @@
       "region_id": "northern-virginia",
       "miles": 0.98,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -198,6 +207,7 @@
       "region_id": "northern-virginia",
       "miles": 1.26,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -207,6 +217,7 @@
       "region_id": "northern-virginia",
       "miles": 17.44,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -216,6 +227,7 @@
       "region_id": "northern-virginia",
       "miles": 0.63,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -225,6 +237,7 @@
       "region_id": "northern-virginia",
       "miles": 0.03,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -234,6 +247,7 @@
       "region_id": "northern-virginia",
       "miles": 0.5,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -243,6 +257,7 @@
       "region_id": "northern-virginia",
       "miles": 0.1,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -252,6 +267,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 5.16,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -261,6 +277,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 4.64,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -270,6 +287,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 4.16,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -279,6 +297,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 4.01,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -288,6 +307,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 3.19,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -297,6 +317,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 3.15,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -306,6 +327,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 2.66,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -315,6 +337,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 2.28,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -324,6 +347,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 2,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -333,6 +357,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.83,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -342,6 +367,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.71,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -351,6 +377,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.6,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -360,6 +387,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.2,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -369,6 +397,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.16,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -378,6 +407,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.08,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -387,6 +417,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.85,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -396,6 +427,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.67,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -405,6 +437,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.57,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -414,6 +447,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.53,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -423,6 +457,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.25,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -432,6 +467,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.14,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -441,6 +477,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 16.59,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -450,6 +487,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 5.43,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -459,6 +497,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 4.66,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -468,6 +507,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 3.57,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -477,6 +517,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 2.05,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -486,6 +527,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 1.6,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -495,6 +537,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 1.52,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -504,6 +547,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 1.39,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -513,6 +557,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.1,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -522,6 +567,7 @@
       "region_id": "northern-virginia",
       "miles": 12.71,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -531,6 +577,7 @@
       "region_id": "northern-virginia",
       "miles": 0.16,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -540,6 +587,7 @@
       "region_id": "northern-virginia",
       "miles": 0.61,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -549,6 +597,7 @@
       "region_id": "northern-virginia",
       "miles": 0.01,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -558,6 +607,7 @@
       "region_id": "northern-virginia",
       "miles": 1.32,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -567,6 +617,7 @@
       "region_id": "northern-virginia",
       "miles": 1.29,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -576,6 +627,7 @@
       "region_id": "northern-virginia",
       "miles": 0.74,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -585,6 +637,7 @@
       "region_id": "northern-virginia",
       "miles": 0.56,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -594,6 +647,7 @@
       "region_id": "northern-virginia",
       "miles": 0.25,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -603,6 +657,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 15.94,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -612,6 +667,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 1.11,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -621,6 +677,7 @@
       "region_id": "northern-virginia",
       "miles": 9.73,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -630,6 +687,7 @@
       "region_id": "northern-virginia",
       "miles": 3.06,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -639,6 +697,7 @@
       "region_id": "northern-virginia",
       "miles": 1.56,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -648,6 +707,7 @@
       "region_id": "northern-virginia",
       "miles": 4.56,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -657,6 +717,7 @@
       "region_id": "northern-virginia",
       "miles": 3.84,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -666,6 +727,7 @@
       "region_id": "northern-virginia",
       "miles": 0.55,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -675,6 +737,7 @@
       "region_id": "northern-virginia",
       "miles": 0.5,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -684,6 +747,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 3.31,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -693,6 +757,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 2.66,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -702,6 +767,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 2.54,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -711,6 +777,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 0.54,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -720,6 +787,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 0.12,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -729,6 +797,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 0.12,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -738,6 +807,7 @@
       "region_id": "northern-virginia",
       "miles": 7.07,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -747,6 +817,7 @@
       "region_id": "northern-virginia",
       "miles": 0.8,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -756,6 +827,7 @@
       "region_id": "northern-virginia",
       "miles": 0.63,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -765,6 +837,7 @@
       "region_id": "washington-dc",
       "miles": 7.24,
       "junction_mile": 322.7,
+      "junction_sec_mile": 0,
       "alt_of": "main"
     },
     {
@@ -774,6 +847,7 @@
       "region_id": "co-canal-nhp",
       "miles": 0.62,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -783,6 +857,7 @@
       "region_id": "washington-dc",
       "miles": 0.05,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -792,6 +867,7 @@
       "region_id": "washington-dc",
       "miles": 0.05,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -801,6 +877,7 @@
       "region_id": "washington-dc",
       "miles": 0.04,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -810,6 +887,7 @@
       "region_id": "washington-dc",
       "miles": 0.02,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -819,6 +897,7 @@
       "region_id": "washington-dc",
       "miles": 0.02,
       "junction_mile": 322.7,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -828,6 +907,7 @@
       "region_id": "washington-dc",
       "miles": 0.01,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -837,6 +917,7 @@
       "region_id": "northern-virginia",
       "miles": 0.95,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -846,6 +927,7 @@
       "region_id": "northern-virginia",
       "miles": 0.93,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -855,6 +937,7 @@
       "region_id": "northern-virginia",
       "miles": 0.83,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -864,6 +947,7 @@
       "region_id": "northern-virginia",
       "miles": 1.52,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -873,6 +957,7 @@
       "region_id": "northern-virginia",
       "miles": 0.3,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -882,6 +967,7 @@
       "region_id": "northern-virginia",
       "miles": 0.88,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -891,6 +977,7 @@
       "region_id": "northern-virginia",
       "miles": 0.79,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -900,6 +987,7 @@
       "region_id": "northern-virginia",
       "miles": 0.53,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -909,6 +997,7 @@
       "region_id": "northern-virginia",
       "miles": 0.22,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -918,6 +1007,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 6.67,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -927,6 +1017,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 2.08,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -936,6 +1027,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.99,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -945,6 +1037,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.81,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -954,6 +1047,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.25,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -963,6 +1057,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.05,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -972,6 +1067,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 2.72,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -981,6 +1077,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.11,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -990,6 +1087,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.8,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -999,6 +1097,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.8,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1008,6 +1107,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.3,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1017,6 +1117,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.21,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1026,6 +1127,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.47,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1035,6 +1137,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.42,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1044,6 +1147,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.17,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1053,6 +1157,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.07,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1062,6 +1167,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.06,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1071,6 +1177,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 0.03,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1080,6 +1187,7 @@
       "region_id": "northern-virginia",
       "miles": 0.48,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1089,6 +1197,7 @@
       "region_id": "northern-virginia",
       "miles": 2.1,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1098,6 +1207,7 @@
       "region_id": "northern-virginia",
       "miles": 0.03,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1107,6 +1217,7 @@
       "region_id": "northern-virginia",
       "miles": 0.19,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1116,6 +1227,7 @@
       "region_id": "northern-virginia",
       "miles": 1.55,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1125,6 +1237,7 @@
       "region_id": "northern-virginia",
       "miles": 1.32,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1134,6 +1247,7 @@
       "region_id": "northern-virginia",
       "miles": 0.16,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1143,6 +1257,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 5.78,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1152,6 +1267,7 @@
       "region_id": "northern-virginia",
       "miles": 5.48,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1161,6 +1277,7 @@
       "region_id": "southern-maryland",
       "miles": 4.03,
       "junction_mile": 505.5,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1170,6 +1287,7 @@
       "region_id": "southern-maryland",
       "miles": 1.34,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1179,6 +1297,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 4.39,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1188,6 +1307,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 0.57,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1197,6 +1317,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.59,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1206,6 +1327,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.43,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1215,6 +1337,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.46,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1224,6 +1347,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.27,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1233,6 +1357,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 0.08,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1242,6 +1367,7 @@
       "region_id": "southern-maryland",
       "miles": 0.99,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1251,6 +1377,7 @@
       "region_id": "southern-maryland",
       "miles": 0.41,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1260,6 +1387,7 @@
       "region_id": "southern-maryland",
       "miles": 0.74,
       "junction_mile": 395.3,
+      "junction_sec_mile": 0.7,
       "alt_of": null
     },
     {
@@ -1269,6 +1397,7 @@
       "region_id": "southern-maryland",
       "miles": 0.09,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1278,6 +1407,7 @@
       "region_id": "southern-maryland",
       "miles": 0.1,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1287,6 +1417,7 @@
       "region_id": "southern-maryland",
       "miles": 0.48,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1296,6 +1427,7 @@
       "region_id": "southern-maryland",
       "miles": 0.39,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1305,6 +1437,7 @@
       "region_id": "southern-maryland",
       "miles": 0.13,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1314,6 +1447,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 1.75,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1323,6 +1457,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 1.31,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1332,6 +1467,7 @@
       "region_id": "eastern-continental-divide",
       "miles": 0.23,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1341,6 +1477,7 @@
       "region_id": "southern-maryland",
       "miles": 2.38,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1350,6 +1487,7 @@
       "region_id": "southern-maryland",
       "miles": 0.81,
       "junction_mile": 358.9,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1359,6 +1497,7 @@
       "region_id": "southern-maryland",
       "miles": 0.07,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1368,6 +1507,7 @@
       "region_id": "southern-maryland",
       "miles": 3.12,
       "junction_mile": 379.2,
+      "junction_sec_mile": 3.1,
       "alt_of": null
     },
     {
@@ -1377,6 +1517,7 @@
       "region_id": "southern-maryland",
       "miles": 3.06,
       "junction_mile": 481.3,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1386,6 +1527,7 @@
       "region_id": "northern-virginia",
       "miles": 2.87,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1395,6 +1537,7 @@
       "region_id": "northern-virginia",
       "miles": 2.8,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1404,6 +1547,7 @@
       "region_id": "northern-virginia",
       "miles": 2.51,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1413,6 +1557,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 2.41,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1422,6 +1567,7 @@
       "region_id": "southern-maryland",
       "miles": 1.05,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1431,6 +1577,7 @@
       "region_id": "southern-maryland",
       "miles": 0.54,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1440,6 +1587,7 @@
       "region_id": "southern-maryland",
       "miles": 0.05,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1449,6 +1597,7 @@
       "region_id": "southern-maryland",
       "miles": 0.33,
       "junction_mile": 405.8,
+      "junction_sec_mile": 0.3,
       "alt_of": null
     },
     {
@@ -1458,6 +1607,7 @@
       "region_id": "southern-maryland",
       "miles": 0.04,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1467,6 +1617,7 @@
       "region_id": "northern-neck-virginia",
       "miles": 1.75,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1476,6 +1627,7 @@
       "region_id": "southern-maryland",
       "miles": 1.72,
       "junction_mile": 383.4,
+      "junction_sec_mile": 1.7,
       "alt_of": null
     },
     {
@@ -1485,6 +1637,7 @@
       "region_id": "southern-maryland",
       "miles": 0.01,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1494,6 +1647,7 @@
       "region_id": "northern-virginia",
       "miles": 1.42,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1503,6 +1657,7 @@
       "region_id": "northern-virginia",
       "miles": 1.29,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1512,6 +1667,7 @@
       "region_id": "northern-virginia",
       "miles": 0.04,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1521,6 +1677,7 @@
       "region_id": "northern-virginia",
       "miles": 0.01,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1530,6 +1687,7 @@
       "region_id": "greater-fredericksburg",
       "miles": 1.04,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1539,6 +1697,7 @@
       "region_id": "northern-virginia",
       "miles": 0.83,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1548,6 +1707,7 @@
       "region_id": "northern-virginia",
       "miles": 0.63,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1557,6 +1717,7 @@
       "region_id": "northern-virginia",
       "miles": 0.18,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1566,6 +1727,7 @@
       "region_id": "washington-dc",
       "miles": 0.08,
       "junction_mile": 341.2,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1575,6 +1737,7 @@
       "region_id": "washington-dc",
       "miles": 0.04,
       "junction_mile": 341.2,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1584,6 +1747,7 @@
       "region_id": "co-canal-nhp",
       "miles": 0.08,
       "junction_mile": 282,
+      "junction_sec_mile": 0.1,
       "alt_of": null
     },
     {
@@ -1593,6 +1757,7 @@
       "region_id": "washington-dc",
       "miles": 0.05,
       "junction_mile": 330.5,
+      "junction_sec_mile": 0.1,
       "alt_of": null
     },
     {
@@ -1602,6 +1767,7 @@
       "region_id": "washington-dc",
       "miles": 0.02,
       "junction_mile": null,
+      "junction_sec_mile": null,
       "alt_of": null
     },
     {
@@ -1611,6 +1777,7 @@
       "region_id": "great-allegheny-passage",
       "miles": 0.06,
       "junction_mile": 78,
+      "junction_sec_mile": 0.1,
       "alt_of": null
     },
     {
@@ -1620,6 +1787,7 @@
       "region_id": "washington-dc",
       "miles": 0.05,
       "junction_mile": 322.8,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1629,6 +1797,7 @@
       "region_id": "washington-dc",
       "miles": 0.04,
       "junction_mile": 349.7,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1638,6 +1807,7 @@
       "region_id": "washington-dc",
       "miles": 0.01,
       "junction_mile": 344.2,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1647,6 +1817,7 @@
       "region_id": "washington-dc",
       "miles": 0.01,
       "junction_mile": 331.4,
+      "junction_sec_mile": 0,
       "alt_of": null
     },
     {
@@ -1656,6 +1827,7 @@
       "region_id": "washington-dc",
       "miles": 0.01,
       "junction_mile": 338.4,
+      "junction_sec_mile": 0,
       "alt_of": null
     }
   ],

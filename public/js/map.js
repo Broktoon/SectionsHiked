@@ -425,6 +425,72 @@ function exitSelectMode() {
   _endSnap = null;
 }
 
+// One shape for every snap. The route fields travel with it: a side route's
+// `mile` is LOCAL to that route, so without route_id a caller cannot tell
+// whether two miles are even on the same axis.
+function _snapRecord(p) {
+  const kind = p.route_kind ?? 'spine';
+  return {
+    lat: p.lat, lng: p.lon,
+    // `mile` locates the point on whatever axis it belongs to. `dist_mile` is
+    // the one that may be SUBTRACTED to get a real distance, and they are not
+    // always the same: an ALTERNATE's mile is interpolated across the spine
+    // span it substitutes for (the IAT pattern — built for lookup), so
+    // differencing it overstates length. The DC River Trail is 7.24mi but
+    // spans spine miles 322.7 to 352.0, a four-fold error. sec_mile is the
+    // route-local measure, so that is what an alternate differences on.
+    mile: p.mile ?? null,
+    dist_mile: kind === 'alternate' ? (p.sec_mile ?? null) : (p.mile ?? null),
+    sec_mile: p.sec_mile ?? null,
+    state: p.state ?? null,
+    route_id: p.route_id ?? 'main',
+    route_kind: kind,
+    junction_mile: p.junction_mile ?? null,
+    junction_sec_mile: p.junction_sec_mile ?? null,
+  };
+}
+
+// Where a route meets the spine, as a pair of real points, so a split segment
+// gets proper endpoints instead of an interpolated guess.
+function junctionPointsFor(routeId) {
+  if (!_points) return null;
+  const onRoute = _points.find(p => (p.route_id ?? 'main') === routeId && p.junction_mile != null);
+  if (!onRoute) return null;
+  const spineMile = onRoute.junction_mile;
+  const routeMile = onRoute.junction_sec_mile;
+  if (routeMile == null) return null;
+  let spinePt = null, routePt = null;
+  for (const p of _points) {
+    const rid = p.route_id ?? 'main';
+    if (rid === 'main') {
+      if (!spinePt || Math.abs(p.mile - spineMile) < Math.abs(spinePt.mile - spineMile)) spinePt = p;
+    } else if (rid === routeId) {
+      if (!routePt || Math.abs((p.sec_mile ?? 0) - routeMile) < Math.abs((routePt.sec_mile ?? 0) - routeMile)) routePt = p;
+    }
+  }
+  if (!spinePt || !routePt) return null;
+  return { spineMile, routeMile, spinePt, routePt };
+}
+
+// Split a hike whose ends are on different routes into one leg per route,
+// meeting at the junction. Returns null where it cannot be done honestly —
+// notably two different off-spine routes, which would need the path between
+// them; the caller refuses those rather than guessing.
+function splitAtJunction(a, b) {
+  if ((a.route_id ?? 'main') === (b.route_id ?? 'main')) return null;
+  const spineEnd = a.route_kind === 'spine' ? a : (b.route_kind === 'spine' ? b : null);
+  const offEnd = a.route_kind === 'spine' ? b : (b.route_kind === 'spine' ? a : null);
+  if (!spineEnd || !offEnd) return null;
+  const j = junctionPointsFor(offEnd.route_id);
+  if (!j) return null;
+  return [
+    { route_id: 'main', route_kind: 'spine',
+      start: spineEnd, end: _snapRecord(j.spinePt) },
+    { route_id: offEnd.route_id, route_kind: offEnd.route_kind,
+      start: _snapRecord(j.routePt), end: offEnd },
+  ];
+}
+
 function _snapToNearest(lat, lng) {
   if (!_points || _points.length === 0) return { lat, lng, mile: null, state: null };
   let best = _points[0];
@@ -433,15 +499,20 @@ function _snapToNearest(lat, lng) {
     const d = haversine(lat, lng, _points[i].lat, _points[i].lon);
     if (d < bestDist) { bestDist = d; best = _points[i]; }
   }
-  return { lat: best.lat, lng: best.lon, mile: best.mile ?? null, state: best.state ?? null };
+  return _snapRecord(best);
 }
 
-function _getStatesForSegment(startMile, endMile) {
+function _getStatesForSegment(startMile, endMile, routeId) {
   if (!_points || startMile == null || endMile == null) return null;
   const lo = Math.min(startMile, endMile);
   const hi = Math.max(startMile, endMile);
+  const rid = routeId ?? 'main';
   const seen = new Set();
   for (const p of _points) {
+    // Filtered to one route on purpose: a side route's mile restarts at 0, so
+    // scanning every point mixes a 0-20 spine span with unrelated side-route
+    // miles 0-20 hundreds of miles away.
+    if ((p.route_id ?? 'main') !== rid) continue;
     if (p.mile >= lo - 0.05 && p.mile <= hi + 0.05 && p.state) seen.add(p.state);
   }
   return seen.size > 0 ? [...seen].join(' · ') : null;
@@ -475,7 +546,7 @@ function _onMapClick(e) {
     _map.off('click', _onMapClick);
 
     if (onSegmentChosen) {
-      const states = _getStatesForSegment(_startSnap.mile, _endSnap.mile);
+      const states = _getStatesForSegment(_startSnap.mile, _endSnap.mile, _startSnap.route_id);
       onSegmentChosen(_startSnap, _endSnap, states);
     }
   }
@@ -494,7 +565,11 @@ function getLoadedPoints() {
 // Used by form mode to snap typed miles to real trail coordinates.
 function snapByMile(targetMile, state) {
   if (!_points || _points.length === 0) return null;
-  const candidates = state ? _points.filter(p => p.state === state) : _points;
+  // Spine points only: form mode asks for a trail mile, and a side route's
+  // mile restarts at 0, so an unfiltered search can snap a typed mile 10 onto
+  // an unrelated side route hundreds of miles away.
+  const spineOnly = _points.filter(p => (p.route_id ?? 'main') === 'main');
+  const candidates = state ? spineOnly.filter(p => p.state === state) : spineOnly;
   if (candidates.length === 0) return null;
   let best = candidates[0];
   let bestDist = Math.abs((best.mile ?? 0) - targetMile);
@@ -502,7 +577,7 @@ function snapByMile(targetMile, state) {
     const d = Math.abs((p.mile ?? 0) - targetMile);
     if (d < bestDist) { bestDist = d; best = p; }
   }
-  return { lat: best.lat, lng: best.lon, mile: best.mile ?? null, state: best.state ?? null };
+  return _snapRecord(best);
 }
 
 // Draw a preview segment from form-mode inputs, then fire onSegmentChosen.

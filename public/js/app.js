@@ -279,16 +279,9 @@ async function saveSegment() {
     ? Math.round(parseFloat(durationVal) * unitMultiplier[durationUnit])
     : null;
 
-  const seg = {
+  const common = {
     user_id: _currentUser.id,
     trail_id: _currentTrail.id,
-    start_lat: _pendingStart.lat,
-    start_lng: _pendingStart.lng,
-    end_lat: _pendingEnd.lat,
-    end_lng: _pendingEnd.lng,
-    start_mile: _pendingStart.mile,
-    end_mile: _pendingEnd.mile,
-    states: _pendingStates,
     date_begun: dateBegun,
     date_completed: document.getElementById('drawer-date-completed').value || null,
     duration_minutes: durationMinutes,
@@ -296,16 +289,65 @@ async function saveSegment() {
     flora_fauna: _floraEntries.length > 0 ? JSON.stringify(_floraEntries) : null,
   };
 
+  // One row is one continuous span on ONE route. A hike whose ends sit on
+  // different routes is split at the junction into a leg each, sharing a
+  // hike_group_id so a later `hikes` table can adopt them without a backfill.
+  // Without this the row would subtract a route-local mile from a spine mile
+  // and store the difference as distance hiked.
+  const startRoute = _pendingStart.route_id ?? 'main';
+  const endRoute = _pendingEnd.route_id ?? 'main';
+  let legs;
+  if (startRoute === endRoute) {
+    legs = [{
+      route_id: startRoute, route_kind: _pendingStart.route_kind ?? 'spine',
+      start: _pendingStart, end: _pendingEnd,
+    }];
+  } else {
+    legs = typeof splitAtJunction === 'function'
+      ? splitAtJunction(_pendingStart, _pendingEnd)
+      : null;
+    if (!legs) {
+      const errEl = document.getElementById('drawer-error');
+      errEl.textContent = 'Those two points are on routes that do not meet directly. '
+        + 'Log them as separate hikes.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+  }
+
+  const groupId = legs.length > 1
+    ? (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()))
+    : null;
+
+  const rows = legs.map(leg => ({
+    ...common,
+    start_lat: leg.start.lat,
+    start_lng: leg.start.lng,
+    end_lat: leg.end.lat,
+    end_lng: leg.end.lng,
+    // dist_mile, not mile: on an alternate those differ, and only dist_mile
+    // subtracts to a real distance. See _snapRecord in map.js.
+    start_mile: leg.start.dist_mile ?? leg.start.mile,
+    end_mile: leg.end.dist_mile ?? leg.end.mile,
+    route_id: leg.route_id === 'main' ? null : leg.route_id,
+    route_kind: leg.route_kind,
+    hike_group_id: groupId,
+    states: legs.length === 1 ? _pendingStates
+      : _getStatesForSegment(leg.start.mile, leg.end.mile, leg.route_id),
+  }));
+
   const saveBtn = document.getElementById('drawer-save-btn');
   saveBtn.disabled = true;
   saveBtn.textContent = 'Saving…';
 
   try {
-    const saved = await addSegment(seg);
-    _allSegments.push(saved);
+    const saved = rows.length === 1 ? [await addSegment(rows[0])] : await addSegments(rows);
+    for (const row of saved) {
+      _allSegments.push(row);
+      addSegmentToMap(row);
+    }
     exitSelectMode();
     closeSegmentDrawer();
-    addSegmentToMap(saved);
     renderTrailInfo(_currentTrail, _allSegments.filter(s => s.trail_id === _currentTrail.id));
   } catch (e) {
     const errEl = document.getElementById('drawer-error');
