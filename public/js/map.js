@@ -9,6 +9,7 @@ let _trailCoords = null;   // LatLng[] for run 0 of trail.geojson; set after tra
 let _trailTotalMiles = null; // trail.totalMiles for the currently loaded trail
 let _altBranches = {};     // passage id (e.g. "11e") -> { altOf, coords: LatLng[] }; alt-route passages only
 let _segmentLayers = [];
+let _trailFitBounds = null;  // bounds of the current trail's spine, for refitTrail()
 
 // Select mode state
 let _points = null;        // points.json — used only for snapping and state lookup
@@ -232,10 +233,31 @@ function _chainParts(parts) {
   return chain;
 }
 
+// Frame the trail. Kept separate from loadTrail because the first fit happens
+// while Leaflet may still believe the container is its old size — the map div
+// is hidden until a trail is opened — and fitBounds then picks a zoom for the
+// wrong dimensions. invalidateSize() alone does not help: it corrects the size
+// but preserves zoom and centre, so the bad zoom survives and the trail ends up
+// a thread in an oversized view. app.js calls this again once the layout has
+// settled, which recomputes the zoom against the real size.
+function _fitTrail() {
+  if (!_map || !_trailFitBounds) return;
+  _map.fitBounds(_trailFitBounds, { padding: [20, 20] });
+  _map.setZoom(_map.getZoom() + 0.5);
+}
+
+// Called by app.js after the map view is shown and laid out.
+function refitTrail() {
+  if (!_map) return;
+  _map.invalidateSize();
+  _fitTrail();
+}
+
 async function loadTrail(trail, segments) {
   initMap();
 
   if (_trailLayer) { _map.removeLayer(_trailLayer); _trailLayer = null; }
+  _trailFitBounds = null;
   _trailCoords = null;
   _altBranches = {};
   _trailTotalMiles = trail.totalMiles;
@@ -322,8 +344,16 @@ async function loadTrail(trail, segments) {
           }
         }
 
-        _map.fitBounds(_trailLayer.getBounds(), { padding: [20, 20] });
-        _map.setZoom(_map.getZoom() + 0.5);
+        // Fit to the SPINE, not to every feature. _trailLayer.getBounds()
+        // covers side routes too, and on Potomac Heritage those run 300 miles
+        // across Virginia and out to the Eastern Continental Divide — enough to
+        // shrink the actual trail to a thread. Side routes stay on the map;
+        // they just do not get to decide the opening view. Falls back to the
+        // layer bounds for any trail whose spine array came out empty.
+        _trailFitBounds = (_trailCoords && _trailCoords.length)
+          ? L.latLngBounds(_trailCoords)
+          : _trailLayer.getBounds();
+        _fitTrail();
       }
     } catch (e) {
       console.warn('Trail GeoJSON load failed:', trail.id, e);

@@ -196,8 +196,22 @@ const FIELDS  = 'OBJECTID,TRNAME,TRALTNAME,MAPLABEL,TRSTATUS,TYPEOFROUTE,STATE,R
   + ',TRSURFACE,TRUSE,TRTYPE';
 
 // Point spacing, miles. Deliberately finer than the 0.5 used by the CDT, PCT,
-// NCT and PNT rebuilds - see the header.
-const SPACING = 0.1;
+// NCT and PNT rebuilds, and finer again since the first build: 0.1 proved too
+// coarse in practice. Clicking the map snaps to the nearest point, so 0.1
+// spacing put an endpoint up to ~264 ft from where the user clicked, which is
+// visible and annoying on a trail with this much suburban detail. 0.05 halves
+// that.
+//
+// An earlier version of this header argued against going finer, on the grounds
+// that 32% of trail length sits on source vertex gaps coarser than 0.05mi so
+// the extra points would be "manufactured". That reasoning was wrong. Every
+// emitted point is interpolated along the line already; sampling the same line
+// more densely invents no geography, because where the source digitises a
+// straight road with sparse vertices the straight line IS the road. Finer
+// sampling does not improve source fidelity, but it does not harm it either -
+// it only costs file size, and 16811 points minified is smaller than the AT's
+// 21901 that already ship.
+const SPACING = 0.05;
 
 // Endpoint merge tolerance, miles (~53 ft). Unlike the PNT, the value here is
 // load-bearing: the DC <-> Southern Maryland join measures exactly 53 ft, so
@@ -1644,7 +1658,9 @@ async function main() {
     if (noState) console.log('  !! ' + noState + ' points fell outside every state polygon');
   }
 
-  fs.writeFileSync(path.join(DATA, 'points.json'), JSON.stringify(points, null, 2));
+  // Minified, like the AT's, IAT's and NET's. At 0.05mi spacing the 2-space
+  // indent cost 1.3MB on its own, and nothing reads this file by eye.
+  fs.writeFileSync(path.join(DATA, 'points.json'), JSON.stringify(points));
   const kindCount = {};
   for (const p of points) kindCount[p.route_kind] = (kindCount[p.route_kind] || 0) + 1;
   const stCount = {};

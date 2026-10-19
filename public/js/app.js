@@ -172,7 +172,12 @@ async function showTrail(trailId) {
   const segments = _allSegments.filter(s => s.trail_id === trailId);
   renderTrailInfo(trail, segments);
   await loadTrail(trail, segments);
-  requestAnimationFrame(() => { if (_map) _map.invalidateSize(); });
+  // Refit rather than only invalidating: the first fit inside loadTrail ran
+  // before this view had its real size, and invalidateSize keeps the old zoom.
+  requestAnimationFrame(() => {
+    if (typeof refitTrail === 'function') refitTrail();
+    else if (_map) _map.invalidateSize();
+  });
 }
 
 function showDashboard() {
@@ -307,11 +312,19 @@ async function saveSegment() {
       ? splitAtJunction(_pendingStart, _pendingEnd)
       : null;
     if (!legs) {
-      const errEl = document.getElementById('drawer-error');
-      errEl.textContent = 'Those two points are on routes that do not meet directly. '
-        + 'Log them as separate hikes.';
-      errEl.classList.remove('hidden');
-      return;
+      // The two routes do not meet anywhere we know of — which is the common
+      // case, not the rare one: only 19 of Potomac Heritage's 172 off-spine
+      // routes touch the spine at all. Refusing the entry here blocked a
+      // perfectly reasonable hike, so it is accepted as a single row instead,
+      // with NO mile values. That is the honest record: the two ends are on
+      // different axes, so there is no on-trail distance to state, and
+      // segmentMiles falls back to straight-line distance when miles are null.
+      legs = [{
+        route_id: startRoute, route_kind: _pendingStart.route_kind ?? 'spine',
+        start: { ..._pendingStart, dist_mile: null, mile: null },
+        end: { ..._pendingEnd, dist_mile: null, mile: null },
+        unlinked: true,
+      }];
     }
   }
 
@@ -332,8 +345,9 @@ async function saveSegment() {
     route_id: leg.route_id === 'main' ? null : leg.route_id,
     route_kind: leg.route_kind,
     hike_group_id: groupId,
-    states: legs.length === 1 ? _pendingStates
-      : _getStatesForSegment(leg.start.mile, leg.end.mile, leg.route_id),
+    states: leg.unlinked ? _pendingStates
+      : (legs.length === 1 ? _pendingStates
+        : _getStatesForSegment(leg.start.mile, leg.end.mile, leg.route_id)),
   }));
 
   const saveBtn = document.getElementById('drawer-save-btn');

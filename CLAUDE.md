@@ -210,6 +210,21 @@ over `route_kind`. The main progress bar counts **spine mileage only**.
 
 `route_type` also carries surface values such as `"cross-country"` (PNT, 17.7mi).
 
+### File formatting
+
+| file | format | why |
+|---|---|---|
+| `points.json` | **minified** | read only by code; at PHT's 0.05mi spacing the 2-space indent cost 1.3MB of the 5.6MB file |
+| `trail.geojson` | **minified** | same, and already universal across all 11 trails |
+| `*_meta.json` | **pretty-printed** | small, and people do read it — region lists, mile ranges, the notes block |
+
+`JSON.stringify(x)` versus `JSON.stringify(x, null, 2)`; nothing more than that.
+
+**Currently inconsistent, normalise when a trail is next rebuilt** rather than in
+a churn-only pass: `points.json` is minified on AT, IAT, NET and PHT but
+pretty-printed on AZT, CDT, Florida, Natchez, NCT, PCT and PNT. `net_meta.json`
+is the one meta file that is minified and should not be.
+
 ### Migration status
 
 On the canonical schema: AT, AZT, Natchez, IAT, NET, PCT, CDT, NCT, PNT.
