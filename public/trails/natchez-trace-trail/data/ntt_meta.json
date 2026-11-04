@@ -1,0 +1,107 @@
+{
+  "trail": {
+    "name": "Natchez Trace National Scenic Trail",
+    "total_miles": 68.9,
+    "point_spacing_miles": 0.1,
+    "source": "Extracted from the existing points.json by scripts/build-meta-from-points.js. Geometry untouched; this file records the tables that were previously copied onto every point.",
+    "built": "2026-11-04"
+  },
+  "regions": [
+    {
+      "id": "mississippi",
+      "name": "Mississippi",
+      "route_id": "main-spine",
+      "mile_start": 0,
+      "mile_end": 44.3,
+      "miles": 44.3,
+      "sections": 4
+    },
+    {
+      "id": "tennessee",
+      "name": "Tennessee",
+      "route_id": "main-spine",
+      "mile_start": 44.3,
+      "mile_end": 68.9,
+      "miles": 24.6,
+      "sections": 1
+    }
+  ],
+  "sections": [
+    {
+      "id": "potkopinu",
+      "name": "Potkopinu",
+      "region_id": "mississippi",
+      "route_id": "main-spine",
+      "mile_start": 0,
+      "mile_end": 3.4,
+      "miles": 3.4
+    },
+    {
+      "id": "rocky-springs",
+      "name": "Rocky Springs",
+      "region_id": "mississippi",
+      "route_id": "main-spine",
+      "mile_start": 3.4,
+      "mile_end": 12.3,
+      "miles": 8.9
+    },
+    {
+      "id": "yockanookany",
+      "name": "Yockanookany",
+      "region_id": "mississippi",
+      "route_id": "main-spine",
+      "mile_start": 12.4,
+      "mile_end": 38.1,
+      "miles": 25.7
+    },
+    {
+      "id": "blackland-prairie",
+      "name": "Blackland Prairie",
+      "region_id": "mississippi",
+      "route_id": "main-spine",
+      "mile_start": 38.2,
+      "mile_end": 44.3,
+      "miles": 6.1
+    },
+    {
+      "id": "highland-rim",
+      "name": "Highland Rim",
+      "region_id": "tennessee",
+      "route_id": "main-spine",
+      "mile_start": 44.3,
+      "mile_end": 68.9,
+      "miles": 24.6
+    }
+  ],
+  "routes": [
+    {
+      "id": "main-spine",
+      "name": null,
+      "kind": "spine",
+      "alt_of": null,
+      "junction_mile": null,
+      "junction_sec_mile": null,
+      "hikeable": true,
+      "miles": 68.9
+    }
+  ],
+  "hydrate": {
+    "id": {
+      "prefix": "ntt",
+      "token_by": "section",
+      "from": "sec_mile",
+      "scale": 10,
+      "width": 4
+    },
+    "sec_mile_from": "section",
+    "sec_mile_decimals": 1,
+    "region_from": "section",
+    "emit": {
+      "route_kind": false,
+      "alt_of": false,
+      "junction_mile": false,
+      "junction_sec_mile": false
+    }
+  },
+  "notes": {}
+}

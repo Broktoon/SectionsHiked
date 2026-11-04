@@ -14,6 +14,7 @@ let _fitObserver = null;     // waits for the map container to actually get a si
 
 // Select mode state
 let _points = null;        // points.json — used only for snapping and state lookup
+let _trailMeta = null;     // the trail's *_meta.json, when it has one
 let _pointsTrailId = null;
 let _startSnap = null;
 let _endSnap = null;
@@ -40,13 +41,39 @@ function initMap() {
 async function _loadPoints(trail) {
   if (_pointsTrailId === trail.id) return;
   _points = null;
+  _trailMeta = null;
   _pointsTrailId = null;
   try {
     const resp = await fetch(`/trails/${trail.id}/data/points.json`);
-    if (resp.ok) {
-      _points = await resp.json();
-      _pointsTrailId = trail.id;
+    if (!resp.ok) return;
+    let pts = await resp.json();
+
+    // A trail on the canonical 7-field schema stores only lat, lon, mile,
+    // route_id, route_type and state. Everything else this file reads —
+    // sec_mile, region_id, route_kind, junction_mile and the rest — is
+    // rebuilt from its meta file, which holds each value once instead of
+    // copying it onto every point.
+    //
+    // Gated on the meta carrying a `hydrate` block, so a trail that has not
+    // been converted yet loads exactly as before. Two of the eleven are
+    // converted today; the other nine take this path unchanged.
+    if (trail.metaFile) {
+      try {
+        const mresp = await fetch(`/trails/${trail.id}/data/${trail.metaFile}`);
+        if (mresp.ok) {
+          const meta = await mresp.json();
+          _trailMeta = meta;
+          if (meta && meta.hydrate && typeof hydratePoints === 'function') {
+            pts = hydratePoints(pts, meta);
+          }
+        }
+      } catch (e) {
+        console.warn('meta load failed:', trail.id, e);
+      }
     }
+
+    _points = pts;
+    _pointsTrailId = trail.id;
   } catch (e) {
     console.warn('points.json load failed:', trail.id, e);
   }
@@ -490,15 +517,15 @@ function _snapRecord(p) {
   const kind = p.route_kind ?? 'spine';
   return {
     lat: p.lat, lng: p.lon,
-    // `mile` locates the point on whatever axis it belongs to. `dist_mile` is
-    // the one that may be SUBTRACTED to get a real distance, and they are not
-    // always the same: an ALTERNATE's mile is interpolated across the spine
-    // span it substitutes for (the IAT pattern — built for lookup), so
-    // differencing it overstates length. The DC River Trail is 7.24mi but
-    // spans spine miles 322.7 to 352.0, a four-fold error. sec_mile is the
-    // route-local measure, so that is what an alternate differences on.
+    // `mile` may now be subtracted directly on every route. It used to be
+    // two different measures wearing one name: an alternate's mile was
+    // interpolated across the spine span it substitutes for, so differencing
+    // it overstated a hike fourfold (the DC River Trail is 7.24mi but spanned
+    // spine miles 322.7 to 352.0). That is what `dist_mile` existed to work
+    // around. Every off-spine route now carries its own route-local mile, so
+    // the workaround is gone and the junction attachment lives in the meta
+    // routes table instead.
     mile: p.mile ?? null,
-    dist_mile: kind === 'alternate' ? (p.sec_mile ?? null) : (p.mile ?? null),
     sec_mile: p.sec_mile ?? null,
     state: p.state ?? null,
     route_id: p.route_id ?? 'main',
@@ -667,7 +694,10 @@ function enterFormPreview(startSnap, endSnap) {
   );
 
   if (onSegmentChosen) {
-    const states = _getStatesForSegment(startSnap.mile, endSnap.mile);
+    // Pass the route: an off-spine route's mile restarts at 0, so defaulting
+    // to the spine scans miles 0-N of the main axis and reports the states of
+    // somewhere else entirely.
+    const states = _getStatesForSegment(startSnap.mile, endSnap.mile, startSnap.route_id);
     onSegmentChosen(startSnap, endSnap, states);
   }
 }

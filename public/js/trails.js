@@ -7,6 +7,7 @@
 const TRAILS = [
   {
     id: 'appalachian-trail',
+    metaFile: 'at_meta.json',
     name: 'Appalachian Trail',
     color: '#4a7c59',
     totalMiles: 2198,
@@ -25,6 +26,7 @@ const TRAILS = [
   },
   {
     id: 'continental-divide-trail',
+    metaFile: 'cdt_meta.json',
     name: 'Continental Divide Trail',
     color: '#4a7c59',
     totalMiles: 3040.0, // CDTC 2026 half-mile markers, Crazy Cook to Waterton Lake
@@ -44,6 +46,7 @@ const TRAILS = [
   },
   {
     id: 'ice-age-trail',
+    metaFile: 'iat_meta.json',
     name: 'Ice Age Trail',
     color: '#4a7c59',
     totalMiles: 1153.1, // certified segments + connecting routes, both hikeable — see CLAUDE.md
@@ -53,6 +56,7 @@ const TRAILS = [
   },
   {
     id: 'natchez-trace-trail',
+    metaFile: 'ntt_meta.json',
     name: 'Natchez Trace Trail',
     color: '#4a7c59',
     totalMiles: 68.9, // real hikeable trail only, across 5 disconnected sections — see CLAUDE.md
@@ -62,6 +66,7 @@ const TRAILS = [
   },
   {
     id: 'new-england-trail',
+    metaFile: 'net_meta.json',
     name: 'New England Trail',
     color: '#4a7c59',
     totalMiles: 235, // official NPS/newenglandtrail.org figure; our own geometry (208.3mi via mile markers, ~184mi via raw geometry) predates trail extensions and undersamples the MA segment — see CLAUDE.md
@@ -71,6 +76,7 @@ const TRAILS = [
   },
   {
     id: 'north-country-trail',
+    metaFile: 'nct_meta.json',
     name: 'North Country Trail',
     color: '#4a7c59',
     // Measured from NCTA's own GIS by scripts/build-nct-data.js; NCTA publishes
@@ -83,6 +89,7 @@ const TRAILS = [
   },
   {
     id: 'pacific-crest-trail',
+    metaFile: 'pct_meta.json',
     name: 'Pacific Crest Trail',
     color: '#4a7c59',
     totalMiles: 2655.7, // PCTA 2026 mile markers, Campo to the Canadian border
@@ -92,6 +99,7 @@ const TRAILS = [
   },
   {
     id: 'pacific-northwest-trail',
+    metaFile: 'pnt_meta.json',
     name: 'Pacific Northwest Trail',
     color: '#4a7c59',
     totalMiles: 1210.95, // measured off the USFS 2016 congressional route; excludes the 5.79mi Puget Sound ferry — see CLAUDE.md
@@ -101,6 +109,7 @@ const TRAILS = [
   },
   {
     id: 'potomac-heritage-trail',
+    metaFile: 'pht_meta.json',
     name: 'Potomac Heritage Trail',
     color: '#4a7c59',
     // Spine only, measured off the NPS POHE centerline by scripts/build-pht-data.js.

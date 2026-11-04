@@ -321,8 +321,8 @@ async function saveSegment() {
       // segmentMiles falls back to straight-line distance when miles are null.
       legs = [{
         route_id: startRoute, route_kind: _pendingStart.route_kind ?? 'spine',
-        start: { ..._pendingStart, dist_mile: null, mile: null },
-        end: { ..._pendingEnd, dist_mile: null, mile: null },
+        start: { ..._pendingStart, mile: null },
+        end: { ..._pendingEnd, mile: null },
         unlinked: true,
       }];
     }
@@ -338,10 +338,11 @@ async function saveSegment() {
     start_lng: leg.start.lng,
     end_lat: leg.end.lat,
     end_lng: leg.end.lng,
-    // dist_mile, not mile: on an alternate those differ, and only dist_mile
-    // subtracts to a real distance. See _snapRecord in map.js.
-    start_mile: leg.start.dist_mile ?? leg.start.mile,
-    end_mile: leg.end.dist_mile ?? leg.end.mile,
+    // `mile` subtracts to a real distance on every route now. It used to
+    // need dist_mile alongside it, because an alternate's mile was
+    // interpolated onto the spine axis. See _snapRecord in map.js.
+    start_mile: leg.start.mile,
+    end_mile: leg.end.mile,
     route_id: leg.route_id === 'main' ? null : leg.route_id,
     route_kind: leg.route_kind,
     hike_group_id: groupId,
