@@ -430,9 +430,55 @@ async function loadTrail(trail, segments) {
   for (const seg of segments) {
     _addSegmentLine(seg);
   }
+  _addGroupJoiners(segments);
 
   if (!_trailLayer && _segmentLayers.length > 0) {
     _map.fitBounds(L.featureGroup(_segmentLayers).getBounds(), { padding: [40, 40] });
+  }
+}
+
+// One hike split across routes is stored as a row per route, and each row's
+// line stops at its own route's edge. The routes themselves are digitised tens
+// of feet apart, so the drawn hike came out with unpainted gaps at every
+// junction — in Georgetown that read as a break across the canal, where the
+// towpath and the river trail are linked 138 ft apart.
+//
+// The hiker crossed there, so the link is drawn. It is a short straight hop
+// rather than the real connector (a footbridge, a ramp) because the source
+// carries no geometry between the two routes at all; nothing is being invented
+// beyond joining two endpoints the route graph already treats as adjacent.
+// Pairs are matched by proximity rather than by leg order, since the rows
+// carry no ordering of their own.
+function _addGroupJoiners(segments) {
+  const groups = new Map();
+  for (const s of segments) {
+    if (!s.hike_group_id) continue;
+    if (!groups.has(s.hike_group_id)) groups.set(s.hike_group_id, []);
+    groups.get(s.hike_group_id).push(s);
+  }
+  for (const legs of groups.values()) {
+    if (legs.length < 2) continue;
+    const ends = [];
+    legs.forEach((s, i) => {
+      ends.push({ leg: i, lat: s.start_lat, lng: s.start_lng });
+      ends.push({ leg: i, lat: s.end_lat, lng: s.end_lng });
+    });
+    const joined = new Set();
+    for (let i = 0; i < ends.length; i++) {
+      for (let j = i + 1; j < ends.length; j++) {
+        if (ends[i].leg === ends[j].leg) continue;
+        const d = haversine(ends[i].lat, ends[i].lng, ends[j].lat, ends[j].lng);
+        if (d > ROUTE_LINK_TOL) continue;
+        const key = Math.min(ends[i].leg, ends[j].leg) + ':' + Math.max(ends[i].leg, ends[j].leg);
+        if (joined.has(key)) continue;
+        joined.add(key);
+        const line = L.polyline(
+          [[ends[i].lat, ends[i].lng], [ends[j].lat, ends[j].lng]],
+          { color: '#2ecc71', weight: 5, opacity: 0.85, smoothFactor: 0 }
+        ).addTo(_map);
+        _segmentLayers.push(line);
+      }
+    }
   }
 }
 
@@ -475,6 +521,12 @@ function _addSegmentLine(seg) {
 // Called from app.js after a segment is saved.
 function addSegmentToMap(seg) {
   _addSegmentLine(seg);
+}
+
+// Called from app.js once, after a multi-leg save, so the junction links
+// appear immediately rather than only on the next load.
+function addSegmentJoiners(segs) {
+  _addGroupJoiners(segs);
 }
 
 // Called from app.js after a segment is deleted.

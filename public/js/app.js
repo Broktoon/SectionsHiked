@@ -361,6 +361,7 @@ async function saveSegment() {
       _allSegments.push(row);
       addSegmentToMap(row);
     }
+    if (saved.length > 1) addSegmentJoiners(saved);
     exitSelectMode();
     closeSegmentDrawer();
     renderTrailInfo(_currentTrail, _allSegments.filter(s => s.trail_id === _currentTrail.id));
