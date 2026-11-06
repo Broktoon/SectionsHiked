@@ -192,13 +192,25 @@ function _sliceArrayByIndex(arr, si, ei) {
 // one branch (all main, or both ends on the same alt route) slices from that
 // branch's own coords; a segment that crosses between branches returns null
 // so the caller falls back to a straight line between the two points.
-function _sliceTrailCoords(startLat, startLng, startMile, endLat, endLng, endMile) {
+// `routeId`, when given, is the route this span is KNOWN to lie on, and is
+// used in place of guessing from proximity. A junction point sits within a few
+// feet of two routes by definition, so _branchAt would return one route for the
+// start and another for the end of a perfectly valid leg, and the whole leg
+// would fall back to a straight line. That is what drew a hike from Fletcher's
+// Cove to Georgetown straight across Georgetown University.
+function _sliceTrailCoords(startLat, startLng, startMile, endLat, endLng, endMile, routeId) {
   if (!_trailCoords || _trailCoords.length === 0) return null;
 
   if (Object.keys(_altBranches).length > 0) {
-    const startBranch = _branchAt(startLat, startLng);
-    const endBranch = _branchAt(endLat, endLng);
+    const startBranch = routeId ?? _branchAt(startLat, startLng);
+    const endBranch = routeId ?? _branchAt(endLat, endLng);
     if (startBranch !== endBranch) return null;
+
+    // An off-spine route with no branch geometry must NOT fall through to the
+    // spine slice below: that would silently draw a span of the main trail in
+    // place of the route the hiker actually walked. A straight line is wrong
+    // but visibly wrong; spine geometry would be wrong and plausible.
+    if (startBranch !== 'main' && !_altBranches[startBranch]) return null;
 
     if (startBranch !== 'main') {
       const coords = _altBranches[startBranch].coords;
@@ -429,7 +441,8 @@ function _addSegmentLine(seg) {
   // This is geometrically identical to the red trail — just recolored green.
   const path = _sliceTrailCoords(
     seg.start_lat, seg.start_lng, seg.start_mile,
-    seg.end_lat,   seg.end_lng,   seg.end_mile
+    seg.end_lat,   seg.end_lng,   seg.end_mile,
+    seg.route_id ?? 'main'
   ) ?? [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
 
   const line = L.polyline(path, {
@@ -535,45 +548,182 @@ function _snapRecord(p) {
   };
 }
 
-// Where a route meets the spine, as a pair of real points, so a split segment
-// gets proper endpoints instead of an interpolated guess.
-function junctionPointsFor(routeId) {
-  if (!_points) return null;
-  const onRoute = _points.find(p => (p.route_id ?? 'main') === routeId && p.junction_mile != null);
-  if (!onRoute) return null;
-  const spineMile = onRoute.junction_mile;
-  const routeMile = onRoute.junction_sec_mile;
-  if (routeMile == null) return null;
-  let spinePt = null, routePt = null;
+// junctionPointsFor() lived here. It found where ONE route met the spine,
+// from the meta's junction_mile. The route graph below supersedes it: it
+// derives every route-to-route contact from the geometry, so a route that
+// reaches the spine only through another route is now routable too.
+
+// How close two routes must come before a hiker can step between them.
+// Chosen from the data, not by feel: on Potomac Heritage 169 route pairs sit
+// within this distance and only 4 more fall in the next 86ft, so the cut lands
+// in a gap rather than mid-cluster. The source digitises adjoining trails as
+// separate features with slightly different endpoints, which is why touching
+// routes still read tens of feet apart.
+const ROUTE_LINK_TOL = 0.05;   // miles (264 ft)
+
+// Adjacency between routes, built once per trail from the points themselves.
+// `junction_mile` in the meta only ever recorded route-to-SPINE attachment, so
+// a route reaching the spine THROUGH another route had no junction at all and
+// any hike crossing it was stored with null miles and drawn as a straight line.
+// On Potomac Heritage that stranded 33 routes and 40 miles, the Mount Vernon
+// Trail among them.
+let _routeGraph = null;
+let _routeGraphTrailId = null;
+
+function _buildRouteGraph() {
+  if (_routeGraph && _routeGraphTrailId === _pointsTrailId) return _routeGraph;
+  const edges = new Map();        // "a|b" -> { gap, aPt, bPt }
+  if (!_points || !_points.length) {
+    _routeGraph = { adj: new Map(), edges };
+    _routeGraphTrailId = _pointsTrailId;
+    return _routeGraph;
+  }
+  // Grid index, so this is a few thousand comparisons rather than every point
+  // against every other point.
+  const CELL = 0.01;
+  const grid = new Map();
   for (const p of _points) {
-    const rid = p.route_id ?? 'main';
-    if (rid === 'main') {
-      if (!spinePt || Math.abs(p.mile - spineMile) < Math.abs(spinePt.mile - spineMile)) spinePt = p;
-    } else if (rid === routeId) {
-      if (!routePt || Math.abs((p.sec_mile ?? 0) - routeMile) < Math.abs((routePt.sec_mile ?? 0) - routeMile)) routePt = p;
+    const k = Math.round(p.lat / CELL) + ':' + Math.round(p.lon / CELL);
+    if (!grid.has(k)) grid.set(k, []);
+    grid.get(k).push(p);
+  }
+  for (const p of _points) {
+    const pid = p.route_id ?? 'main';
+    const ci = Math.round(p.lat / CELL), cj = Math.round(p.lon / CELL);
+    for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) {
+      const cell = grid.get((ci + di) + ':' + (cj + dj));
+      if (!cell) continue;
+      for (const q of cell) {
+        const qid = q.route_id ?? 'main';
+        if (pid === qid) continue;
+        const d = haversine(p.lat, p.lon, q.lat, q.lon);
+        if (d > ROUTE_LINK_TOL) continue;
+        const k = pid < qid ? pid + '|' + qid : qid + '|' + pid;
+        const cur = edges.get(k);
+        if (cur === undefined || d < cur.gap) {
+          edges.set(k, pid < qid ? { gap: d, aPt: p, bPt: q } : { gap: d, aPt: q, bPt: p });
+        }
+      }
     }
   }
-  if (!spinePt || !routePt) return null;
-  return { spineMile, routeMile, spinePt, routePt };
+  const adj = new Map();
+  for (const k of edges.keys()) {
+    const [a, b] = k.split('|');
+    if (!adj.has(a)) adj.set(a, []);
+    if (!adj.has(b)) adj.set(b, []);
+    adj.get(a).push(b);
+    adj.get(b).push(a);
+  }
+  _routeGraph = { adj, edges };
+  _routeGraphTrailId = _pointsTrailId;
+  return _routeGraph;
 }
 
-// Split a hike whose ends are on different routes into one leg per route,
-// meeting at the junction. Returns null where it cannot be done honestly —
-// notably two different off-spine routes, which would need the path between
-// them; the caller refuses those rather than guessing.
+// The two real points where routes `a` and `b` meet, oriented for the caller.
+function _linkPoints(g, a, b) {
+  const k = a < b ? a + '|' + b : b + '|' + a;
+  const e = g.edges.get(k);
+  if (!e) return null;
+  return a < b ? { exit: e.aPt, entry: e.bPt } : { exit: e.bPt, entry: e.aPt };
+}
+
+// Fewest routes crossed, which is what a hiker would actually walk.
+function _routePath(fromId, toId) {
+  const g = _buildRouteGraph();
+  if (fromId === toId) return [fromId];
+  if (!g.adj.has(fromId) || !g.adj.has(toId)) return null;
+  const prev = new Map([[fromId, null]]);
+  const queue = [fromId];
+  while (queue.length) {
+    const cur = queue.shift();
+    if (cur === toId) {
+      const path = [];
+      for (let n = toId; n != null; n = prev.get(n)) path.unshift(n);
+      return path;
+    }
+    for (const nxt of (g.adj.get(cur) || [])) {
+      if (!prev.has(nxt)) { prev.set(nxt, cur); queue.push(nxt); }
+    }
+  }
+  return null;
+}
+
+// The drawn path between two snapped points, following the trail across as
+// many routes as it takes. Used for the preview line so what the user sees
+// while choosing matches what gets stored and redrawn afterwards; returns
+// null when there is no walkable chain, and the caller draws a straight hint.
+function _pathAcrossRoutes(a, b) {
+  const aid = a.route_id ?? 'main';
+  const bid = b.route_id ?? 'main';
+  if (aid === bid) {
+    return _sliceTrailCoords(a.lat, a.lng, a.mile, b.lat, b.lng, b.mile, aid);
+  }
+  const legs = splitAtJunction(a, b);
+  if (!legs) return null;
+  const out = [];
+  for (const lg of legs) {
+    const part = _sliceTrailCoords(
+      lg.start.lat, lg.start.lng, lg.start.mile,
+      lg.end.lat, lg.end.lng, lg.end.mile, lg.route_id
+    );
+    if (!part || !part.length) return null;
+    // A slice comes back in the array's own order, which may run opposite to
+    // the direction walked. Concatenating without checking makes the line
+    // double back on itself at every junction -- the preview measured 5.26mi
+    // for a 2.65mi hike before this.
+    const head = part[0], tail = part[part.length - 1];
+    const toStart = haversine(lg.start.lat, lg.start.lng, head[0], head[1]);
+    const toEnd = haversine(lg.start.lat, lg.start.lng, tail[0], tail[1]);
+    const ordered = toEnd < toStart ? part.slice().reverse() : part;
+    for (const c of ordered) {
+      const prev = out[out.length - 1];
+      if (prev && prev[0] === c[0] && prev[1] === c[1]) continue;
+      out.push(c);
+    }
+  }
+  return out.length ? out : null;
+}
+
+// Split a hike whose ends are on different routes into one leg per route it
+// crosses, each leg measured on its own axis and drawn from its own geometry.
+// Returns null only where no walkable chain of routes connects the two ends;
+// the caller then stores one unlinked row, as before.
 function splitAtJunction(a, b) {
-  if ((a.route_id ?? 'main') === (b.route_id ?? 'main')) return null;
-  const spineEnd = a.route_kind === 'spine' ? a : (b.route_kind === 'spine' ? b : null);
-  const offEnd = a.route_kind === 'spine' ? b : (b.route_kind === 'spine' ? a : null);
-  if (!spineEnd || !offEnd) return null;
-  const j = junctionPointsFor(offEnd.route_id);
-  if (!j) return null;
-  return [
-    { route_id: 'main', route_kind: 'spine',
-      start: spineEnd, end: _snapRecord(j.spinePt) },
-    { route_id: offEnd.route_id, route_kind: offEnd.route_kind,
-      start: _snapRecord(j.routePt), end: offEnd },
-  ];
+  const aid = a.route_id ?? 'main';
+  const bid = b.route_id ?? 'main';
+  if (aid === bid) return null;
+  const path = _routePath(aid, bid);
+  if (!path || path.length < 2) return null;
+  const g = _buildRouteGraph();
+  const kindOf = (rid, fallback) => {
+    if (rid === 'main') return 'spine';
+    const pt = _points.find(p => (p.route_id ?? 'main') === rid);
+    return (pt && pt.route_kind) || fallback || 'side';
+  };
+  const legs = [];
+  let legStart = a;
+  for (let i = 0; i < path.length; i++) {
+    const rid = path[i];
+    const last = i === path.length - 1;
+    let legEnd;
+    if (last) {
+      legEnd = b;
+    } else {
+      const link = _linkPoints(g, rid, path[i + 1]);
+      if (!link) return null;
+      legEnd = _snapRecord(link.exit);
+    }
+    legs.push({
+      route_id: rid,
+      route_kind: kindOf(rid, i === 0 ? a.route_kind : b.route_kind),
+      start: legStart, end: legEnd,
+    });
+    if (!last) {
+      const link = _linkPoints(g, rid, path[i + 1]);
+      legStart = _snapRecord(link.entry);
+    }
+  }
+  return legs;
 }
 
 function _snapToNearest(lat, lng) {
@@ -619,10 +769,7 @@ function _onMapClick(e) {
       radius: 8, fillColor: '#2ecc71', color: '#fff', weight: 2.5, fillOpacity: 1,
     }).addTo(_map);
 
-    const previewPath = _sliceTrailCoords(
-      _startSnap.lat, _startSnap.lng, _startSnap.mile,
-      snap.lat, snap.lng, snap.mile
-    ) ?? [[_startSnap.lat, _startSnap.lng], [snap.lat, snap.lng]];
+    const previewPath = _pathAcrossRoutes(_startSnap, snap) ?? [[_startSnap.lat, _startSnap.lng], [snap.lat, snap.lng]];
     _previewLine = L.polyline(previewPath, {
       color: '#2ecc71', weight: 4, opacity: 0.7, dashArray: '8 6', smoothFactor: 0,
     }).addTo(_map);
@@ -679,10 +826,7 @@ function enterFormPreview(startSnap, endSnap) {
     radius: 8, fillColor: '#2ecc71', color: '#fff', weight: 2.5, fillOpacity: 1,
   }).addTo(_map);
 
-  const path = _sliceTrailCoords(
-    startSnap.lat, startSnap.lng, startSnap.mile,
-    endSnap.lat,   endSnap.lng,   endSnap.mile
-  ) ?? [[startSnap.lat, startSnap.lng], [endSnap.lat, endSnap.lng]];
+  const path = _pathAcrossRoutes(startSnap, endSnap) ?? [[startSnap.lat, startSnap.lng], [endSnap.lat, endSnap.lng]];
 
   _previewLine = L.polyline(path, {
     color: '#2ecc71', weight: 4, opacity: 0.7, dashArray: '8 6', smoothFactor: 0,
