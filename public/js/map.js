@@ -449,6 +449,14 @@ async function loadTrail(trail, segments) {
 // beyond joining two endpoints the route graph already treats as adjacent.
 // Pairs are matched by proximity rather than by leg order, since the rows
 // carry no ordering of their own.
+//
+// Matching and drawing use DIFFERENT coordinates, deliberately. Adjacency is
+// tested on the stored endpoints, which are points.json records and the basis
+// on which ROUTE_LINK_TOL was chosen. The hop itself is drawn between the
+// endpoints the legs were actually RENDERED at, which are nearest vertices in
+// the thinned GeoJSON and sit up to a few tens of feet away. Drawing between
+// the stored endpoints instead left the hop floating clear of both legs, so
+// the canal crossing in Georgetown appeared twice and joined nothing.
 function _addGroupJoiners(segments) {
   const groups = new Map();
   for (const s of segments) {
@@ -460,8 +468,16 @@ function _addGroupJoiners(segments) {
     if (legs.length < 2) continue;
     const ends = [];
     legs.forEach((s, i) => {
-      ends.push({ leg: i, lat: s.start_lat, lng: s.start_lng });
-      ends.push({ leg: i, lat: s.end_lat, lng: s.end_lng });
+      const path = _segmentPath(s);
+      const head = path[0], tail = path[path.length - 1];
+      // The slice comes back in trail order, which may be the reverse of the
+      // row, so decide which drawn end belongs to which stored end by distance.
+      const flip = haversine(s.start_lat, s.start_lng, tail[0], tail[1])
+                 < haversine(s.start_lat, s.start_lng, head[0], head[1]);
+      const drawnStart = flip ? tail : head;
+      const drawnEnd   = flip ? head : tail;
+      ends.push({ leg: i, lat: s.start_lat, lng: s.start_lng, draw: drawnStart });
+      ends.push({ leg: i, lat: s.end_lat,   lng: s.end_lng,   draw: drawnEnd });
     });
     const joined = new Set();
     for (let i = 0; i < ends.length; i++) {
@@ -473,7 +489,7 @@ function _addGroupJoiners(segments) {
         if (joined.has(key)) continue;
         joined.add(key);
         const line = L.polyline(
-          [[ends[i].lat, ends[i].lng], [ends[j].lat, ends[j].lng]],
+          [ends[i].draw, ends[j].draw],
           { color: '#2ecc71', weight: 5, opacity: 0.85, smoothFactor: 0 }
         ).addTo(_map);
         _segmentLayers.push(line);
@@ -482,14 +498,20 @@ function _addGroupJoiners(segments) {
   }
 }
 
-function _addSegmentLine(seg) {
-  // Slice the trail's own GeoJSON coordinates between the two endpoints.
-  // This is geometrically identical to the red trail — just recolored green.
-  const path = _sliceTrailCoords(
+// The coordinates one stored row is drawn along. Shared by the renderer and by
+// the junction joiner, so the joiner cannot disagree with what is on screen.
+function _segmentPath(seg) {
+  return _sliceTrailCoords(
     seg.start_lat, seg.start_lng, seg.start_mile,
     seg.end_lat,   seg.end_lng,   seg.end_mile,
     seg.route_id ?? 'main'
   ) ?? [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
+}
+
+function _addSegmentLine(seg) {
+  // Slice the trail's own GeoJSON coordinates between the two endpoints.
+  // This is geometrically identical to the red trail — just recolored green.
+  const path = _segmentPath(seg);
 
   const line = L.polyline(path, {
     color: '#2ecc71', weight: 5, opacity: 0.85, smoothFactor: 0,
