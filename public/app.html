@@ -235,6 +235,23 @@
           </select>
         </div>
       </div>
+      <!-- Trip type. Radios rather than a select: three short options, all
+           visible at a glance, one tap instead of two on a phone, and native
+           arrow-key navigation. Nothing is preselected, so skipping the field
+           stores NULL ("not recorded") rather than a value the hiker never
+           chose. -->
+      <div class="form-group">
+        <label id="trip-type-label">Trip type</label>
+        <div class="choice-row" role="radiogroup" aria-labelledby="trip-type-label">
+          <input type="radio" name="trip-type" id="trip-type-one-way" value="one-way">
+          <label for="trip-type-one-way">One-way</label>
+          <input type="radio" name="trip-type" id="trip-type-out-and-back" value="out-and-back">
+          <label for="trip-type-out-and-back">Out &amp; back</label>
+          <input type="radio" name="trip-type" id="trip-type-loop" value="loop">
+          <label for="trip-type-loop">Loop</label>
+        </div>
+        <div class="form-hint">How you covered it: straight through, back the same way, or round by a different route.</div>
+      </div>
       <div class="form-group">
         <label for="drawer-notes">Notes</label>
         <textarea id="drawer-notes" rows="3" placeholder="Trail conditions, highlights, gear…"></textarea>

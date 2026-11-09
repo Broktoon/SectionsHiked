@@ -240,6 +240,9 @@ function openSegmentDrawer(start, end, states) {
   document.getElementById('drawer-date-completed').value = '';
   document.getElementById('drawer-duration-val').value = '';
   document.getElementById('drawer-duration-unit').value = 'hours';
+  // Clear any previous choice: nothing is preselected, so a skipped field
+  // stores NULL rather than carrying the last hike's answer forward.
+  document.querySelectorAll('input[name="trip-type"]').forEach(r => { r.checked = false; });
   document.getElementById('drawer-notes').value = '';
   document.getElementById('drawer-flora-input').value = '';
   document.getElementById('drawer-error').classList.add('hidden');
@@ -290,6 +293,10 @@ async function saveSegment() {
     date_begun: dateBegun,
     date_completed: document.getElementById('drawer-date-completed').value || null,
     duration_minutes: durationMinutes,
+    // One outing is one trip type, so this sits in `common` and every leg of a
+    // split hike carries the same value. A leg of an out-and-back is not itself
+    // an out-and-back. Null when the hiker skipped the field.
+    trip_type: document.querySelector('input[name="trip-type"]:checked')?.value ?? null,
     notes: document.getElementById('drawer-notes').value.trim() || null,
     flora_fauna: _floraEntries.length > 0 ? JSON.stringify(_floraEntries) : null,
   };
