@@ -538,6 +538,10 @@ function _addSegmentLine(seg) {
   });
 
   _segmentLayers.push(line);
+  if (_selectActive) {
+    const el = typeof line.getElement === "function" ? line.getElement() : null;
+    if (el && el.style) el.style.pointerEvents = "none";
+  }
 }
 
 // Called from app.js after a segment is saved.
@@ -552,6 +556,24 @@ function addSegmentJoiners(segs) {
 }
 
 // Called from app.js after a segment is deleted.
+// A saved segment is a clickable line carrying a delete popup, which is right
+// in Navigate mode and wrong while the user is tapping out a new segment: the
+// line swallows the tap, so the one point you most want to start from -- the
+// end of the segment you are continuing -- is the one point you cannot pick.
+// Clicking just beside it instead leaves a real gap of one point spacing (264ft
+// on Potomac Heritage). Sharing the endpoint draws with no gap at all, so
+// letting the tap through fixes the gap and the popup together.
+//
+// pointer-events is set on each path rather than on the pane, because Leaflet
+// gives interactive paths their own pointer-events rule and a descendant can
+// re-enable what an ancestor switched off.
+function _setSegmentsClickable(on) {
+  for (const layer of _segmentLayers) {
+    const el = typeof layer.getElement === "function" ? layer.getElement() : null;
+    if (el && el.style) el.style.pointerEvents = on ? "" : "none";
+  }
+}
+
 function removeSegmentLayer(layer) {
   _map.removeLayer(layer);
   const idx = _segmentLayers.indexOf(layer);
@@ -575,6 +597,10 @@ async function enterSelectMode(trail) {
   await _loadPoints(trail); // no-op if already cached
 
   _setStatusText('Tap your start point');
+  // A popup left open from Navigate mode would sit over the map during
+  // selection, and its line would keep taking taps.
+  _map.closePopup();
+  _setSegmentsClickable(false);
   _map.on('click', _onMapClick);
 }
 
@@ -584,6 +610,7 @@ function exitSelectMode() {
     if (_selectActive) _map.doubleClickZoom.enable();
   }
   _selectActive = false;
+  _setSegmentsClickable(true);
 
   if (_startMarker) { _map.removeLayer(_startMarker); _startMarker = null; }
   if (_endMarker)   { _map.removeLayer(_endMarker);   _endMarker = null;   }
