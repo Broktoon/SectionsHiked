@@ -232,8 +232,38 @@ function diffOrg(old, now) {
 
 // ── main ─────────────────────────────────────────────────────────────────────
 
+// One quick request per host before the real work. With the network blocked,
+// every probe would otherwise sit through three 30s timeouts, about an hour
+// in all, before reporting anything.
+async function preflight() {
+  const hosts = [...new Set([...LAYERS, ...ORGS].map(s => new URL(s.url).origin)),
+    'https://api.openstreetmap.org'];
+  const results = await Promise.all(hosts.map(async origin => {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 15000);
+    try {
+      await fetch(origin + '/', { method: 'HEAD', headers: { 'User-Agent': UA }, signal: ctl.signal });
+      return null;                    // any HTTP answer, even 404, means the host is reachable
+    } catch (e) {
+      return origin + ': ' + (e.cause && e.cause.code || e.name || e.message);
+    } finally {
+      clearTimeout(timer);
+    }
+  }));
+  return { hosts, down: results.filter(Boolean) };
+}
+
 async function main() {
   const update = process.argv.includes('--update');
+  const pf = await preflight();
+  if (pf.down.length > pf.hosts.length / 2) {
+    console.log('# Trail source check, ' + new Date().toISOString().slice(0, 10) + '\n\n'
+      + '**CHECK FAILED: ' + pf.down.length + ' of ' + pf.hosts.length + ' source hosts could not be reached.** '
+      + 'This says nothing about whether the data changed; it usually means the network is blocked.\n\n'
+      + pf.down.map(d => '- ' + d).join('\n') + '\n');
+    process.exitCode = 2;
+    return;
+  }
   const baseline = fs.existsSync(BASELINE) ? JSON.parse(fs.readFileSync(BASELINE, 'utf8')) : null;
   const old = baseline ? baseline.sources : {};
   const now = {};
