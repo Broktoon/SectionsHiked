@@ -213,6 +213,16 @@ const FIELDS  = 'OBJECTID,TRNAME,TRALTNAME,MAPLABEL,TRSTATUS,TYPEOFROUTE,STATE,R
 // 21901 that already ship.
 const SPACING = 0.05;
 
+// Elevation: 'required' or 'none', and it must be stated. No trail source
+// carries elevation; the AT, CDT and PCT builds look it up from a terrain
+// service (USGS EPQS, OpenTopoData SRTM) and set trail_elev on every point.
+// Stage 10 passes trail_elev through and enforces this declaration either
+// way: 'required' fails the build if any point lacks a numeric trail_elev;
+// 'none' fails it if any point has one, so the absence is always deliberate.
+// PHT has no lookup stage, so 'none'. Copying Stage 10 into another build
+// means setting this for that trail.
+const ELEVATION = 'none';
+
 // Endpoint merge tolerance, miles (~53 ft). Unlike the PNT, the value here is
 // load-bearing: the DC <-> Southern Maryland join measures exactly 53 ft, so
 // anything tighter detaches Southern Maryland from the rest of the trail. That
@@ -1658,9 +1668,9 @@ async function main() {
     if (noState) console.log('  !! ' + noState + ' points fell outside every state polygon');
   }
 
-  // Minified, like the AT's, IAT's and NET's. At 0.05mi spacing the 2-space
-  // indent cost 1.3MB on its own, and nothing reads this file by eye.
-  fs.writeFileSync(path.join(DATA, 'points.json'), JSON.stringify(points));
+  // Nothing is written here. These are the full 17-field working records;
+  // Stage 10 reduces them to the canonical schema and writes all three files
+  // together, only once every check has passed.
   const kindCount = {};
   for (const p of points) kindCount[p.route_kind] = (kindCount[p.route_kind] || 0) + 1;
   const stCount = {};
@@ -1763,9 +1773,8 @@ async function main() {
     });
   }
 
-  fs.writeFileSync(path.join(DATA, 'trail.geojson'),
-    JSON.stringify({ type: 'FeatureCollection', features }));
-  const bytes = fs.statSync(path.join(DATA, 'trail.geojson')).size;
+  const geojson = { type: 'FeatureCollection', features };
+  const bytes = JSON.stringify(geojson).length;
   console.log('  ' + features.length + ' features (' + spineFeatures + ' spine, '
     + kept.filter(r => r.kind === 'alternate').length + ' alternate, '
     + kept.filter(r => r.kind === 'side').length + ' side), '
@@ -1842,7 +1851,6 @@ async function main() {
         + 'vocabulary describes hikeable route and a paddle route is outside it.',
     },
   };
-  fs.writeFileSync(path.join(DATA, 'pht_meta.json'), JSON.stringify(meta, null, 2));
   console.log('  ' + regionMeta.length + ' regions ('
     + regionMeta.filter(r => r.on_spine).length + ' on spine), '
     + meta.routes.length + ' routes, 0 sections');
@@ -1876,8 +1884,423 @@ async function main() {
     + '   dropped fragments under ' + MIN_ROUTE_MI + ' mi (' + tiny.length + ')');
   console.log('  ' + r2(dedupedTotal + joinMi - spineDistinct - altMi - sideMi
     - tiny.reduce((s, r) => s + r.len, 0)).toFixed(2).padStart(9) + '   unaccounted');
+  // ── Stage 10: canonical schema, pinned route ids, verify, write ────────────
+  console.log('\n=== Stage 10: canonical files ===');
+  const pinned = readPinned();
+  const out = canonicalise(points, meta, geojson, pinned);
+  const failures = verifyCanonical(points, out, pinned);
+  if (failures.length) {
+    console.log('\nVERIFICATION FAILED - nothing written:');
+    for (const f of failures) console.log('  - ' + f);
+    process.exit(1);
+  }
+  // Minified points and GeoJSON, pretty meta: the canonical file-format rule.
+  fs.writeFileSync(path.join(DATA, 'points.json'), JSON.stringify(out.slim));
+  fs.writeFileSync(path.join(DATA, 'pht_meta.json'), JSON.stringify(out.meta, null, 2) + '\n');
+  fs.writeFileSync(path.join(DATA, 'trail.geojson'), JSON.stringify(out.geojson));
   console.log('\nWrote points.json, trail.geojson, pht_meta.json');
   console.log('If the spine total moved, update trails.js totalMiles (currently 529.14).');
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// Stage 10 helpers
+//
+// Until 2026-11 the build wrote the 17-field layout and two follow-up scripts
+// finished the job: migrate-pht-to-canonical.js (slim records, meta tables,
+// numeric route ids) and renumber-pht-geojson.js (the same ids in the GeoJSON).
+// Both are folded in here, so one run produces the served files. Fed the
+// October 2026 source, this stage reproduces the files those two scripts made
+// byte for byte, apart from trail.built.
+//
+// ROUTE IDS ARE PINNED. route_id is stored on every hike_segments row, but the
+// decomposition names unnamed routes by discovery order (side-unnamed-31), so
+// an upstream edit anywhere could reshuffle them and silently move saved hikes
+// onto other trails. So every rebuilt route is matched to the route already in
+// pht_meta.json that covers the SAME GROUND, and keeps that id:
+//
+//   - matched              keeps its id, its legacy_route_id, and, if the
+//                          source gives no name, its old name
+//   - new                  takes the next unused number (side-172, alt-2...)
+//   - no longer present    moves to retired_routes, which no app reads, so a
+//                          saved hike still has a name to show; its id is
+//                          never reused
+// ═════════════════════════════════════════════════════════════════════════════
+
+const CANON_REQUIRED = ['lat', 'lon', 'mile', 'route_id'];
+const CANON_OPTIONAL = ['trail_elev', 'route_type', 'state'];
+const MATCH_TOL_MI = 100 / 5280;   // a rebuilt point within 100 ft of a pinned route's line is "on" it
+const MATCH_MIN = 0.5;             // both routes must lie at least half on each other
+
+// The files on disk before this run, which hold the pinned assignments. None
+// on a first build: every route is then new and numbered in file order.
+function readPinned() {
+  const metaPath = path.join(DATA, 'pht_meta.json');
+  const ptsPath = path.join(DATA, 'points.json');
+  if (!fs.existsSync(metaPath) || !fs.existsSync(ptsPath)) return null;
+  const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+  if (!(meta.routes || []).some(r => r.legacy_route_id)) return null;
+  const pts = JSON.parse(fs.readFileSync(ptsPath, 'utf8'));
+  const lines = new Map();
+  for (const p of pts) {
+    if (!lines.has(p.route_id)) lines.set(p.route_id, []);
+    lines.get(p.route_id).push([p.lon, p.lat]);
+  }
+  return {
+    routes: meta.routes,
+    retired: meta.retired_routes || [],
+    lines,
+    geojsonIds: (() => {
+      const g = path.join(DATA, 'trail.geojson');
+      if (!fs.existsSync(g)) return new Set();
+      const ids = new Set();
+      for (const f of JSON.parse(fs.readFileSync(g, 'utf8')).features || []) {
+        if (f.properties && f.properties.route_id) ids.add(f.properties.route_id);
+      }
+      return ids;
+    })(),
+  };
+}
+
+// Fraction of `pts` lying within MATCH_TOL_MI of the polyline `line`.
+// Equirectangular feet are plenty at 100 ft; a coarse grid keeps it fast.
+function coverage(pts, line) {
+  if (!pts.length || line.length < 1) return 0;
+  const CELL = 0.002;
+  const grid = new Map();
+  const segs = line.length === 1 ? [[line[0], line[0]]] : line.slice(1).map((b, i) => [line[i], b]);
+  segs.forEach((s, i) => {
+    const x0 = Math.floor(Math.min(s[0][0], s[1][0]) / CELL) - 1, x1 = Math.floor(Math.max(s[0][0], s[1][0]) / CELL) + 1;
+    const y0 = Math.floor(Math.min(s[0][1], s[1][1]) / CELL) - 1, y1 = Math.floor(Math.max(s[0][1], s[1][1]) / CELL) + 1;
+    for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) {
+      const k = x + ',' + y;
+      if (!grid.has(k)) grid.set(k, []);
+      grid.get(k).push(i);
+    }
+  });
+  let hit = 0;
+  for (const p of pts) {
+    const k = Math.floor(p[0] / CELL) + ',' + Math.floor(p[1] / CELL);
+    const cand = grid.get(k) || [];
+    if (cand.some(i => distToSeg(p, segs[i][0], segs[i][1]) <= MATCH_TOL_MI)) hit++;
+  }
+  return hit / pts.length;
+}
+
+function distToSeg(p, a, b) {
+  const kx = 69.17 * Math.cos(p[1] * Math.PI / 180), ky = 69.0;
+  const ax = (a[0] - p[0]) * kx, ay = (a[1] - p[1]) * ky;
+  const bx = (b[0] - p[0]) * kx, by = (b[1] - p[1]) * ky;
+  const dx = bx - ax, dy = by - ay;
+  const len2 = dx * dx + dy * dy;
+  const t = len2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / len2)) : 0;
+  return Math.hypot(ax + t * dx, ay + t * dy);
+}
+
+function prettyName(routeId) {
+  return routeId
+    .replace(/^(side|alt)-/, '')
+    .split('-')
+    .map(w => (w.length > 2 ? w[0].toUpperCase() + w.slice(1) : w.toUpperCase()))
+    .join(' ');
+}
+
+// Decide every route's canonical id. Returns Map(build id -> {id, legacy, name}).
+function assignIds(points, legacyMeta, pinned, log) {
+  const order = [];
+  const kindOf = new Map();
+  const ptsOf = new Map();
+  for (const p of points) {
+    if (!kindOf.has(p.route_id)) { order.push(p.route_id); kindOf.set(p.route_id, p.route_kind); ptsOf.set(p.route_id, []); }
+    ptsOf.get(p.route_id).push([p.lon, p.lat]);
+  }
+  const buildRow = new Map((legacyMeta.routes || []).map(r => [r.id, r]));
+  const nameFor = (bid, fallback) => (buildRow.get(bid) || {}).name || fallback || prettyName(bid);
+  const assign = new Map();
+
+  if (!pinned) {
+    let nAlt = 0, nSide = 0;
+    for (const bid of order) {
+      const k = kindOf.get(bid);
+      const id = k === 'spine' ? 'main' : k === 'alternate' ? 'alt-' + (++nAlt) : 'side-' + (++nSide);
+      assign.set(bid, { id, legacy: bid, name: nameFor(bid, k === 'spine' ? 'Main spine' : null), status: 'new' });
+    }
+    log.push('no pinned meta on disk: ' + order.length + ' routes numbered in file order');
+    return { assign, order, kindOf, retired: [] };
+  }
+
+  // Score every same-kind pair that could plausibly be the same route.
+  const pinnedRows = pinned.routes;
+  const pairs = [];
+  for (const bid of order) {
+    const k = kindOf.get(bid);
+    if (k === 'spine') continue;
+    const mine = ptsOf.get(bid);
+    for (const row of pinnedRows) {
+      if (row.kind !== k) continue;
+      const theirs = pinned.lines.get(row.id) || [];
+      const a = coverage(mine, theirs);
+      if (a < MATCH_MIN) continue;
+      const b = coverage(theirs, mine);
+      if (b < MATCH_MIN) continue;
+      pairs.push({ bid, row, score: Math.min(a, b) });
+    }
+  }
+  pairs.sort((x, y) => y.score - x.score);
+  const takenRow = new Set(), takenBid = new Set();
+  const spineRow = pinnedRows.find(r => r.kind === 'spine');
+  for (const bid of order) {
+    if (kindOf.get(bid) !== 'spine') continue;
+    assign.set(bid, { id: 'main', legacy: spineRow ? spineRow.legacy_route_id : bid,
+      name: spineRow ? spineRow.name : 'Main spine', status: 'matched', score: 1 });
+    if (spineRow) takenRow.add(spineRow.id);
+  }
+  for (const pr of pairs) {
+    if (takenRow.has(pr.row.id) || takenBid.has(pr.bid)) continue;
+    takenRow.add(pr.row.id); takenBid.add(pr.bid);
+    const srcName = (buildRow.get(pr.bid) || {}).name;
+    assign.set(pr.bid, { id: pr.row.id, legacy: pr.row.legacy_route_id,
+      name: srcName || pr.row.name, status: 'matched', score: pr.score });
+  }
+
+  // New routes take numbers above everything ever issued, retired included.
+  const issued = [...pinnedRows, ...pinned.retired].map(r => r.id);
+  const maxN = prefix => Math.max(0, ...issued.filter(i => i.startsWith(prefix))
+    .map(i => Number(i.slice(prefix.length))).filter(Number.isFinite));
+  let nAlt = maxN('alt-'), nSide = maxN('side-');
+  const legacyTaken = new Set([...pinnedRows, ...pinned.retired].map(r => r.legacy_route_id));
+  for (const bid of order) {
+    if (assign.has(bid)) continue;
+    const k = kindOf.get(bid);
+    const id = k === 'alternate' ? 'alt-' + (++nAlt) : 'side-' + (++nSide);
+    let legacy = bid, n = 1;
+    while (legacyTaken.has(legacy)) legacy = bid + '-r' + (++n);
+    legacyTaken.add(legacy);
+    assign.set(bid, { id, legacy, name: nameFor(bid), status: 'new' });
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const retired = [
+    ...pinned.retired,
+    ...pinnedRows.filter(r => !takenRow.has(r.id))
+      .map(r => ({ id: r.id, name: r.name, legacy_route_id: r.legacy_route_id,
+        kind: r.kind, region_id: r.region_id, miles: r.miles, retired: today })),
+  ];
+
+  const matched = [...assign.values()].filter(a => a.status === 'matched');
+  const weak = matched.filter(a => a.score < 0.95);
+  const renamedLegacy = [...assign].filter(([bid, a]) => a.status === 'matched' && a.legacy !== bid);
+  log.push(matched.length + ' routes matched to their pinned id'
+    + (weak.length ? ', ' + weak.length + ' with overlap under 95%: '
+      + weak.map(a => a.id + ' ' + (a.score * 100).toFixed(0) + '%').join(', ') : ''));
+  if (renamedLegacy.length) {
+    log.push(renamedLegacy.length + ' routes the decomposition now names differently, ids kept: '
+      + renamedLegacy.slice(0, 8).map(([bid, a]) => a.id + ' (' + a.legacy + ' now ' + bid + ')').join(', '));
+  }
+  const fresh = [...assign.values()].filter(a => a.status === 'new');
+  log.push(fresh.length + ' new routes' + (fresh.length ? ': ' + fresh.map(a => a.id + ' "' + a.name + '"').join(', ') : ''));
+  const newlyRetired = retired.length - pinned.retired.length;
+  log.push(newlyRetired + ' routes retired this run'
+    + (newlyRetired ? ': ' + retired.slice(pinned.retired.length).map(r => r.id + ' "' + r.name + '"').join(', ') : ''));
+  return { assign, order, kindOf, retired };
+}
+
+// The canonical files, built from the in-memory 17-field records. The record,
+// meta and notes below are exactly what migrate-pht-to-canonical.js produced.
+function canonicalise(points, legacyMeta, legacyGeojson, pinned) {
+  const SPINE = 'main';
+  const log = [];
+  const { assign, order, kindOf, retired } = assignIds(points, legacyMeta, pinned, log);
+  for (const l of log) console.log('  ' + l);
+  const rename = new Map([...assign].map(([bid, a]) => [bid, a.id]));
+  const buildRow = new Map((legacyMeta.routes || []).map(r => [r.id, r]));
+
+  // The alternate's mile, rescaled from the spine span it was interpolated
+  // across onto the route's own length.
+  const altNewMile = new Map();
+  for (const bid of order) {
+    if (kindOf.get(bid) !== 'alternate') continue;
+    const pts = points.filter(p => p.route_id === bid);
+    const row = buildRow.get(bid);
+    if (!row || typeof row.miles !== 'number') throw new Error('no length in meta for alternate ' + bid);
+    const n = pts.length;
+    pts.forEach((p, i) => altNewMile.set(p, n > 1 ? r3(row.miles * i / (n - 1)) : 0));
+  }
+
+  const slim = points.map(p => {
+    const rec = {
+      lat: p.lat,
+      lon: p.lon,
+      mile: altNewMile.has(p) ? altNewMile.get(p) : p.mile,
+      route_id: rename.get(p.route_id),
+    };
+    // Carried whenever the working record has it; ELEVATION decides whether
+    // that must be every point or none.
+    if (p.trail_elev !== undefined && p.trail_elev !== null) rec.trail_elev = p.trail_elev;
+    rec.route_type = p.route_type ?? 'trail';
+    if (p.state !== undefined && p.state !== null) rec.state = p.state;
+    return rec;
+  });
+
+  const routes = order.map(bid => {
+    const a = assign.get(bid);
+    const kind = kindOf.get(bid);
+    const row = buildRow.get(bid) || {};
+    const pts = points.filter(p => p.route_id === bid);
+    // Full precision on the spine: trails.js computes progress against it.
+    const miles = kind === 'spine'
+      ? r3(Math.max(...pts.map(p => p.mile)))
+      : (typeof row.miles === 'number' ? row.miles : r1(Math.max(...pts.map(p => p.mile))));
+    return {
+      id: a.id,
+      name: a.name,
+      legacy_route_id: a.legacy,
+      kind,
+      alt_of: kind === 'spine' ? null : (pts[0].alt_of ?? (kind === 'alternate' ? SPINE : null)),
+      region_id: row.region_id ?? null,
+      miles,
+      junction_mile: pts[0].junction_mile ?? null,
+      junction_sec_mile: pts[0].junction_sec_mile ?? null,
+      hikeable: true,
+      sec_mile_from: kind === 'spine' ? 'region' : 'route',
+      region_from: kind === 'spine' ? 'ranges' : 'route',
+    };
+  });
+
+  const meta = {
+    trail: { ...legacyMeta.trail, schema: 'canonical-7' },
+    regions: (legacyMeta.regions || []).map(r => ({ ...r, route_id: SPINE })),
+    sections: legacyMeta.sections || [],
+    routes,
+    hydrate: {
+      id: { prefix: 'pht', token_by: 'route', from: 'mile', scale: 1000, width: 7 },
+      sec_mile_from: 'region',
+      sec_mile_decimals: 1,
+      region_from: 'ranges',
+      emit: { route_kind: true, alt_of: true, junction_mile: true, junction_sec_mile: true },
+    },
+    notes: {
+      ...(legacyMeta.notes || {}),
+      schema: 'points.json carries lat, lon, mile, route_id, route_type and '
+        + 'state. id, sec_mile, region_id, region_name, section_id, '
+        + 'section_name, route_kind, alt_of, junction_mile and '
+        + 'junction_sec_mile are rebuilt at load by lib/hydrate-points.js.',
+      route_ids: 'Numeric ids are PINNED. legacy_route_id on each row records '
+        + 'the descriptive id they replaced. route_id is a foreign key on '
+        + 'hike_segments, so a rebuild must reuse these assignments and only '
+        + 'append new ones.',
+      alternate_mile: 'alt-1 (the DC River Trail) carries its own route-local '
+        + 'mile. It previously held a mile interpolated across spine miles '
+        + '322.71-352.04, which is why map.js needed dist_mile to avoid '
+        + 'overstating a hike fourfold.',
+    },
+  };
+  if (retired.length) {
+    meta.retired_routes = retired;
+    meta.notes.retired_routes = 'Routes no longer in the source. No app loads '
+      + 'this list; it keeps a name for any saved hike that still carries the id, '
+      + 'and the ids are never issued again.';
+  }
+
+  // GeoJSON: the same ids. "roadwalk" is the non-hikeable tag, not a route.
+  const geojson = JSON.parse(JSON.stringify(legacyGeojson));
+  for (const f of geojson.features) {
+    for (const key of ['route_id', 'alt_of']) {
+      const v = f.properties[key];
+      if (v == null || v === 'roadwalk') continue;
+      if (!rename.has(v)) throw new Error('geojson ' + key + ' "' + v + '" has no route');
+      f.properties[key] = rename.get(v);
+    }
+  }
+  return { slim, meta, geojson, rename };
+}
+
+// Every check must pass before anything is written.
+function verifyCanonical(points, out, pinned) {
+  const fail = [];
+  const { slim, meta, geojson, rename } = out;
+  const allowed = new Set([...CANON_REQUIRED, ...CANON_OPTIONAL]);
+
+  // 1. The canonical record: the required four on every point, of the right
+  //    type, and no field outside the seven. Nothing more, nothing less.
+  const extra = new Set(), missing = {};
+  for (const p of slim) {
+    for (const k of Object.keys(p)) if (!allowed.has(k)) extra.add(k);
+    for (const k of CANON_REQUIRED) {
+      const v = p[k];
+      const ok = k === 'route_id' ? typeof v === 'string' && v.length > 0 : typeof v === 'number' && Number.isFinite(v);
+      if (!ok) missing[k] = (missing[k] || 0) + 1;
+    }
+  }
+  if (extra.size) fail.push('points.json carries non-canonical fields: ' + [...extra].join(', '));
+  for (const [k, n] of Object.entries(missing)) fail.push(n + ' points lack a valid ' + k);
+  // Elevation, against this build's declaration.
+  const withElev = slim.filter(p => typeof p.trail_elev === 'number' && Number.isFinite(p.trail_elev)).length;
+  const anyElev = slim.filter(p => p.trail_elev !== undefined).length;
+  if (ELEVATION === 'required') {
+    if (withElev !== slim.length) fail.push('ELEVATION is required but ' + (slim.length - withElev) + ' points lack a numeric trail_elev');
+    else console.log('  elevation: required, present on all ' + slim.length + ' points');
+  } else if (ELEVATION === 'none') {
+    if (anyElev) fail.push('ELEVATION is declared none but ' + anyElev + ' points carry trail_elev');
+    else console.log('  elevation: none, as declared');
+  } else {
+    fail.push('ELEVATION must be "required" or "none", got ' + JSON.stringify(ELEVATION));
+  }
+  const present = new Set(slim.flatMap(p => Object.keys(p)));
+  console.log('  points.json fields: ' + [...present].join(', ')
+    + '  (canonical: required ' + CANON_REQUIRED.join(', ') + '; optional ' + CANON_OPTIONAL.join(', ') + ')');
+
+  // 2. Round trip: hydrating the slim file gives back the working records,
+  //    except for the differences this stage makes on purpose.
+  const { hydratePoints } = require('../public/js/hydrate-points');
+  const back = hydratePoints(slim, meta);
+  const unexplained = {};
+  for (let i = 0; i < points.length; i++) {
+    const a = points[i], b = back[i];
+    const newRoute = rename.get(a.route_id);
+    for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
+      const av = a[k] === undefined ? null : a[k];
+      const bv = b[k] === undefined ? null : b[k];
+      if (JSON.stringify(av) === JSON.stringify(bv)) continue;
+      if (k === 'route_id' && bv === newRoute) continue;
+      if (k === 'id' && newRoute !== 'main') continue;            // id token is the route id
+      if (k === 'mile' && a.route_kind === 'alternate') continue;  // rescaled route-local
+      if (k === 'route_type' && av === null && bv === 'trail') continue;
+      unexplained[k] = (unexplained[k] || 0) + 1;
+    }
+  }
+  if (Object.keys(unexplained).length) fail.push('round trip differs: ' + JSON.stringify(unexplained));
+  else console.log('  round trip: all ' + points.length + ' points hydrate back to the working records');
+
+  // 3. Ids: unique, every route has points, the GeoJSON uses only those ids.
+  const ids = meta.routes.map(r => r.id);
+  if (new Set(ids).size !== ids.length) fail.push('duplicate route ids in meta');
+  const legacy = meta.routes.map(r => r.legacy_route_id);
+  if (new Set(legacy).size !== legacy.length) fail.push('duplicate legacy_route_id in meta');
+  const pointRoutes = new Set(slim.map(p => p.route_id));
+  const noPts = ids.filter(i => !pointRoutes.has(i));
+  if (noPts.length) fail.push('routes with no points: ' + noPts.join(', '));
+  const gjOrphan = new Set();
+  for (const f of geojson.features) {
+    const v = f.properties.route_id;
+    if (v && v !== 'roadwalk' && !pointRoutes.has(v)) gjOrphan.add(v);
+  }
+  if (gjOrphan.size) fail.push('geojson routes missing from points: ' + [...gjOrphan].join(', '));
+  const kinds = {};
+  for (const r of meta.routes) kinds[r.kind] = (kinds[r.kind] || 0) + 1;
+  if (kinds.spine !== 1) fail.push('expected exactly one spine, got ' + (kinds.spine || 0));
+
+  // 4. Pinning: no id that was ever issued disappears, and none is reused.
+  if (pinned) {
+    const now = new Set(ids);
+    const retiredIds = new Set((meta.retired_routes || []).map(r => r.id));
+    const lost = pinned.routes.map(r => r.id).filter(i => !now.has(i) && !retiredIds.has(i));
+    if (lost.length) fail.push('pinned ids neither kept nor retired: ' + lost.join(', '));
+    const reused = [...retiredIds].filter(i => now.has(i));
+    if (reused.length) fail.push('retired ids reissued: ' + reused.join(', '));
+  }
+  console.log('  routes: spine ' + kinds.spine + ', alternate ' + (kinds.alternate || 0)
+    + ', side ' + (kinds.side || 0) + (meta.retired_routes ? ', retired ' + meta.retired_routes.length : ''));
+  return fail;
 }
 
 main().catch(e => { console.error('\nFAILED: ' + e.message); process.exit(1); });

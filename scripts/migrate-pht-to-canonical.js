@@ -1,5 +1,9 @@
 // migrate-pht-to-canonical.js — Phase 2 of the canonical schema rollout.
 //
+// SUPERSEDED 2026-11-10: build-pht-data.js now does this itself (Stage 10)
+// and writes canonical files directly. Kept as history only. Do NOT run it
+// on the build's output: it expects the 17-field records and would fail.
+//
 // Transforms the Potomac Heritage files from the 17-field layout to the
 // 7-field canonical schema, and verifies the result before writing anything.
 //

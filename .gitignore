@@ -77,5 +77,7 @@ public/trails/potomac-heritage-trail/data/trail_backup.geojson
 # and October 2026, moving Southern Maryland by 18 miles), so a rebuild after
 # an upstream change will not reproduce the 529.14mi this was validated at.
 # The accounting block the build prints every run is the record of that.
-scripts/cache/pht_nps.json
+scripts/cache/pht_nps*.json
+# ^ includes dated snapshots such as pht_nps_2026-10-16.json, the source the
+#   October build was validated against, kept locally for comparison.
 scripts/cache/census_states_pht.geojson

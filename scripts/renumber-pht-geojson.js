@@ -1,5 +1,8 @@
 // Bring trail.geojson's route ids into line with points.json.
 //
+// SUPERSEDED 2026-11-10: build-pht-data.js now writes the GeoJSON with
+// canonical route ids (Stage 10). Kept as history only.
+//
 // The canonical-schema migration renumbered points.json to main / alt-N /
 // side-N but left trail.geojson on the old slug ids, so the two files shared
 // no route vocabulary at all. map.js keys _altBranches off the GeoJSON and
