@@ -53,8 +53,83 @@ function isSpineSegment(seg) {
   return (seg.route_kind ?? 'spine') === 'spine';
 }
 
+// Total length of a set of [lo, hi] mile spans, counting ground once however
+// many spans cover it. Sort by start, then walk: a span that begins at or
+// before the running end extends it, otherwise the run is banked and a new one
+// starts.
+//
+// Spans that merely TOUCH (…310.1][310.1…) merge, which is the normal case
+// when one segment is entered as the continuation of another. Spans separated
+// by any real distance do not, and no tolerance is applied to close small
+// gaps: an unwalked quarter mile between two segments is unwalked, and
+// absorbing it would be inventing a fact the hiker never stated.
+function _unionSpanMiles(spans) {
+  if (spans.length === 0) return 0;
+  const sorted = spans.slice().sort((a, b) => a[0] - b[0]);
+  let total = 0;
+  let [lo, hi] = sorted[0];
+  for (let i = 1; i < sorted.length; i++) {
+    const [s, e] = sorted[i];
+    if (s <= hi) {
+      if (e > hi) hi = e;          // overlapping or touching: extend
+    } else {
+      total += hi - lo;            // disjoint: bank the run, start another
+      lo = s; hi = e;
+    }
+  }
+  return total + (hi - lo);
+}
+
+// Miles of SPINE actually covered — ground, not rows.
+//
+// This used to sum each row's own length, so two segments overlapping by a
+// mile reported that mile twice and progress could run past 100%. Overlap was
+// awkward to create while saved segment lines swallowed map taps; once they
+// stopped, it became one tap away.
+//
+// Spans are unioned per trail AND per route, because a mile number only means
+// something on one axis: a side route's mile restarts at zero, so its mile 3
+// and the spine's mile 3 are hundreds of miles apart and must never merge.
+// isSpineSegment has already dropped off-spine rows, but rows written before
+// route_kind existed default to 'spine', so keying on the route as well is a
+// cheap guard against one of those actually being elsewhere.
+//
+// Each span is sorted low-to-high before use. start_mile is simply whichever
+// end was tapped FIRST, so a row can hold the higher mile in start_mile; left
+// alone that is a negative span, which would subtract from the total.
+//
+// This is not a statement about which way anyone walked. Nothing here records
+// or reads travel direction, and nothing should: a stretch of trail is hiked
+// or it is not. The old sum hid the same normalisation inside
+// Math.abs(end_mile - start_mile); a union cannot, so it is spelled out.
+// Anything about out-and-back lives in trip_type, and only there.
+//
+// Rows with no miles — a cross-route hike the router could not link — have no
+// position on any axis and so cannot be unioned. They are added separately, at
+// their straight-line distance. Two such rows over the same ground will still
+// double-count; that is the honest limit of a row that states no miles, and
+// dropping them would be worse.
 function spineMiles(segments) {
-  return segments.filter(isSpineSegment).reduce((sum, s) => sum + segmentMiles(s), 0);
+  const byAxis = new Map();
+  let unplaced = 0;
+
+  for (const seg of segments) {
+    if (!isSpineSegment(seg)) continue;
+    if (seg.start_mile == null || seg.end_mile == null) {
+      unplaced += segmentMiles(seg);
+      continue;
+    }
+    const key = (seg.trail_id ?? '') + '|' + (seg.route_id ?? 'main');
+    if (!byAxis.has(key)) byAxis.set(key, []);
+    byAxis.get(key).push([
+      Math.min(seg.start_mile, seg.end_mile),
+      Math.max(seg.start_mile, seg.end_mile),
+    ]);
+  }
+
+  let total = unplaced;
+  for (const spans of byAxis.values()) total += _unionSpanMiles(spans);
+  return total;
 }
 
 function formatDate(dateStr) {
