@@ -12,50 +12,70 @@
   },
   "regions": [
     {
+      "id": "socal",
+      "name": "Southern California",
       "region_id": "socal",
       "region_name": "Southern California",
       "mile_start": 0,
       "mile_end": 519.5,
-      "miles": 519.5
+      "miles": 519.5,
+      "route_id": "main-spine"
     },
     {
+      "id": "southern-sierra",
+      "name": "Southern Sierra",
       "region_id": "southern-sierra",
       "region_name": "Southern Sierra",
       "mile_start": 520,
       "mile_end": 1000,
-      "miles": 480
+      "miles": 480,
+      "route_id": "main-spine"
     },
     {
+      "id": "northern-sierra",
+      "name": "Northern Sierra",
       "region_id": "northern-sierra",
       "region_name": "Northern Sierra",
       "mile_start": 1000.5,
       "mile_end": 1419,
-      "miles": 418.5
+      "miles": 418.5,
+      "route_id": "main-spine"
     },
     {
+      "id": "norcal-soor",
+      "name": "Northern California / Southern Oregon",
       "region_id": "norcal-soor",
       "region_name": "Northern California / Southern Oregon",
       "mile_start": 1419.5,
       "mile_end": 1879.5,
-      "miles": 460
+      "miles": 460,
+      "route_id": "main-spine"
     },
     {
+      "id": "central-cascades",
+      "name": "Central Cascades",
       "region_id": "central-cascades",
       "region_name": "Central Cascades",
       "mile_start": 1880,
       "mile_end": 2253,
-      "miles": 373
+      "miles": 373,
+      "route_id": "main-spine"
     },
     {
+      "id": "north-cascades",
+      "name": "North Cascades",
       "region_id": "north-cascades",
       "region_name": "North Cascades",
       "mile_start": 2253.5,
       "mile_end": 2655.66,
-      "miles": 402.16
+      "miles": 402.16,
+      "route_id": "main-spine"
     }
   ],
   "sections": [
     {
+      "id": "ca-a",
+      "name": "California Section A",
       "section_id": "ca-a",
       "section_name": "California Section A",
       "region_id": "socal",
@@ -64,9 +84,12 @@
       "miles": 109,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-b",
+      "name": "California Section B",
       "section_id": "ca-b",
       "section_name": "California Section B",
       "region_id": "socal",
@@ -75,9 +98,12 @@
       "miles": 100,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-c",
+      "name": "California Section C",
       "section_id": "ca-c",
       "section_name": "California Section C",
       "region_id": "socal",
@@ -86,9 +112,12 @@
       "miles": 131.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-d",
+      "name": "California Section D",
       "section_id": "ca-d",
       "section_name": "California Section D",
       "region_id": "socal",
@@ -97,9 +126,12 @@
       "miles": 112,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-e",
+      "name": "California Section E",
       "section_id": "ca-e",
       "section_name": "California Section E",
       "region_id": "socal",
@@ -108,9 +140,12 @@
       "miles": 111.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-f",
+      "name": "California Section F",
       "section_id": "ca-f",
       "section_name": "California Section F",
       "region_id": "southern-sierra",
@@ -119,9 +154,12 @@
       "miles": 86.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-g",
+      "name": "California Section G",
       "section_id": "ca-g",
       "section_name": "California Section G",
       "region_id": "southern-sierra",
@@ -130,9 +168,12 @@
       "miles": 114.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-h",
+      "name": "California Section H",
       "section_id": "ca-h",
       "section_name": "California Section H",
       "region_id": "southern-sierra",
@@ -141,9 +182,12 @@
       "miles": 175,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-i",
+      "name": "California Section I",
       "section_id": "ca-i",
       "section_name": "California Section I",
       "region_id": "southern-sierra",
@@ -152,9 +196,12 @@
       "miles": 73.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-j",
+      "name": "California Section J",
       "section_id": "ca-j",
       "section_name": "California Section J",
       "region_id": "northern-sierra",
@@ -163,9 +210,12 @@
       "miles": 75.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-k",
+      "name": "California Section K",
       "section_id": "ca-k",
       "section_name": "California Section K",
       "region_id": "northern-sierra",
@@ -174,9 +224,12 @@
       "miles": 64,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-l",
+      "name": "California Section L",
       "section_id": "ca-l",
       "section_name": "California Section L",
       "region_id": "northern-sierra",
@@ -185,9 +238,12 @@
       "miles": 38,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-m",
+      "name": "California Section M",
       "section_id": "ca-m",
       "section_name": "California Section M",
       "region_id": "northern-sierra",
@@ -196,9 +252,12 @@
       "miles": 91.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-n",
+      "name": "California Section N",
       "section_id": "ca-n",
       "section_name": "California Section N",
       "region_id": "northern-sierra",
@@ -207,9 +266,12 @@
       "miles": 130.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-o",
+      "name": "California Section O",
       "section_id": "ca-o",
       "section_name": "California Section O",
       "region_id": "norcal-soor",
@@ -218,9 +280,12 @@
       "miles": 82.5,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-p",
+      "name": "California Section P",
       "section_id": "ca-p",
       "section_name": "California Section P",
       "region_id": "norcal-soor",
@@ -229,9 +294,12 @@
       "miles": 98,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-q",
+      "name": "California Section Q",
       "section_id": "ca-q",
       "section_name": "California Section Q",
       "region_id": "norcal-soor",
@@ -240,9 +308,12 @@
       "miles": 56,
       "states": [
         "CA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "ca-r",
+      "name": "California Section R",
       "section_id": "ca-r",
       "section_name": "California Section R",
       "region_id": "norcal-soor",
@@ -252,9 +323,12 @@
       "states": [
         "CA",
         "OR"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "or-b",
+      "name": "Oregon Section B",
       "section_id": "or-b",
       "section_name": "Oregon Section B",
       "region_id": "norcal-soor",
@@ -263,9 +337,12 @@
       "miles": 54,
       "states": [
         "OR"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "or-c",
+      "name": "Oregon Section C",
       "section_id": "or-c",
       "section_name": "Oregon Section C",
       "region_id": "norcal-soor",
@@ -274,9 +351,12 @@
       "miles": 74,
       "states": [
         "OR"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "or-d",
+      "name": "Oregon Section D",
       "section_id": "or-d",
       "section_name": "Oregon Section D",
       "region_id": "norcal-soor",
@@ -285,9 +365,12 @@
       "miles": 59.5,
       "states": [
         "OR"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "or-e",
+      "name": "Oregon Section E",
       "section_id": "or-e",
       "section_name": "Oregon Section E",
       "region_id": "central-cascades",
@@ -296,9 +379,12 @@
       "miles": 75.5,
       "states": [
         "OR"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "or-f",
+      "name": "Oregon Section F",
       "section_id": "or-f",
       "section_name": "Oregon Section F",
       "region_id": "central-cascades",
@@ -307,9 +393,12 @@
       "miles": 109,
       "states": [
         "OR"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "or-g",
+      "name": "Oregon Section G",
       "section_id": "or-g",
       "section_name": "Oregon Section G",
       "region_id": "central-cascades",
@@ -318,9 +407,12 @@
       "miles": 55,
       "states": [
         "OR"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "wa-h",
+      "name": "Washington Section H",
       "section_id": "wa-h",
       "section_name": "Washington Section H",
       "region_id": "central-cascades",
@@ -329,9 +421,12 @@
       "miles": 147.5,
       "states": [
         "WA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "wa-i",
+      "name": "Washington Section I",
       "section_id": "wa-i",
       "section_name": "Washington Section I",
       "region_id": "north-cascades",
@@ -340,9 +435,12 @@
       "miles": 97.5,
       "states": [
         "WA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "wa-j",
+      "name": "Washington Section J",
       "section_id": "wa-j",
       "section_name": "Washington Section J",
       "region_id": "north-cascades",
@@ -351,9 +449,12 @@
       "miles": 70.5,
       "states": [
         "WA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "wa-k",
+      "name": "Washington Section K",
       "section_id": "wa-k",
       "section_name": "Washington Section K",
       "region_id": "north-cascades",
@@ -362,9 +463,12 @@
       "miles": 126.5,
       "states": [
         "WA"
-      ]
+      ],
+      "route_id": "main-spine"
     },
     {
+      "id": "wa-l",
+      "name": "Washington Section L",
       "section_id": "wa-l",
       "section_name": "Washington Section L",
       "region_id": "north-cascades",
@@ -373,7 +477,44 @@
       "miles": 61.16,
       "states": [
         "WA"
-      ]
+      ],
+      "route_id": "main-spine"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "id": "main-spine",
+      "name": null,
+      "kind": "spine",
+      "alt_of": null,
+      "junction_mile": null,
+      "junction_sec_mile": null,
+      "hikeable": true,
+      "miles": 2655.7
+    }
+  ],
+  "hydrate": {
+    "id": {
+      "prefix": "pct",
+      "token_by": "route",
+      "from": "mile",
+      "scale": 1000,
+      "width": 7,
+      "tokens": {
+        "main-spine": "main"
+      }
+    },
+    "sec_mile_from": "section",
+    "sec_mile_decimals": 2,
+    "region_from": "ranges",
+    "emit": {
+      "route_kind": false,
+      "alt_of": false,
+      "junction_mile": false,
+      "junction_sec_mile": false
+    }
+  },
+  "notes": {
+    "schema": "points.json carries only lat, lon, mile, route_id and, where present, trail_elev, route_type and state. id, sec_mile, region_id, region_name, section_id and section_name are rebuilt at load by hydrate-points.js from the tables in this file. Converted by scripts/slim-trail.js."
+  }
 }

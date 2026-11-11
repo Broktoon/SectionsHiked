@@ -462,6 +462,11 @@ function run(trailDir, write) {
   return { trailDir, meta, roundTrip: rt };
 }
 
+// The table builder and the round trip are reused by slim-trail.js (Phase 4),
+// so the command-line run below happens only when this file is run directly.
+module.exports = { buildMeta, roundTrip, inferIdFormat };
+if (require.main !== module) return;
+
 const args = process.argv.slice(2);
 const write = args.includes('--write');
 const targets = args.includes('--all')
