@@ -36,7 +36,7 @@
 const fs = require('fs');
 const path = require('path');
 const { slimPoint } = require('../public/js/hydrate-points');
-const { buildMeta, roundTrip } = require('./build-meta-from-points');
+const { buildMeta, roundTrip, fitOffSpineRoutes } = require('./build-meta-from-points');
 
 const CANON = new Set(['lat', 'lon', 'mile', 'route_id', 'trail_elev', 'route_type', 'state']);
 
@@ -67,6 +67,18 @@ if (existing.hydrate) {
 const derived = buildMeta(trailDir, points);
 const fail = [];
 
+// The one section each off-spine route sits in (NET's Middletown spur is
+// "ct-middletown"). The table builder derives rows for the spine only, so an
+// existing row for one of these is kept and tagged with its route instead of
+// being reported as orphaned.
+const spineIds = new Set(['main', 'main-spine']);
+const offSpineSection = new Map();
+for (const p of points) {
+  const rid = p.route_id ?? 'main';
+  if (spineIds.has(rid) || p.section_id == null) continue;
+  offSpineSection.set(p.section_id, rid);
+}
+
 // Match each derived row to the existing row for the same id, whatever key
 // the existing file uses for it, and add only the canonical keys it lacks.
 function mergeRows(kind, existingRows, derivedRows, idKeys, nameKeys) {
@@ -74,7 +86,9 @@ function mergeRows(kind, existingRows, derivedRows, idKeys, nameKeys) {
   const byId = new Map((existingRows || []).map(r => [idOf(r), r]));
   const derivedIds = new Set(derivedRows.map(r => r.id));
   for (const r of existingRows || []) {
-    if (!derivedIds.has(idOf(r))) fail.push(kind + ' "' + idOf(r) + '" is in the meta file but no point carries it');
+    if (derivedIds.has(idOf(r))) continue;
+    if (kind === 'section' && offSpineSection.has(idOf(r))) continue;
+    fail.push(kind + ' "' + idOf(r) + '" is in the meta file but no point carries it');
   }
   const merged = new Map();
   for (const d of derivedRows) {
@@ -87,15 +101,37 @@ function mergeRows(kind, existingRows, derivedRows, idKeys, nameKeys) {
     if (kind === 'section' && row.region_id === undefined && d.region_id != null) row.region_id = d.region_id;
     merged.set(d.id, row);
   }
-  // Keep the existing file's order.
-  return (existingRows || []).map(r => merged.get(idOf(r))).filter(Boolean);
+  // Keep the existing file's order. An off-spine route's own row keeps every
+  // key it has and gains the route it belongs to.
+  return (existingRows || []).map(r => {
+    if (merged.has(idOf(r))) return merged.get(idOf(r));
+    if (kind === 'section' && offSpineSection.has(idOf(r))) {
+      return { id: idOf(r), ...r, route_id: offSpineSection.get(idOf(r)) };
+    }
+    return null;
+  }).filter(Boolean);
 }
 
 const meta = JSON.parse(JSON.stringify(existing));
+// NET's meta has no region table at all; the points name two (ct, ma). The
+// derived table is added as a new key rather than reported as missing rows.
+// Neither app reads meta.regions on NET.
+if (!existing.regions && derived.regions.length) {
+  existing.regions = derived.regions.map(r => ({ ...r }));
+  console.log('no regions table in the meta file; adding the ' + derived.regions.length + ' derived from the points');
+}
 meta.regions = mergeRows('region', existing.regions, derived.regions, ['id', 'region_id'], ['name', 'region_name']);
 meta.sections = mergeRows('section', existing.sections, derived.sections, ['id', 'section_id'], ['name', 'section_name']);
 if (!meta.routes) meta.routes = derived.routes;
 meta.hydrate = derived.hydrate;
+if (!fail.length && meta.routes.some(r => r.kind !== 'spine')) {
+  for (const f of fitOffSpineRoutes(points, meta)) fail.push(f);
+  for (const r of meta.routes.filter(r => r.kind !== 'spine')) {
+    console.log('route  ' + r.id + ': region ' + r.region_id + ', section ' + (r.section_id ?? '(table row)')
+      + ', sec_mile from route' + (r.sec_mile_scale ? ' / ' + r.sec_mile_scale.toFixed(6) : '')
+      + (r.id_from ? ', id from ' + r.id_from : ''));
+  }
+}
 meta.notes = {
   ...(existing.notes || {}),
   schema: 'points.json carries only lat, lon, mile, route_id and, where present, '
@@ -115,11 +151,23 @@ const slim = points.map(slimPoint);
 const extra = [...new Set(slim.flatMap(p => Object.keys(p)))].filter(k => !CANON.has(k));
 if (extra.length) {
   fail.push('slim points would still carry ' + extra.join(', ')
-    + ' (per-point data with no home in meta; move it first, as Phase 4 plans for AT legacy_id)');
+    + ' (per-point data with no home in meta; decide where it goes, or drop it, first)');
 }
 
 if (!fail.length) {
-  const rt = roundTrip(points, meta);
+  let rt = roundTrip(points, meta);
+  // The existing rows may share boundary miles (NCT: Vermont 0-71, New York
+  // 71-775.5) with the point at 71 belonging to New York. The rows are kept
+  // as the apps read them; the loader is told the convention instead.
+  if (!rt.ok) {
+    const alt = { ...meta, hydrate: { ...meta.hydrate, boundary: 'next' } };
+    const rt2 = roundTrip(points, alt);
+    if (rt2.ok) {
+      meta.hydrate = alt.hydrate;
+      rt = rt2;
+      console.log('rows share boundary miles; hydrate.boundary = "next"');
+    }
+  }
   if (!rt.ok) {
     fail.push('round trip differs: ' + JSON.stringify(rt.fieldCounts));
     for (const d of rt.diffs.slice(0, 6)) {

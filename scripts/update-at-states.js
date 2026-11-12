@@ -1,4 +1,21 @@
 #!/usr/bin/env node
+// ============================================================================
+// OUTDATED (2026-11-12): do not run without updating the output stage first.
+//
+// This script writes the OLD 17-field points.json. The shipped
+// public/trails/appalachian-trail/data/points.json was converted in place
+// by scripts/slim-trail.js to the canonical slim records (lat, lon, mile,
+// route_id + optional trail_elev, route_type, state), with id, sec_mile,
+// section and region rebuilt at load from the hydrate block in its
+// *_meta.json. Re-running this unchanged overwrites both files in the old
+// shape and silently undoes that migration (and drops the hydrate block,
+// per-route sec_mile_scale / id_from settings and boundary: "next").
+//
+// Cheapest fix when this trail's source is next pulled: write the old shape
+// to a temp dir, then run slim-trail.js on it and verify with
+// verify-schema-roundtrip.js. build-pht-data.js Stage 10 is the model for
+// writing canonical files directly (with route-id pinning).
+// ============================================================================
 /**
  * update-at-states.js
  *

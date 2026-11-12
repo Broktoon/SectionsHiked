@@ -98,8 +98,11 @@ function runsAlongAxis(points, keyFn) {
 
 // ------------------------------------------------------- id format inference
 
-function inferIdFormat(points, trailDir) {
+function inferIdFormat(points, trailDir, allPoints) {
   const withId = points.filter(p => typeof p.id === 'string');
+  // Tokens are read off every point, so an alternate's token is recorded even
+  // when its numeric tail follows a different rule (route id_from).
+  const tokenPts = (allPoints || points).filter(p => typeof p.id === 'string');
   if (!withId.length) return null;
 
   const prefix = withId[0].id.split('-')[0];
@@ -137,7 +140,7 @@ function inferIdFormat(points, trailDir) {
     const keyFn = cand === 'section' ? (p => p.section_id) : (p => p.route_id ?? SPINE_ROUTE);
     const map = new Map();
     let consistent = true;
-    for (const p of withId) {
+    for (const p of tokenPts) {
       const k = keyFn(p);
       const tok = middleOf(p);
       if (map.has(k) && map.get(k) !== tok) { consistent = false; break; }
@@ -149,7 +152,7 @@ function inferIdFormat(points, trailDir) {
 
   const keyFn = token_by === 'section' ? (p => p.section_id) : (p => p.route_id ?? SPINE_ROUTE);
   const tokens = {};
-  for (const p of withId) tokens[keyFn(p)] = middleOf(p);
+  for (const p of tokenPts) tokens[keyFn(p)] = middleOf(p);
 
   // Only record tokens that differ from the key itself — AT's route_id is
   // "main-spine" while its ids say "main", and that override has to survive
@@ -195,8 +198,8 @@ function buildMeta(trailDir, points) {
         name: sample.section_name ?? null,
         region_id: sample.region_id ?? null,
         route_id: spineRouteId,
-        mile_start: r1(r.mile_start),
-        mile_end: r1(r.mile_end),
+        mile_start: r3(r.mile_start),
+        mile_end: r3(r.mile_end),
         miles: r1(r.mile_end - r.mile_start),
       };
     });
@@ -216,8 +219,8 @@ function buildMeta(trailDir, points) {
       name: sample.region_name ?? null,
       ...(sample.state !== undefined ? { state: sample.state } : {}),
       route_id: spineRouteId,
-      mile_start: r1(Math.min(...mi)),
-      mile_end: r1(Math.max(...mi)),
+      mile_start: r3(Math.min(...mi)),
+      mile_end: r3(Math.max(...mi)),
       miles: r1(Math.max(...mi) - Math.min(...mi)),
       sections: sections.filter(s => s.region_id === id).length,
     };
@@ -292,7 +295,7 @@ function buildMeta(trailDir, points) {
   });
 
   // --- id format ----------------------------------------------------------
-  const idFormat = inferIdFormat(points, trailDir);
+  const idFormat = inferIdFormat(spine, trailDir, points);
 
   // Scan every point, never a sample. PCT stores sec_mile at 1 decimal
   // throughout except its very last point, which carries the exact terminus
@@ -350,6 +353,79 @@ function buildMeta(trailDir, points) {
     },
     notes: {},
   };
+}
+
+// Off-spine routes (CDT's five alternates, NET's Middletown spur, IAT's
+// Baraboo) each sit in one region and one section, measure sec_mile from
+// their own start, and may encode a different number in their id tail. The
+// candidate settings are tried in order and kept only where rebuilding that
+// route's points reproduces them exactly; a route no candidate reproduces is
+// reported, never guessed.
+function fitOffSpineRoutes(points, meta) {
+  const failures = [];
+  const slim = points.map(slimPoint);
+  const routeIds = [...new Set(points.map(p => p.route_id ?? SPINE_ROUTE))];
+  for (const route of meta.routes) {
+    if (route.kind === 'spine') continue;
+    const idx = [];
+    points.forEach((p, i) => { if ((p.route_id ?? SPINE_ROUTE) === route.id) idx.push(i); });
+    const pts = idx.map(i => points[i]);
+    const regs = [...new Set(pts.map(p => p.region_id ?? null))];
+    const secs = [...new Set(pts.map(p => p.section_id ?? null))];
+    if (regs.length === 1 && regs[0] != null) { route.region_from = 'route'; route.region_id = regs[0]; }
+    if (secs.length === 1 && secs[0] != null
+        && !meta.sections.some(s => s.id === secs[0] && s.route_id === route.id)) {
+      route.section_id = secs[0];
+      route.section_name = pts[0].section_name ?? null;
+    }
+    route.sec_mile_from = 'route';
+    const base = Math.min(...pts.map(p => p.mile));
+    const top = pts.reduce((a, p) => (p.mile > a.mile ? p : a));
+    const dp = pts.reduce((m, p) => {
+      const t = String(p.sec_mile); const k = t.indexOf('.');
+      return Math.max(m, k < 0 ? 0 : t.length - k - 1);
+    }, 0);
+    // The scale is not read off the last point alone: both numbers are
+    // rounded, and at 3 decimals that misses by enough to flip 20 of Gila's
+    // points. Every point bounds the scale (its sec_mile must round back
+    // exactly), so intersect those bounds and keep the shortest number inside.
+    const half = 0.5 / Math.pow(10, dp);
+    let lo = 0, hi = Infinity;
+    for (const p of pts) {
+      if (!p.sec_mile) continue;
+      const d = p.mile - base;
+      lo = Math.max(lo, d / (p.sec_mile + half));
+      if (p.sec_mile > half) hi = Math.min(hi, d / (p.sec_mile - half));
+    }
+    let scale = top.sec_mile ? (top.mile - base) / top.sec_mile : 1;
+    if (lo < hi && isFinite(hi)) {
+      for (let sig = 2; sig <= 15; sig++) {
+        const c = Number(((lo + hi) / 2).toPrecision(sig));
+        if (c > lo && c < hi) { scale = c; break; }
+      }
+    }
+    if (dp !== meta.hydrate.sec_mile_decimals) route.sec_mile_decimals = dp;
+    const same = () => {
+      const back = hydratePoints(slim, meta);
+      return idx.every(i => {
+        const a = points[i], b = back[i];
+        return Object.keys({ ...a, ...b }).every(k =>
+          JSON.stringify(a[k] ?? null) === JSON.stringify(b[k] ?? null));
+      });
+    };
+    let ok = false;
+    for (const sc of (Math.abs(scale - 1) < 1e-9 ? [null] : [scale, null])) {
+      for (const idFrom of [null, 'sec_mile', 'mile']) {
+        if (sc === null) delete route.sec_mile_scale; else route.sec_mile_scale = sc;
+        if (idFrom === null) delete route.id_from; else route.id_from = idFrom;
+        if (same()) { ok = true; break; }
+      }
+      if (ok) break;
+    }
+    if (ok) route.miles = top.sec_mile;   // its own length, not the spine span it projects onto
+    if (!ok) failures.push('route ' + route.id + ': no setting rebuilds its points exactly');
+  }
+  return failures;
 }
 
 // ---------------------------------------------------------- the round trip
@@ -464,7 +540,7 @@ function run(trailDir, write) {
 
 // The table builder and the round trip are reused by slim-trail.js (Phase 4),
 // so the command-line run below happens only when this file is run directly.
-module.exports = { buildMeta, roundTrip, inferIdFormat };
+module.exports = { buildMeta, roundTrip, inferIdFormat, fitOffSpineRoutes };
 if (require.main !== module) return;
 
 const args = process.argv.slice(2);
